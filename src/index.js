@@ -55,12 +55,12 @@ class Root extends Component {
             <BrowserRouter basename={'/'}>
                 <ScrollContext>
                     <Switch>
-                    <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
+                        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
                         <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} component={Login} />
 
                         <App>
                             <Route path={`${process.env.PUBLIC_URL}/dashboard`} component={Dashboard} />
-                                
+
                             <Route path={`${process.env.PUBLIC_URL}/products/physical/category`} component={Category} />
                             <Route path={`${process.env.PUBLIC_URL}/products/physical/sub-category`} component={Sub_category} />
                             <Route path={`${process.env.PUBLIC_URL}/products/physical/product-list`} component={Product_list} />

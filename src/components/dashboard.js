@@ -3,10 +3,10 @@ import Breadcrumb from './common/breadcrumb';
 import { Navigation, Box, MessageSquare, Users, Briefcase, CreditCard, ShoppingCart, Calendar } from 'react-feather';
 import CountUp from 'react-countup';
 import { Chart } from "react-google-charts";
-import CanvasJSReact from '../assets/canvas/canvasjs.react';
 
+import CanvasJSReact from '../assets/canvas/canvasjs.react';
 import { Pie, Doughnut, Bar, Line } from 'react-chartjs-2';
-import { 
+import {
     pieOptions, 
     doughnutOption, 
     lineOptions, 
@@ -22,7 +22,6 @@ import user from '../assets/images/dashboard/user.png';
 import designer from '../assets/images/dashboard/designer.jpg'
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
-
 
 export class Dashboard extends Component {
 
