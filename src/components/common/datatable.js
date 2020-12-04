@@ -24,9 +24,8 @@ export class Datatable extends Component {
             });
             fetch(url).then(async res => {
                 const response = await res.json();
-                console.log(response);
+
                 if (response.code === 200 ) {
-                    console.log(response.data);
                     this.setState({
                         myData: response.data,
                         loading: false,
@@ -93,7 +92,7 @@ export class Datatable extends Component {
     render() {
         const { pageSize, myClass, multiSelectOption, pagination } = this.props;
         const { myData = [], loading = false, error = null } = this.state
-        console.log(myData);
+
         if (loading) {
             return <div>Loading</div>;
         }
