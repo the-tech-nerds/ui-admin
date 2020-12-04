@@ -3,15 +3,44 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import * as fetch from 'isomorphic-fetch';
 
 export class Datatable extends Component {
     constructor(props) {
         super(props)
         this.state = {
             checkedValues: [],
-            myData: this.props.myData
+            myData: this.props.myData,
+            loading: false,
+            error: null,
         }
+    }
+
+    componentDidMount() {
+        const { url = undefined } = this.props;
+        if (url) {
+            this.setState({
+                loading: true
+            });
+            fetch(url).then(async res => {
+                const response = await res.json();
+
+                if (response.code === 200 ) {
+                    this.setState({
+                        myData: response.data,
+                        loading: false,
+                    });
+                    return;
+                }
+                this.setError("Failed Loading Data");
+            }).catch(e => {})
+        }
+    }
+
+    setError(error) {
+        this.setState({
+            error,
+        })
     }
 
     selectRow = (e, i) => {
@@ -62,76 +91,87 @@ export class Datatable extends Component {
 
     render() {
         const { pageSize, myClass, multiSelectOption, pagination } = this.props;
-        const { myData } = this.state
+        const { myData = [], loading = false, error = null } = this.state
 
-        const columns = [];
-        for (var key in myData[0]) {
-
-            let editable = this.renderEditable
-            if (key === "image") {
-                editable = null;
-            }
-            if (key === "status") {
-                editable = null;
-            }
-            if (key === "avtar") {
-                editable = null;
-            }
-            if (key === "vendor") {
-                editable = null;
-            }
-            if(key === "order_status"){
-                editable = null;
-            }
-
-            columns.push(
-                {
-                    Header: <b>{this.Capitalize(key.toString())}</b>,
-                    accessor: key,
-                    Cell: editable,
-                    style: {
-                        textAlign: 'center'
-                    }
-                });
+        if (loading) {
+            return <div>Loading</div>;
         }
 
-        if (multiSelectOption == true) {
-            columns.push(
-                {
-                    Header: <button className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
-                        onClick={
-                            (e) => {
-                                if (window.confirm('Are you sure you wish to delete this item?'))
-                                    this.handleRemoveRow()
-                            }}>Delete</button>,
-                    id: 'delete',
-                    accessor: str => "delete",
-                    sortable: false,
-                    style: {
-                        textAlign: 'center'
-                    },
-                    Cell: (row) => (
-                        <div>
+        if (error) {
+            return (
+                <div>Error loading data..</div>
+            );
+        }
+
+        const columns = [];
+        if (myData) {
+            for (var key in myData[0]) {
+
+                let editable = this.renderEditable
+                if (key === "image") {
+                    editable = null;
+                }
+                if (key === "status") {
+                    editable = null;
+                }
+                if (key === "avtar") {
+                    editable = null;
+                }
+                if (key === "vendor") {
+                    editable = null;
+                }
+                if(key === "order_status"){
+                    editable = null;
+                }
+
+                columns.push(
+                    {
+                        Header: <b>{this.Capitalize(key.toString())}</b>,
+                        accessor: key,
+                        Cell: editable,
+                        style: {
+                            textAlign: 'center'
+                        }
+                    });
+            }
+
+            if (multiSelectOption == true) {
+                columns.push(
+                    {
+                        Header: <button className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
+                                        onClick={
+                                            (e) => {
+                                                if (window.confirm('Are you sure you wish to delete this item?'))
+                                                    this.handleRemoveRow()
+                                            }}>Delete</button>,
+                        id: 'delete',
+                        accessor: str => "delete",
+                        sortable: false,
+                        style: {
+                            textAlign: 'center'
+                        },
+                        Cell: (row) => (
+                            <div>
                             <span >
                                 <input type="checkbox" name={row.original.id} defaultChecked={this.state.checkedValues.includes(row.original.id)}
-                                    onChange={e => this.selectRow(e, row.original.id)} />
+                                       onChange={e => this.selectRow(e, row.original.id)} />
                             </span>
-                        </div>
-                    ),
-                    accessor: key,
-                    style: {
-                        textAlign: 'center'
+                            </div>
+                        ),
+                        accessor: key,
+                        style: {
+                            textAlign: 'center'
+                        }
                     }
-                }
-            )
-        } else {
-            columns.push(
-                {
-                    Header: <b>Action</b>,
-                    id: 'delete',
-                    accessor: str => "delete",
-                    Cell: (row) => (
-                        <div>
+                )
+            } else {
+                columns.push(
+                    {
+                        Header: <b>Action</b>,
+                        id: 'delete',
+                        accessor: str => "delete",
+                        Cell: (row) => (
+                            <div>
                             <span onClick={() => {
                                 if (window.confirm('Are you sure you wish to delete this item?')) {
                                     let data = myData;
@@ -145,15 +185,16 @@ export class Datatable extends Component {
                                 ></i>
                             </span>
 
-                        <span><i className="fa fa-pencil" style={{ width: 35, fontSize: 20, padding: 11,color:'rgb(40, 167, 69)' }}></i></span>
-                    </div>
-                ),
-                style: {
-                    textAlign: 'center'
-                },
-                sortable: false
+                                <span><i className="fa fa-pencil" style={{ width: 35, fontSize: 20, padding: 11,color:'rgb(40, 167, 69)' }}></i></span>
+                            </div>
+                        ),
+                        style: {
+                            textAlign: 'center'
+                        },
+                        sortable: false
+                    }
+                )
             }
-        )
         }
 
         return (

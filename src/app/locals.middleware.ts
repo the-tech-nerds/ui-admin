@@ -40,10 +40,8 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
     res.locals.js = (await resolveFiles(staticJsPath, 'js/', 'static') || [])
         .filter((fileName: any) => !fileName.includes(".map"));
 
-    const { baseUrl } = req;
-    console.log('here');
-    console.log(baseUrl);
-    if (baseUrl.includes("/api")) {
+    const { url } = req;
+    if (url.includes("/api")) {
         next();
     } else {
         res.render('pages/main');
