@@ -31,29 +31,6 @@ export class Tabset_user extends Component {
                             <AvField name="phone" label="Phone" type="phone" required />
                             <Button color="primary">Register</Button>
                         </Forms>
-                        {/*<form className="needs-validation user-add" noValidate="">*/}
-                        {/*    <h4>Account Details</h4>*/}
-                        {/*    <div className="form-group row">*/}
-                        {/*        <label className="col-xl-3 col-md-4"><span>*</span> First Name</label>*/}
-                        {/*        <input className="form-control col-xl-8 col-md-7" id="validationCustom0" type="text" required="" />*/}
-                        {/*    </div>*/}
-                        {/*    <div className="form-group row">*/}
-                        {/*        <label className="col-xl-3 col-md-4"><span>*</span> Last Name</label>*/}
-                        {/*        <input className="form-control col-xl-8 col-md-7" id="validationCustom1" type="text" required="" />*/}
-                        {/*    </div>*/}
-                        {/*    <div className="form-group row">*/}
-                        {/*        <label className="col-xl-3 col-md-4"><span>*</span> Email</label>*/}
-                        {/*        <input className="form-control col-xl-8 col-md-7" id="validationCustom2" type="text" required="" />*/}
-                        {/*    </div>*/}
-                        {/*    <div className="form-group row">*/}
-                        {/*        <label className="col-xl-3 col-md-4"><span>*</span> Password</label>*/}
-                        {/*        <input className="form-control col-xl-8 col-md-7" id="validationCustom3" type="password" required="" />*/}
-                        {/*    </div>*/}
-                        {/*    <div className="form-group row">*/}
-                        {/*        <label className="col-xl-3 col-md-4"><span>*</span> Confirm Password</label>*/}
-                        {/*        <input className="form-control col-xl-8 col-md-7" id="validationCustom4" type="password" required="" />*/}
-                        {/*    </div>*/}
-                        {/*</form>*/}
                     </TabPanel>
                     <TabPanel>
                         <form className="needs-validation user-add" noValidate="">
