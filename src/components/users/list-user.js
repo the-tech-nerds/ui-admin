@@ -23,7 +23,8 @@ export class List_user extends Component {
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
                                 <Datatable
                                     multiSelectOption={true}
-                                    myData={data}
+                                    // myData={data}
+                                    url="/api/users/"
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"
