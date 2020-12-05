@@ -181,9 +181,9 @@ export class Tabset_user extends Component {
                         </form>
                     </TabPanel>
                 </Tabs>
-                <div className="pull-right">
-                    <button type="button" className="btn btn-primary">Save</button>
-                </div>
+                {/*<div className="pull-right">*/}
+                {/*    <button type="button" className="btn btn-primary">Save</button>*/}
+                {/*</div>*/}
             </Fragment>
         )
     }
