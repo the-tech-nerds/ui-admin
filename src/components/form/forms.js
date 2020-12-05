@@ -66,7 +66,7 @@ export class Forms extends Component {
     }
 
     render() {
-        const { children, title = '' } = this.props;
+        const { children, title = null } = this.props;
         const { error = false, errorMessage = '', loading = false } = this.state;
         const className = loading ? 'blur' : '';
         const matches = String(errorMessage).match(/\[(.*?)\]/);
@@ -77,7 +77,7 @@ export class Forms extends Component {
                 className={className}
             >
                 {error && <label className="text-danger">{matches[1]}</label>}
-                <h4>{title}</h4>
+                {title && <h4>{title}</h4>}
                 {children}
             </AvForm>
         );
