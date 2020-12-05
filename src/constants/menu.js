@@ -66,8 +66,9 @@ export const MENUITEMS = [
     },
     {
         title: 'Users', icon: UserPlus, type: 'sub', active: false, children: [
-            { path: '/users/list-user', title: 'User List', type: 'link' },
-            { path: '/users/create-user', title: 'Create User', type: 'link' },
+            { path: '/list-users', title: 'User List', type: 'link' },
+            { path: '/list-admins', title: 'Admin List', type: 'link' },
+            { path: '/create-user', title: 'Add Admin', type: 'link' },
         ]
     },
     {

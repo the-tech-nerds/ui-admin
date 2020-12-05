@@ -12,7 +12,7 @@ export default class UserService {
         return this.gatewayService.execute("auth", {
             method: "POST",
             path: '/api/v1/authentication/register',
-            body: user,
+            body: { ...user, type: 2 },
         });
     }
 
@@ -23,7 +23,7 @@ export default class UserService {
         });
         const users = userList.map((user: any) => ({
             id: user.id,
-            'first Name': user.first_name,
+            'First Name': user.first_name,
             'Last Name': user.last_name,
             'Email': user.email,
             'Phone': user.phone,
@@ -33,5 +33,51 @@ export default class UserService {
             code: 200,
             data: users,
         };
+    }
+
+     async listAdmins() {
+        const { data: userList } = await this.gatewayService.execute("auth", {
+            method: "GET",
+            qs: {
+              userType: "2",
+            },
+            path: '/api/v1/user/all',
+        });
+        const users = userList.map((user: any) => ({
+            id: user.id,
+            'First Name': user.first_name,
+            'Last Name': user.last_name,
+            'Email': user.email,
+            'Phone': user.phone,
+            'Active': user.is_active ? 'Yes' : 'No'
+        }));
+        return {
+            code: 200,
+            data: users,
+        };
+    }
+
+    async getUser(userId: number) {
+        const { data: user } = await this.gatewayService.execute("auth", {
+            method: "GET",
+            path: `/api/v1/user/${userId}`,
+        });
+        const {
+            id,
+            first_name,
+            last_name,
+            email,
+            phone,
+        } = user;
+        return {
+            code: 200,
+            data: {
+                id,
+                first_name,
+                last_name,
+                email,
+                phone,
+            }
+        }
     }
 }

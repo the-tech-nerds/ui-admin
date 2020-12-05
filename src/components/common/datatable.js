@@ -71,7 +71,7 @@ export class Datatable extends Component {
         return (
             <div
                 style={{ backgroundColor: "#fafafa" }}
-                contentEditable
+                contentEditable={false}
                 suppressContentEditableWarning
                 onBlur={e => {
                     const data = [...this.state.myData];
@@ -90,7 +90,7 @@ export class Datatable extends Component {
     }
 
     render() {
-        const { pageSize, myClass, multiSelectOption, pagination } = this.props;
+        const { pageSize, myClass, multiSelectOption, pagination, extraColumns = [] } = this.props;
         const { myData = [], loading = false, error = null } = this.state
 
         if (loading) {
@@ -103,7 +103,7 @@ export class Datatable extends Component {
             );
         }
 
-        const columns = [];
+        let columns = [];
         if (myData) {
             for (var key in myData[0]) {
 
@@ -164,52 +164,27 @@ export class Datatable extends Component {
                         }
                     }
                 )
-            } else {
-                columns.push(
-                    {
-                        Header: <b>Action</b>,
-                        id: 'delete',
-                        accessor: str => "delete",
-                        Cell: (row) => (
-                            <div>
-                            <span onClick={() => {
-                                if (window.confirm('Are you sure you wish to delete this item?')) {
-                                    let data = myData;
-                                    data.splice(row.index, 1);
-                                    this.setState({ myData: data });
-                                }
-                                toast.success("Successfully Deleted !")
-
-                            }}>
-                                <i className="fa fa-trash" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
-                                ></i>
-                            </span>
-
-                                <span><i className="fa fa-pencil" style={{ width: 35, fontSize: 20, padding: 11,color:'rgb(40, 167, 69)' }}></i></span>
-                            </div>
-                        ),
-                        style: {
-                            textAlign: 'center'
-                        },
-                        sortable: false
-                    }
-                )
+            }
+            console.log(extraColumns);
+            if (extraColumns.length > 0) {
+               columns = [ ...columns, ...extraColumns ];
             }
         }
 
-        return (
-            <Fragment>
-                <ReactTable
-                    data={myData}
-                    columns={columns}
-                    defaultPageSize={pageSize}
-                    className={myClass}
-                    showPagination={pagination}
-                />
-                <ToastContainer />
-            </Fragment>
-        )
+            return (
+                <Fragment>
+                    <ReactTable
+                        filterable={true}
+                        data={myData}
+                        columns={columns}
+                        defaultPageSize={pageSize}
+                        className={myClass}
+                        showPagination={pagination}
+                    />
+                    <ToastContainer />
+                </Fragment>
+            )
+        }
     }
-}
 
-export default Datatable
+    export default Datatable
