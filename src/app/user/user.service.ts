@@ -1,5 +1,6 @@
 import {GatewayService} from "@technerds/common-services";
 import {Injectable} from "@nestjs/common";
+import {UserLoginRequest} from "./requests/user.login.request";
 
 @Injectable()
 export default class UserService {
@@ -13,6 +14,14 @@ export default class UserService {
             method: "POST",
             path: '/api/v1/authentication/register',
             body: user,
+        });
+    }
+
+    loginUser(request: UserLoginRequest) {
+        return this.gatewayService.execute("auth", {
+            method: "POST",
+            path: '/api/v1/authentication/login',
+            body: request,
         });
     }
 

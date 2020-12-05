@@ -2,9 +2,12 @@ import React, { Component, Fragment } from 'react';
 import { Tabs, TabList, TabPanel, Tab } from 'react-tabs';
 import { User, Unlock } from 'react-feather';
 import { withRouter } from 'react-router-dom';
+import Forms from "../form/forms";
+import {AvField, AvForm} from "availity-reactstrap-validation";
+import {Button} from "reactstrap";
 
 export class LoginTabset extends Component {
-    constructor(props) {
+    /*constructor(props) {
         super(props);
         this.state = {
             activeShow: true,
@@ -25,7 +28,7 @@ export class LoginTabset extends Component {
 
     routeChange = () => {
         this.props.history.push(`${process.env.PUBLIC_URL}/dashboard`);
-      }
+      }*/
     render() {
         return (
             <div>
@@ -33,12 +36,27 @@ export class LoginTabset extends Component {
                     <Tabs>
                         <TabList className="nav nav-tabs tab-coupon" >
                             <Tab className="nav-link" onClick={(e) => this.clickActive(e)}><User />Login</Tab>
-                            <Tab className="nav-link" onClick={(e) => this.clickActive(e)}><Unlock />Register</Tab>
+                            {/*<Tab className="nav-link" onClick={(e) => this.clickActive(e)}><Unlock />Register</Tab>*/}
                         </TabList>
 
                         <TabPanel>
+                            <Forms
+                                title="Login User"
+                                options={{
+                                    method: 'POST',
+                                    url: '/api/users/login',
+                                    onSuccess: (response) => {
+                                        console.log("in user login");
+                                        window.location.href ='/users/list-user';
+                                    }
+                                }}
+                            >
+                                <AvField name="username" label="Email" type="email" required />
+                                <AvField name="password" label="Password" type="password" required />
+                                <Button color="primary">Login</Button>
+                            </Forms>
                             <form className="form-horizontal auth-form">
-                                <div className="form-group">
+                                {/*<div className="form-group">
                                     <input required="" name="login[username]" type="email" className="form-control" placeholder="Username" id="exampleInputEmail1" />
                                 </div>
                                 <div className="form-group">
@@ -55,8 +73,8 @@ export class LoginTabset extends Component {
                                 </div>
                                 <div className="form-button">
                                     <button className="btn btn-primary" type="submit"  onClick={() => this.routeChange()}>Login</button>
-                                </div>
-                                <div className="form-footer">
+                                </div>*/}
+                                {/*<div className="form-footer">
                                     <span>Or Login up with social platforms</span>
                                     <ul className="social">
                                         <li><a className="fa fa-facebook" href=""></a></li>
@@ -64,10 +82,10 @@ export class LoginTabset extends Component {
                                         <li><a className="fa fa-instagram" href=""></a></li>
                                         <li><a className="fa fa-pinterest" href=""></a></li>
                                     </ul>
-                                </div>
+                                </div>*/}
                             </form>
                         </TabPanel>
-                        <TabPanel>
+                        {/*<TabPanel>
                             <form className="form-horizontal auth-form">
                                 <div className="form-group">
                                     <input required="" name="login[username]" type="email" className="form-control" placeholder="Username" id="exampleInputEmail12" />
@@ -100,7 +118,7 @@ export class LoginTabset extends Component {
                                     </ul>
                                 </div>
                             </form>
-                        </TabPanel>
+                        </TabPanel>*/}
                     </Tabs>
                 </Fragment>
             </div>

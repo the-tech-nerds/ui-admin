@@ -32,6 +32,7 @@
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
     "chart.js": "^2.9.4",
+    "class-validator": "^0.12.2",
     "concurrently": "^5.3.0",
     "css-loader": "1.0.0",
     "dotenv": "6.0.0",
