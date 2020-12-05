@@ -20,7 +20,6 @@ export class Tabset_user extends Component {
                                 method: 'POST',
                                 url: '/api/users',
                                 onSuccess: (response) => {
-                                    console.log("in user list");
                                     window.location.href ='/users/list-user';
                                 }
                             }}
