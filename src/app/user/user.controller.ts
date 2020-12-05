@@ -1,5 +1,6 @@
 import {Body, Controller, Get, Param, Post, Query} from "@nestjs/common";
 import UserService from "./user.service";
+import {UserLoginRequest} from "./requests/user.login.request";
 
 @Controller('/api/users')
 export default class UserController {
@@ -15,6 +16,13 @@ export default class UserController {
         @Body() userCreateRequest: any
     ) {
         return this.userService.createUser(userCreateRequest);
+    }
+
+    @Post('/login')
+    async login(
+        @Body() userLoginRequest: UserLoginRequest
+    ) {
+        return this.userService.loginUser(userLoginRequest);
     }
 
     @Get('/')
