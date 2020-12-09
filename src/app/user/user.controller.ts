@@ -31,12 +31,9 @@ export default class UserController {
         }
         return this.userService.listUsers();
     }
-<<<<<<< HEAD
-=======
 
     @Get('/:id')
     async getUser(@Param('id') id: number) {
         return this.userService.getUser(id);
     }
->>>>>>> 8126746b693e5c086b6d3c14d6e3ae18f9f9cafe
 }

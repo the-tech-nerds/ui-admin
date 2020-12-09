@@ -76,7 +76,6 @@ export class sidebar extends Component {
         const theme = {
             selectionColor: "#C51162"
         };
-
         const mainmenu = this.state.mainmenu.map((menuItem, i) =>
             <li className={`${menuItem.active ? 'active' : ''}`} key={i}>
                 {(menuItem.sidebartitle) ?
