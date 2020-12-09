@@ -36,6 +36,7 @@ import List_menu from './components/menus/list-menu';
 import Create_menu from './components/menus/create-menu';
 import List_user from './components/users/list-user';
 import Create_user from './components/users/create-user';
+import UserDetails from './components/users/user-details';
 import List_vendors from './components/vendors/list-vendors';
 import Create_vendors from './components/vendors/create.vendors';
 import Translations from './components/localization/translations';
@@ -46,6 +47,7 @@ import Reports from './components/reports/report';
 import Invoice from './components/invoice';
 import Datatable from './components/common/datatable'
 import Login from './components/auth/login';
+import ListAdmin from "./components/users/list-admin";
 
 
 
@@ -86,8 +88,11 @@ class Root extends Component {
                             <Route path={`${process.env.PUBLIC_URL}/menus/list-menu`} component={List_menu} />
                             <Route path={`${process.env.PUBLIC_URL}/menus/create-menu`} component={Create_menu} />
 
-                            <Route path={`${process.env.PUBLIC_URL}/users/list-user`} component={List_user} />
-                            <Route path={`${process.env.PUBLIC_URL}/users/create-user`} component={Create_user} />
+                            <Route path={`${process.env.PUBLIC_URL}/list-users`} component={List_user} exact={true}/>
+                            <Route path={`${process.env.PUBLIC_URL}/list-admins`} component={ListAdmin} exact={true}/>
+                            <Route path={`${process.env.PUBLIC_URL}/create-user`} component={Create_user}
+                                   exact={true}/>
+                            <Route path={`${process.env.PUBLIC_URL}/users/:id`} component={UserDetails} />
 
                             <Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors} />
                             <Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`} component={Create_vendors} />

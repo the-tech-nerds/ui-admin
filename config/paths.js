@@ -64,7 +64,6 @@ const resolveModule = (resolveFn, filePath) => {
 
   return resolveFn(`${filePath}.js`);
 };
-console.log(getServedPath(resolveApp('package.json')))
 // config after eject: we're in ./config/
 module.exports = {
   dotenv: resolveApp('.env'),

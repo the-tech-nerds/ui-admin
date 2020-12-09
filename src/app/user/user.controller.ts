@@ -1,5 +1,6 @@
-import {Body, Controller, Get, Post} from "@nestjs/common";
+import {Body, Controller, Get, Param, Post, Query} from "@nestjs/common";
 import UserService from "./user.service";
+import {UserLoginRequest} from "./requests/user.login.request";
 
 @Controller('/api/users')
 export default class UserController {
@@ -16,8 +17,26 @@ export default class UserController {
         return this.userService.createUser(userCreateRequest);
     }
 
+    @Post('/login')
+    async login(
+        @Body() userLoginRequest: UserLoginRequest
+    ) {
+        return this.userService.loginUser(userLoginRequest);
+    }
+
     @Get('/')
-    async get() {
+    async get(@Query('type') type: any) {
+        if (type === 'admin') {
+            return this.userService.listAdmins();
+        }
         return this.userService.listUsers();
     }
+<<<<<<< HEAD
+=======
+
+    @Get('/:id')
+    async getUser(@Param('id') id: number) {
+        return this.userService.getUser(id);
+    }
+>>>>>>> 8126746b693e5c086b6d3c14d6e3ae18f9f9cafe
 }
