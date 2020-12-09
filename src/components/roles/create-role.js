@@ -125,13 +125,7 @@ export default class CreateRole extends Component {
                                                                         name={'permissions_' + i}
                                                                         id={"cat_" + category.id}
                                                                     >
-                                                                        <AvCheckbox
-                                                                            label="select all"
-                                                                            value="0"
-                                                                            id={"per_all_" + category.id}
-                                                                            key={"per_all_" + category.id}
-                                                                        />
-                                                                        {category.permissions.map((permission, j) => (
+                                                                        {category.permissions.map(permission => (
                                                                             <AvCheckbox
                                                                                 label={permission.name}
                                                                                 value={permission.id}
