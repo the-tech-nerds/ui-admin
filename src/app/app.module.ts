@@ -5,6 +5,8 @@ import {CacheModule, commonConfig, GatewayModule} from "@technerds/common-servic
 import {ConfigModule} from "@nestjs/config";
 import { UserModule } from './user/user.module';
 import configuration from "./config/configuration";
+import {RoleModule} from "./role/role.module";
+import {PermissionCategoryModule} from "./permissionCategory/permissionCategory.module";
 
 @Module({
   imports: [
@@ -14,7 +16,7 @@ import configuration from "./config/configuration";
       isGlobal: true,
       load: [configuration,commonConfig],
     }),
-    UserModule,
+    UserModule, RoleModule, PermissionCategoryModule
   ],
   controllers: [AppController],
   providers: [AppService]

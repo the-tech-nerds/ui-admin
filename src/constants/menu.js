@@ -9,6 +9,7 @@ import {
     UserPlus,
     Users,
     Chrome,
+    CheckCircle,
     BarChart,Settings,Archive, LogIn
 } from 'react-feather';
 
@@ -69,6 +70,12 @@ export const MENUITEMS = [
             { path: '/list-users', title: 'User List', type: 'link' },
             { path: '/list-admins', title: 'Admin List', type: 'link' },
             { path: '/create-user', title: 'Add Admin', type: 'link' },
+        ]
+    },
+    {
+        title: 'Roles', icon: CheckCircle, type: 'sub', active: false, children: [
+            { path: '/list-roles', title: 'Role List', type: 'link' },
+            { path: '/create-role', title: 'Add Role', type: 'link' },
         ]
     },
     {
