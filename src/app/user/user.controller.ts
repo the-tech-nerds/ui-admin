@@ -3,7 +3,6 @@ import UserService from "./user.service";
 
 @Controller('/api/users')
 export default class UserController {
-
     constructor(
         private readonly userService: UserService
     ) {
