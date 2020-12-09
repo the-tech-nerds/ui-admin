@@ -18,6 +18,8 @@ export class Forms extends Component {
 
     handleValidSubmit(event, values) {
         event.preventDefault();
+        console.log(values);
+        return;
         const {
             options: {
                 method = "POST", url = '', headers = null, onSuccess = () => {}

@@ -48,6 +48,8 @@ import Invoice from './components/invoice';
 import Datatable from './components/common/datatable'
 import Login from './components/auth/login';
 import ListAdmin from "./components/users/list-admin";
+import ListRole from "./components/roles/list-roles";
+import CreateRole from "./components/roles/create-role";
 
 
 
@@ -93,6 +95,9 @@ class Root extends Component {
                             <Route path={`${process.env.PUBLIC_URL}/create-user`} component={Create_user}
                                    exact={true}/>
                             <Route path={`${process.env.PUBLIC_URL}/users/:id`} component={UserDetails} />
+
+                            <Route path={`${process.env.PUBLIC_URL}/list-roles`} component={ListRole} exact={true}/>
+                            <Route path={`${process.env.PUBLIC_URL}/create-role`} component={CreateRole} exact={true}/>
 
                             <Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors} />
                             <Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`} component={Create_vendors} />
