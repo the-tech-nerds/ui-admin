@@ -1,6 +1,7 @@
 import {GatewayService} from "@technerds/common-services";
 import {Injectable} from "@nestjs/common";
 import {UserLoginRequest} from "./requests/user.login.request";
+import {ResetPasswordRequest} from "./requests/reset-password.request";
 
 @Injectable()
 export default class UserService {
@@ -24,7 +25,13 @@ export default class UserService {
             body: request,
         });
     }
-
+    resetPassword(request: ResetPasswordRequest) {
+        return this.gatewayService.execute("auth", {
+            method: "POST",
+            path: '/api/v1/password/reset',
+            body: request,
+        });
+    }
     async listUsers() {
         const { data: userList } = await this.gatewayService.execute("auth", {
             method: "GET",
