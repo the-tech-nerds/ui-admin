@@ -2,6 +2,7 @@ import {GatewayService} from "@technerds/common-services";
 import {Injectable} from "@nestjs/common";
 import {UserLoginRequest} from "./requests/user.login.request";
 import {ResetPasswordRequest} from "./requests/reset-password.request";
+import * as moment  from "moment";
 
 @Injectable()
 export default class UserService {
@@ -15,6 +16,14 @@ export default class UserService {
             method: "POST",
             path: '/api/v1/authentication/register',
             body: { ...user, type: 2 },
+        });
+    }
+    updateUser(user: any, userId: any) {
+        user.gender_type = Number(user.gender_type);
+        return this.gatewayService.execute("auth", {
+            method: "PUT",
+            path: '/api/v1/user/info/' + userId,
+            body: { ...user},
         });
     }
 
@@ -84,6 +93,8 @@ export default class UserService {
             last_name,
             email,
             phone,
+            birthday,
+            gender_type
         } = user;
         return {
             code: 200,
@@ -93,6 +104,9 @@ export default class UserService {
                 last_name,
                 email,
                 phone,
+                birthday : birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
+                gender_type,
+                gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other'
             }
         }
     }

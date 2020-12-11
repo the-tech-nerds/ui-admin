@@ -1,57 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Tabs, TabList, TabPanel, Tab } from 'react-tabs';
 import {User, Settings, Key} from 'react-feather'
 import ChangePassword from "./change-password";
+import EditProfile from "./edit-profile";
 
-export class Tabset_profile extends Component {
-    render() {
+export function Tabset_profile({user, response}){
         return (
             <div>
                 <Tabs>
                     <TabList className="nav nav-tabs tab-coupon" >
                         <Tab className="nav-link"><User className="mr-2" />Profile</Tab>
-                        <Tab className="nav-link"><Settings className="mr-2" />Contact</Tab>
+                        <Tab className="nav-link"><Settings className="mr-2" />Setting</Tab>
                         <Tab className="nav-link"><Key className="mr-2" />Reset Password</Tab>
                     </TabList>
-
                     <TabPanel>
-                        <div className="tab-pane fade show active">
-                            <h5 className="f-w-600 f-16">Profile</h5>
-                            <div className="table-responsive profile-table">
-                                <table className="table table-responsive">
-                                    <tbody>
-                                        <tr>
-                                            <td>First Name:</td>
-                                            <td>John</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Last Name:</td>
-                                            <td>Deo</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Email:</td>
-                                            <td>johndeo@gmail.com</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Gender:</td>
-                                            <td>Male</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Mobile Number:</td>
-                                            <td>2124821463</td>
-                                        </tr>
-                                        <tr>
-                                            <td>DOB:</td>
-                                            <td>Dec, 15 1993</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Location:</td>
-                                            <td>USA</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <EditProfile user={user} response={response}/>
                     </TabPanel>
                     <TabPanel>
                         {/* <div className="tab-pane fade"> */}
@@ -127,7 +90,6 @@ export class Tabset_profile extends Component {
                 </Tabs>
             </div>
         )
-    }
 }
 
 export default Tabset_profile

@@ -1,6 +1,7 @@
-import {Body, Controller, Get, Param, Post, Query} from "@nestjs/common";
+import {Body, Controller, Get, Param, Post, Put, Query} from "@nestjs/common";
 import UserService from "./user.service";
 import {UserLoginRequest} from "./requests/user.login.request";
+import {UserUpdateRequest} from "./requests/user-update.request";
 import {ResetPasswordRequest} from "./requests/reset-password.request";
 
 @Controller('/api/users')
@@ -18,6 +19,14 @@ export default class UserController {
     ) {
         return this.userService.createUser(userCreateRequest);
     }
+
+    @Put('/')
+    async update(
+        @Body() userUpdateRequest: UserUpdateRequest
+    ) {
+        return this.userService.updateUser(userUpdateRequest, 38);
+    }
+
 
     @Post('/login')
     async login(
