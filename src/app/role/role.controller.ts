@@ -24,6 +24,7 @@ export default class RoleController {
 
     @Get('/:id/permissions')
     async getRolePermissions(@Param('id') id: number) {
+        console.log(id);
         return this.roleService.getRolePermissions(id);
     }
 }

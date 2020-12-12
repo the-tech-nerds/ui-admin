@@ -1,34 +1,30 @@
 import React, {Component, Fragment} from 'react'
 import Breadcrumb from '../common/breadcrumb';
-import Slider from 'react-slick';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import * as fetch from "isomorphic-fetch";
-import Loader from "../common/loader";
 import Forms from "../form/forms";
 import {AvCheckbox, AvCheckboxGroup, AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
+import * as fetch from "isomorphic-fetch";
+import Loader from "../common/loader";
 
-export default class UserDetails extends Component {
+export default class EditRole extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            user: null,
+            categories: [],
+            permissions: [],
             error: false,
             errorMessage: null,
+            selectedPermissions: [],
+            selectedRole: {},
+            role: '',
         }
     }
 
     componentDidMount() {
-        const url = window.location.href;
-        const roleId = url.substring(url.lastIndexOf('/') + 1);
-
-        if (!roleId) {
-            throw new Error("No user id in url");
-        }
-
+        const url = window.location.href.split('/');
+        const roleId = url[4];
         this.setState({loading: true});
-        fetch(`/api/roles/${roleId}`, {
+        fetch(`/api/permission-categories`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -39,16 +35,60 @@ export default class UserDetails extends Component {
             .then(async res => {
                 this.setState({loading: false});
                 const response = await res.json();
-                console.log(response.data)
                 if (response.code === 200) {
-                    this.setState({
-                        user: response.data,
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            categories: response.data
+                        }
                     });
                 } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                        loading: false,
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            error: true,
+                            errorMessage: response.message,
+                            loading: false,
+                        }
+                    });
+
+                }
+            })
+            .catch(error => {
+                this.setState({
+                    error: true,
+                    errorMessage: error,
+                    loading: false,
+                })
+            });
+        fetch(`/api/roles/${roleId}/permissions`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            cache: 'no-cache',
+            redirect: 'follow',
+        })
+            .then(async res => {
+                this.setState({loading: false});
+                const response = await res.json();
+                if (response.code === 200) {
+                    console.log(response);
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            selectedPermissions: response.data.permissions,
+                            selectedRole:response.data.role
+                        }
+                    });
+                } else {
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            error: true,
+                            errorMessage: response.message,
+                            loading: false,
+                        }
                     });
                 }
             })
@@ -62,24 +102,41 @@ export default class UserDetails extends Component {
     }
 
     render() {
-        const {user, loading} = this.state;
+        const {categories, loading, selectedPermissions, selectedRole} = this.state;
         return (
             <Fragment>
-                <Breadcrumb title="Role Detail" parent="Role"/>
+                <Breadcrumb title="Edit Role" parent="Roles"/>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
                             <div className="card">
                                 {loading && <Loader/>}
                                 <div className="card-header">
-                                    <h5>Role</h5>
+                                    <h5> Edit Role</h5>
                                 </div>
                                 <div className="card-body">
-                                    <div>
+                                    <Forms
+                                        options={{
+                                            method: 'PUT',
+                                            url: '/api/role/1',
+                                            onSuccess: (response) => {
+                                                window.location.href = '/list-roles';
+                                            },
+                                            dataProcessBeforeSubmit: (value, callback) => {
+                                                callback({
+                                                    permissions: Object.keys(value)
+                                                        .filter(pk => pk !== 'name')
+                                                        .reduce((allPermission, permissionKey) => [...allPermission, ...value[permissionKey]], []),
+                                                    name: value.name
+                                                });
+                                            },
+                                        }}
+                                    >
                                         <div className="row small" style={{marginTop: "10px"}}>
                                             <div className="col-md-12">
                                                 <div className="form-group">
-                                                    <label name="name" label="Name" type="text" required
+                                                    <AvField name="name" label="Name" type="text" required
+                                                             value={selectedRole.name}
                                                     />
                                                 </div>
                                             </div>
@@ -101,6 +158,9 @@ export default class UserDetails extends Component {
                                                                                 value={permission.id}
                                                                                 id={"perm_" + permission.id}
                                                                                 key={"perm_" + permission.id}
+                                                                                checked={selectedPermissions.filter((per_id) => {
+                                                                                    return per_id === permission.id
+                                                                                }).length > 0}
                                                                             />
                                                                         ))}
                                                                     </AvCheckboxGroup>
@@ -111,10 +171,10 @@ export default class UserDetails extends Component {
                                                 </div>
                                             </div>
                                             <div className="col-md-12">
-                                                <Button color="primary">Create</Button>
+                                                <Button color="primary">Edit</Button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Forms>
                                 </div>
                             </div>
                         </div>
