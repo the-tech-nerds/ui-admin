@@ -17,17 +17,22 @@ export default class RoleService {
     }
 
     async listRoles() {
-        const { data: roleList } = await this.gatewayService.execute("auth", {
+        console.log('res');
+        // const {data: roleList} = await this.gatewayService.execute("auth", {
+        const res = await this.gatewayService.execute("auth", {
             method: "GET",
             path: '/api/v1/authorization/roles',
+
         });
-        const roles = roleList.map((role: any) => ({
-            id: role.id,
-            'Name': role.name,
-        }));
-        return {
-            code: 200,
-            data: roles,
-        };
+        console.log(res);
+        // const roles = roleList.map((role: any) => ({
+        //     id: role.id,
+        //     'Name': role.name,
+        // }));
+        // return {
+        //     code: 200,
+        //     data: roles,
+        // };
     }
+
 }

@@ -1,6 +1,7 @@
 import {GatewayService} from "@technerds/common-services";
 import {Injectable} from "@nestjs/common";
 import {UserLoginRequest} from "./requests/user.login.request";
+import {ResetPasswordRequest} from "./requests/reset-password.request";
 
 @Injectable()
 export default class UserService {
@@ -13,7 +14,7 @@ export default class UserService {
         return this.gatewayService.execute("auth", {
             method: "POST",
             path: '/api/v1/authentication/register',
-            body: { ...user, type: 2 },
+            body: {...user, type: 2},
         });
     }
 
@@ -25,8 +26,16 @@ export default class UserService {
         });
     }
 
+    resetPassword(request: ResetPasswordRequest) {
+        return this.gatewayService.execute("auth", {
+            method: "POST",
+            path: '/api/v1/password/reset',
+            body: request,
+        });
+    }
+
     async listUsers() {
-        const { data: userList } = await this.gatewayService.execute("auth", {
+        const {data: userList} = await this.gatewayService.execute("auth", {
             method: "GET",
             path: '/api/v1/user/all',
         });
@@ -44,11 +53,11 @@ export default class UserService {
         };
     }
 
-     async listAdmins() {
-        const { data: userList } = await this.gatewayService.execute("auth", {
+    async listAdmins() {
+        const {data: userList} = await this.gatewayService.execute("auth", {
             method: "GET",
             qs: {
-              userType: "2",
+                userType: "2",
             },
             path: '/api/v1/user/all',
         });
@@ -67,7 +76,8 @@ export default class UserService {
     }
 
     async getUser(userId: number) {
-        const { data: user } = await this.gatewayService.execute("auth", {
+        console.log(userId);
+        const {data: user} = await this.gatewayService.execute("auth", {
             method: "GET",
             path: `/api/v1/user/${userId}`,
         });
