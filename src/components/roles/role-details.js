@@ -15,7 +15,7 @@ import user from '../../assets/images/user.png'
 import * as fetch from "isomorphic-fetch";
 import Loader from "../common/loader";
 
-export default class RoleDetails extends Component {
+export default class UserDetails extends Component {
     constructor(props) {
         super(props)
         this.state = {

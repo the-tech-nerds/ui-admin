@@ -52,15 +52,18 @@ export default class UserService {
             },
             path: '/api/v1/user/all',
         });
-        const users = userList.map((user: any) => ({
-            id: user.id,
-            'First Name': user.first_name,
-            'Last Name': user.last_name,
-            'Email': user.email,
-            'Phone': user.phone,
-            'Active': user.is_active ? 'Yes' : 'No'
+         const users = userList.map((user: any) => ({
+             id: user.id,
+             roleIds: user?.roles?.map((role:any) => role.id) || [],
+             'First Name': user.first_name,
+             'Last Name': user.last_name,
+             'Email': user.email,
+             'Phone': user.phone,
+             // @ts-ignore
+             "Roles": user?.roles?.reduce((acc:any, role) => (acc+role.name+', '), '').slice(0,-1) || 'n/a',
+            'Active': user.is_active ? 'Yes' : 'No',
         }));
-        return {
+         return {
             code: 200,
             data: users,
         };
@@ -68,7 +71,7 @@ export default class UserService {
 
     async getUser(userId: number) {
         const { data: user } = await this.gatewayService.execute("auth", {
-            method: "GET",
+            method: "POST",
             path: `/api/v1/user/${userId}`,
         });
         const {
@@ -88,5 +91,13 @@ export default class UserService {
                 phone,
             }
         }
+    }
+
+    async assignRole(userId: number, roles:[]) {
+        return await this.gatewayService.execute("auth", {
+            method: "POST",
+            path: `/api/v1/user/${userId}/assign-roles`,
+            body: roles
+        });
     }
 }
