@@ -23,6 +23,6 @@ async function bootstrap() {
     return JSON.stringify(content);
   });
 
-  await app.listen(8102);
+  await app.listen(3001);
 }
 bootstrap();

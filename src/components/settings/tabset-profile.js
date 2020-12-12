@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Tabs, TabList, TabPanel, Tab } from 'react-tabs';
-import {User,Settings} from 'react-feather'
+import {User, Settings, Key} from 'react-feather'
+import ChangePassword from "./change-password";
 
 export class Tabset_profile extends Component {
     render() {
@@ -10,6 +11,7 @@ export class Tabset_profile extends Component {
                     <TabList className="nav nav-tabs tab-coupon" >
                         <Tab className="nav-link"><User className="mr-2" />Profile</Tab>
                         <Tab className="nav-link"><Settings className="mr-2" />Contact</Tab>
+                        <Tab className="nav-link"><Key className="mr-2" />Reset Password</Tab>
                     </TabList>
 
                     <TabPanel>
@@ -54,7 +56,7 @@ export class Tabset_profile extends Component {
                     <TabPanel>
                         {/* <div className="tab-pane fade"> */}
                             <div className="account-setting">
-                                
+
                                 <h5 className="f-w-600 f-16">Notifications</h5>
                                 <div className="row">
                                     <div className="col">
@@ -118,6 +120,9 @@ export class Tabset_profile extends Component {
                                 <button type="button" className="btn btn-primary">Delete Account</button>
                             </div>
                         {/* </div> */}
+                    </TabPanel>
+                    <TabPanel>
+                      <ChangePassword/>
                     </TabPanel>
                 </Tabs>
             </div>
