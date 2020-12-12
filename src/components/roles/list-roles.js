@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom'
+import React, {Component, Fragment} from 'react';
+import {Link} from 'react-router-dom'
 import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable';
 
@@ -7,7 +7,7 @@ export default class ListRole extends Component {
     render() {
         return (
             <Fragment>
-                <Breadcrumb title="Role List" parent="Users" />
+                <Breadcrumb title="Role List" parent="Users"/>
                 <div className="container-fluid">
                     <div className="card">
                         <div className="card-header">
@@ -26,7 +26,7 @@ export default class ListRole extends Component {
                                     class="-striped -highlight"
                                     extraColumns={[
                                         {
-                                            Header: <b>Action</b>,
+                                            Header: <b>Show</b>,
                                             id: 'view',
                                             accessor: str => "view",
                                             Cell: (row) => (
@@ -34,8 +34,38 @@ export default class ListRole extends Component {
                                                     <span onClick={() => {
                                                         window.location.href = `/roles/${row.original.id}`;
                                                     }}>
-                                                        <i className="fa fa-eye" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
-                                                        ></i>
+                                                        <i className="fa fa-eye" style={{
+                                                            width: 35,
+                                                            fontSize: 20,
+                                                            padding: 11,
+                                                            color: '#e4566e'
+                                                        }}
+                                                        />
+                                                    </span>
+                                                </div>
+                                            ),
+                                            style: {
+                                                textAlign: 'center',
+                                                cursor: 'pointer',
+                                            },
+                                            sortable: false
+                                        },
+                                        {
+                                            Header: <b>Edit</b>,
+                                            id: 'edit',
+                                            accessor: str => "edit",
+                                            Cell: (row) => (
+                                                <div>
+                                                    <span onClick={() => {
+                                                        window.location.href = `/roles/${row.original.id}/edit`;
+                                                    }}>
+                                                        <i className="fa fa-pencil" style={{
+                                                            width: 35,
+                                                            fontSize: 20,
+                                                            padding: 11,
+                                                            color: '#e4566e'
+                                                        }}
+                                                        />
                                                     </span>
                                                 </div>
                                             ),

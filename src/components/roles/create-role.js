@@ -22,9 +22,6 @@ export default class CreateRole extends Component {
     }
 
     componentDidMount() {
-        console.log("in mount create-role");
-        const url = window.location.href;
-
         this.setState({loading: true});
         fetch(`/api/permission-categories`, {
             method: "GET",
@@ -38,8 +35,8 @@ export default class CreateRole extends Component {
                 this.setState({loading: false});
                 const response = await res.json();
                 if (response.code === 200) {
-                    this.setState({
-                        categories: response.data
+                    this.setState((state) => {
+                        return {...state, categories: response.data};
                     });
                 } else {
                     this.setState({
