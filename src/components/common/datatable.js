@@ -90,7 +90,7 @@ export class Datatable extends Component {
     }
 
     render() {
-        const { pageSize, myClass, multiSelectOption, pagination, extraColumns = [] } = this.props;
+        const { pageSize, myClass, multiSelectOption, pagination, extraColumns = [], excludeColumns = [] } = this.props;
         const { myData = [], loading = false, error = null } = this.state
 
         if (loading) {
@@ -106,7 +106,9 @@ export class Datatable extends Component {
         let columns = [];
         if (myData) {
             for (var key in myData[0]) {
-
+                if(excludeColumns.includes(key)){
+                    continue;
+                }
                 let editable = this.renderEditable
                 if (key === "image") {
                     editable = null;
@@ -165,7 +167,6 @@ export class Datatable extends Component {
                     }
                 )
             }
-            console.log(extraColumns);
             if (extraColumns.length > 0) {
                columns = [ ...columns, ...extraColumns ];
             }

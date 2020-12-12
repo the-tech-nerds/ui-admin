@@ -153,6 +153,7 @@ export default class    ListAdmin extends Component {
                                             sortable: false
                                         }
                                     ]}
+                                    excludeColumns={['roleIds']}
                                 />
                             </div>
                         </div>
