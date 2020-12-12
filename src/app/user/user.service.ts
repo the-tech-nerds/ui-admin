@@ -15,7 +15,7 @@ export default class UserService {
         return this.gatewayService.execute("auth", {
             method: "POST",
             path: '/api/v1/authentication/register',
-            body: { ...user, type: 2 },
+            body: {...user, type: 2},
         });
     }
     updateUser(user: any, userId: any) {
@@ -34,6 +34,7 @@ export default class UserService {
             body: request,
         });
     }
+
     resetPassword(request: ResetPasswordRequest) {
         return this.gatewayService.execute("auth", {
             method: "POST",
@@ -41,8 +42,9 @@ export default class UserService {
             body: request,
         });
     }
+
     async listUsers() {
-        const { data: userList } = await this.gatewayService.execute("auth", {
+        const {data: userList} = await this.gatewayService.execute("auth", {
             method: "GET",
             path: '/api/v1/user/all',
         });
@@ -60,21 +62,24 @@ export default class UserService {
         };
     }
 
-     async listAdmins() {
-        const { data: userList } = await this.gatewayService.execute("auth", {
+    async listAdmins() {
+        const {data: userList} = await this.gatewayService.execute("auth", {
             method: "GET",
             qs: {
-              userType: "2",
+                userType: "2",
             },
             path: '/api/v1/user/all',
         });
         const users = userList.map((user: any) => ({
             id: user.id,
+            roleIds: user?.roles?.map((role: any) => role.id) || [],
             'First Name': user.first_name,
             'Last Name': user.last_name,
             'Email': user.email,
             'Phone': user.phone,
-            'Active': user.is_active ? 'Yes' : 'No'
+            // @ts-ignore
+            "Roles": user?.roles?.reduce((acc: any, role) => (acc + role.name + ', '), '').slice(0, -1) || 'n/a',
+            'Active': user.is_active ? 'Yes' : 'No',
         }));
         return {
             code: 200,
@@ -83,7 +88,7 @@ export default class UserService {
     }
 
     async getUser(userId: number) {
-        const { data: user } = await this.gatewayService.execute("auth", {
+        const {data: user} = await this.gatewayService.execute("auth", {
             method: "GET",
             path: `/api/v1/user/${userId}`,
         });
@@ -109,5 +114,13 @@ export default class UserService {
                 gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other'
             }
         }
+    }
+
+    async assignRole(userId: number, roles: []) {
+        return await this.gatewayService.execute("auth", {
+            method: "POST",
+            path: `/api/v1/user/${userId}/assign-roles`,
+            body: roles
+        });
     }
 }

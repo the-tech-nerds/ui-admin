@@ -6,7 +6,6 @@ import {ResetPasswordRequest} from "./requests/reset-password.request";
 
 @Controller('/api/users')
 export default class UserController {
-
     constructor(
         private readonly userService: UserService
     ) {
@@ -52,5 +51,13 @@ export default class UserController {
     @Get('/:id')
     async getUser(@Param('id') id: number) {
         return this.userService.getUser(id);
+    }
+
+    @Post('/:id/assign-roles')
+    async assignRole(
+        @Param('id') id: number,
+        @Body() userAssignRolesRequest: any,
+        ) {
+        return this.userService.assignRole(id, userAssignRolesRequest);
     }
 }
