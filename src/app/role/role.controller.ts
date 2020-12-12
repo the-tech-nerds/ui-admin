@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post} from "@nestjs/common";
+import {Body, Controller, Get, Param, Post} from "@nestjs/common";
 import RoleService from "./role.service";
 
 @Controller('/api/roles')
@@ -20,5 +20,10 @@ export default class RoleController {
     @Get('/')
     async get() {
         return this.roleService.listRoles();
+    }
+
+    @Get('/:id/permissions')
+    async getRolePermissions(@Param('id') id: number) {
+        return this.roleService.getRolePermissions(id);
     }
 }

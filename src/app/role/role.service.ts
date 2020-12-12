@@ -17,22 +17,33 @@ export default class RoleService {
     }
 
     async listRoles() {
-        console.log('res');
-        // const {data: roleList} = await this.gatewayService.execute("auth", {
-        const res = await this.gatewayService.execute("auth", {
+        const {data: roleList} = await this.gatewayService.execute("auth", {
             method: "GET",
             path: '/api/v1/authorization/roles',
 
         });
-        console.log(res);
-        // const roles = roleList.map((role: any) => ({
-        //     id: role.id,
-        //     'Name': role.name,
-        // }));
-        // return {
-        //     code: 200,
-        //     data: roles,
-        // };
+        const roles = roleList.map((role: any) => ({
+            id: role.id,
+            'Name': role.name,
+        }));
+        return {
+            code: 200,
+            data: roles,
+        };
     }
 
+    async getRolePermissions(id: number) {
+        const {data: roleList} = await this.gatewayService.execute("auth", {
+            method: "GET",
+            path: '/api/v1/authorization/roles',
+        });
+        const roles = roleList.map((role: any) => ({
+            id: role.id,
+            'Name': role.name,
+        }));
+        return {
+            code: 200,
+            data: roles,
+        };
+    }
 }

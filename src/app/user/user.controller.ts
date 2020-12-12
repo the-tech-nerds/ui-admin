@@ -43,4 +43,12 @@ export default class UserController {
     async getUser(@Param('id') id: number) {
         return this.userService.getUser(id);
     }
+
+    @Post('/:id/assign-roles')
+    async assignRole(
+        @Param('id') id: number,
+        @Body() userAssignRolesRequest: any,
+        ) {
+        return this.userService.assignRole(id, userAssignRolesRequest);
+    }
 }

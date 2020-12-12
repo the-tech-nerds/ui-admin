@@ -3,10 +3,6 @@ import Breadcrumb from '../common/breadcrumb';
 import Forms from "../form/forms";
 import {AvCheckbox, AvCheckboxGroup, AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
-
-/*import role_data from '../../assets/data/roles';
-import permission_category_data from '../../assets/data/permissionCategory';
-import permission_data from '../../assets/data/permissions';*/
 import * as fetch from "isomorphic-fetch";
 import Loader from "../common/loader";
 
@@ -18,7 +14,7 @@ export default class CreateRole extends Component {
             permissions: [],
             error: false,
             errorMessage: null,
-            selectedPermission: [],
+            selectedPermissions: [],
             role: '',
         }
         this.setRoleTitle = this.setRoleTitle.bind(this);
@@ -76,7 +72,7 @@ export default class CreateRole extends Component {
     }
 
     render() {
-        const {categories, loading, selectedPermission, role} = this.state;
+        const {categories, loading, selectedPermissions, role} = this.state;
         return (
             <Fragment>
                 <Breadcrumb title="Create Role" parent="Roles"/>
@@ -94,7 +90,7 @@ export default class CreateRole extends Component {
                                             method: 'POST',
                                             url: '/api/roles',
                                             onSuccess: (response) => {
-                                                window.location.href = '/list-role';
+                                                window.location.href = '/list-roles';
                                             },
                                             dataProcessBeforeSubmit: (value, callback) => {
                                                 callback({

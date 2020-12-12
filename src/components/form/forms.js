@@ -19,7 +19,6 @@ export class Forms extends Component {
 
 
     handleValidSubmit(event, values) {
-        console.log(values);
         event.preventDefault();
         const {
             options: {
@@ -35,6 +34,7 @@ export class Forms extends Component {
         });
         dataProcessBeforeSubmit(values, (data) => {
             values = data;
+            console.log(data);
             fetch(url, {
                 method: method,
                 body: JSON.stringify(values),

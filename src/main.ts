@@ -22,6 +22,11 @@ async function bootstrap() {
   hbs.registerHelper('json', function (content: string) {
     return JSON.stringify(content);
   });
+<<<<<<< HEAD
   await app.listen(3001);
+=======
+
+  await app.listen(8102);
+>>>>>>> 0ad3c0e58a3488217b405e69f1f3598094a2beef
 }
 bootstrap();
