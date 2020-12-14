@@ -1,34 +1,27 @@
 import React, {Component, Fragment} from 'react'
 import Breadcrumb from '../common/breadcrumb';
-import Slider from 'react-slick';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import * as fetch from "isomorphic-fetch";
-import Loader from "../common/loader";
 import Forms from "../form/forms";
 import {AvCheckbox, AvCheckboxGroup, AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
+import * as fetch from "isomorphic-fetch";
+import Loader from "../common/loader";
 
-export default class UserDetails extends Component {
+export default class CreateRole extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            user: null,
+            categories: [],
+            permissions: [],
             error: false,
             errorMessage: null,
+            selectedPermissions: [],
+            role: '',
         }
     }
 
     componentDidMount() {
-        const url = window.location.href;
-        const roleId = url.substring(url.lastIndexOf('/') + 1);
-
-        if (!roleId) {
-            throw new Error("No user id in url");
-        }
-
         this.setState({loading: true});
-        fetch(`/api/roles/${roleId}`, {
+        fetch(`/api/permission-categories`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -39,10 +32,9 @@ export default class UserDetails extends Component {
             .then(async res => {
                 this.setState({loading: false});
                 const response = await res.json();
-                console.log(response.data)
                 if (response.code === 200) {
-                    this.setState({
-                        user: response.data,
+                    this.setState((state) => {
+                        return {...state, categories: response.data};
                     });
                 } else {
                     this.setState({
@@ -62,29 +54,29 @@ export default class UserDetails extends Component {
     }
 
     render() {
-        const {user, loading} = this.state;
+        const {categories, loading} = this.state;
         return (
             <Fragment>
-                <Breadcrumb title="Role Detail" parent="Role"/>
+                <Breadcrumb title="Create Role" parent="Roles"/>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
                             <div className="card">
                                 {loading && <Loader/>}
                                 <div className="card-header">
-                                    <h5>Role</h5>
+                                    <h5> Details Role</h5>
                                 </div>
                                 <div className="card-body">
                                     <div>
                                         <div className="row small" style={{marginTop: "10px"}}>
                                             <div className="col-md-12">
                                                 <div className="form-group">
-                                                    <label name="name" label="Name" type="text" required
+                                                    <AvField name="name" label="Name" type="text" required
                                                     />
                                                 </div>
                                             </div>
                                             <div className="col-md-12">
-                                                <div className="row">
+                                                 <div className="row">
                                                     {categories.map((category, i) => (
                                                         <div className="col-md-3" key={"cat_" + category.id}>
                                                             <div className="card">

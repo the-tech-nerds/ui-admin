@@ -74,6 +74,30 @@ export default class ListRole extends Component {
                                                 cursor: 'pointer',
                                             },
                                             sortable: false
+                                        },{
+                                            Header: <b>Details</b>,
+                                            id: 'details',
+                                            accessor: str => "details",
+                                            Cell: (row) => (
+                                                <div>
+                                                    <span onClick={() => {
+                                                        window.location.href = `/roles/${row.original.id}/details`;
+                                                    }}>
+                                                        <i className="fa fa-street-view" style={{
+                                                            width: 35,
+                                                            fontSize: 20,
+                                                            padding: 11,
+                                                            color: '#e4566e'
+                                                        }}
+                                                        />
+                                                    </span>
+                                                </div>
+                                            ),
+                                            style: {
+                                                textAlign: 'center',
+                                                cursor: 'pointer',
+                                            },
+                                            sortable: false
                                         }
                                     ]}
                                 />
