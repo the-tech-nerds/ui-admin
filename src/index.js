@@ -51,6 +51,7 @@ import ListAdmin from "./components/users/list-admin";
 import ListRole from "./components/roles/list-roles";
 import CreateRole from "./components/roles/create-role";
 import EditRole from "./components/roles/edit-role";
+import RoleDetails from "./components/roles/role-details";
 
 
 class Root extends Component {
@@ -109,6 +110,7 @@ class Root extends Component {
                             <Route path={`${process.env.PUBLIC_URL}/list-roles`} component={ListRole} exact={true}/>
                             <Route path={`${process.env.PUBLIC_URL}/create-role`} component={CreateRole} exact={true}/>
                             <Route path={`${process.env.PUBLIC_URL}/roles/:id/edit`} component={EditRole} exact={true}/>
+                            <Route path={`${process.env.PUBLIC_URL}/roles/:id/details`} component={RoleDetails} exact={true}/>
 
                             <Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors}/>
                             <Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`}
