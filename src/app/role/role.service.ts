@@ -58,8 +58,20 @@ export default class RoleService {
     async getRoleDetailsById(id: number, roleCreateRequest: any) {
         const data = await this.gatewayService.execute("auth", {
             method: "PUT",
-            path: `/api/v1/authorization//role/${id}/details`,
+            path: `/api/v1/authorization/role/${id}/details`,
             body: {...roleCreateRequest}
+        });
+        return {
+            code: 200,
+            data,
+        };
+    }
+
+    async getPermissionsFromRole(roleId: number) {
+        console.log(roleId);
+        const data = await this.gatewayService.execute("auth", {
+            method: "GET",
+            path: `/api/v1/authorization/permission/categories/role/${roleId}`,
         });
         return {
             code: 200,

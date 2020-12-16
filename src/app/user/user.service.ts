@@ -78,7 +78,7 @@ export default class UserService {
             'Email': user.email,
             'Phone': user.phone,
             // @ts-ignore
-            "Roles": user?.roles?.reduce((acc: any, role) => (acc + role.name + ', '), '').slice(0, -1) || 'n/a',
+            "Roles": user?.roles?.reduce((acc: any, role) => (acc + role.name + ', '), '').slice(0, -2) || 'n/a',
             'Active': user.is_active ? 'Yes' : 'No',
         }));
         return {

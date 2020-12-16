@@ -67,6 +67,7 @@
   }
 }
 .styles_modal__gNwvD {
+  min-width: 500px;
   padding: 0;
   button {
     svg {
@@ -3417,7 +3418,7 @@ $i: 1;
         width: 460px;
       }
     }
-    
+
   }
   .product-adding {
     .add-product-form {
@@ -3438,7 +3439,7 @@ $i: 1;
       height: 312px !important;
     }
   }
-  // forms 
+  // forms
   .needs-validation {
     h4 {
       font-size: 16px;

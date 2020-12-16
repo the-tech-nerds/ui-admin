@@ -37,4 +37,9 @@ export default class RoleController {
     async getRoleDetailsById(@Body() roleCreateRequest: any, @Param('id') id: number) {
         return this.roleService.getRoleDetailsById(id, roleCreateRequest);
     }
+
+    @Get('/:id/details')
+    async getPermissionsFromRole(@Param('id') roleId: number) {
+        return this.roleService.getPermissionsFromRole(roleId);
+    }
 }

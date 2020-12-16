@@ -166,7 +166,6 @@ export default class EditRole extends Component {
                                                                     >
                                                                         {category?.permissions?.map((permission, j) => (
                                                                             <AvCheckbox
-                                                                                disabled={true}
                                                                                 label={permission.name}
                                                                                 value={permission.id}
                                                                                 id={"perm_" + permission.id}
