@@ -1,17 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import Breadcrumb from '../common/breadcrumb';
-import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Modal from 'react-responsive-modal';
 
 
 // image import
-import two from '../../assets/images/pro3/2.jpg';
-import twentySeven from '../../assets/images/pro3/27.jpg';
 import one from '../../assets/images/pro3/1.jpg';
-import size_chart from '../../assets/images/size-chart.jpg'
-import user from '../../assets/images/user.png'
 import * as fetch from "isomorphic-fetch";
 import Loader from "../common/loader";
 
@@ -87,8 +81,20 @@ export default class UserDetails extends Component {
                                     <hr />
                                     <h6 className="product-title">Email</h6>
                                     <p>{user.email}</p>
-                                     <h6 className="product-title">Phone</h6>
+                                    <h6 className="product-title">Phone</h6>
                                     <p>{user.phone}</p>
+                                </div>
+
+                                <br/>
+                                <h3>Assigned Roles</h3>
+                                <hr/>
+                                <div>
+                                    {user.roles.map(role =>
+                                            <span onClick={() => {
+                                                window.location.href = `/roles/${role.id}/details`;
+                                            }}
+                                                  title="Show role details" className="btn btn-primary mr-2">{role.name}</span>
+                                    )}
                                 </div>
                             </div>
                         </div>}

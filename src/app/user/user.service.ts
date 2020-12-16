@@ -99,7 +99,8 @@ export default class UserService {
             email,
             phone,
             birthday,
-            gender_type
+            gender_type,
+            roles
         } = user;
         return {
             code: 200,
@@ -111,7 +112,8 @@ export default class UserService {
                 phone,
                 birthday : birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
                 gender_type,
-                gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other'
+                gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other',
+                roles
             }
         }
     }
