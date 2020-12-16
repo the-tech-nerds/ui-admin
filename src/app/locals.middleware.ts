@@ -41,6 +41,16 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
         .filter((fileName: any) => !fileName.includes(".map"));
 
     const { url } = req;
+
+    if (req.signedCookies && req.signedCookies.r_code) {
+        req.headers.access_token = req.signedCookies.r_code;
+
+        if (url === '/auth/login') {
+            res.redirect('/');
+            return;
+        }
+    }
+
     if (url.includes("/api")) {
         next();
     } else {

@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import './index.scss';
 import App from './components/app';
-import {ScrollContext} from 'react-router-scroll-4';
-
+// import {ScrollContext} from 'react-router-scroll-4';
 // Components
 import Dashboard from './components/dashboard';
 
@@ -57,15 +56,12 @@ class Root extends Component {
     render() {
         return (
             <BrowserRouter basename={'/'}>
-                <ScrollContext>
+                <div>
                     <Switch>
-                        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login}/>
                         <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} component={Login}/>
-
+                        <Route exact path={`${process.env.PUBLIC_URL}/dashboard`} component={Dashboard}/>
                         <App>
-                            <Route path={`${process.env.PUBLIC_URL}/dashboard`} component={Dashboard}/>
-
-                            <Route path={`${process.env.PUBLIC_URL}/products/physical/category`} component={Category}/>
+                            <Route exact path={`${process.env.PUBLIC_URL}/products/physical/category`} component={Category}/>
                             <Route path={`${process.env.PUBLIC_URL}/products/physical/sub-category`}
                                    component={Sub_category}/>
                             <Route path={`${process.env.PUBLIC_URL}/products/physical/product-list`}
@@ -100,15 +96,14 @@ class Root extends Component {
                             <Route path={`${process.env.PUBLIC_URL}/menus/list-menu`} component={List_menu}/>
                             <Route path={`${process.env.PUBLIC_URL}/menus/create-menu`} component={Create_menu}/>
 
-                            <Route path={`${process.env.PUBLIC_URL}/list-users`} component={List_user} exact={true}/>
-                            <Route path={`${process.env.PUBLIC_URL}/list-admins`} component={ListAdmin} exact={true}/>
-                            <Route path={`${process.env.PUBLIC_URL}/create-user`} component={Create_user}
-                                   exact={true}/>
+                            <Route exact path={`${process.env.PUBLIC_URL}/list-users`} component={List_user}/>
+                            <Route exact path={`${process.env.PUBLIC_URL}/list-admins`} component={ListAdmin}/>
+                            <Route exact path={`${process.env.PUBLIC_URL}/create-user`} component={Create_user}/>
                             <Route path={`${process.env.PUBLIC_URL}/users/:id`} component={UserDetails}/>
 
-                            <Route path={`${process.env.PUBLIC_URL}/list-roles`} component={ListRole} exact={true}/>
-                            <Route path={`${process.env.PUBLIC_URL}/create-role`} component={CreateRole} exact={true}/>
-                            <Route path={`${process.env.PUBLIC_URL}/roles/:id/edit`} component={EditRole} exact={true}/>
+                            <Route exact path={`${process.env.PUBLIC_URL}/list-roles`} component={ListRole}/>
+                            <Route path={`${process.env.PUBLIC_URL}/create-role`} component={CreateRole} />
+                            <Route path={`${process.env.PUBLIC_URL}/roles/:id/edit`} component={EditRole} />
 
                             <Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors}/>
                             <Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`}
@@ -127,9 +122,14 @@ class Root extends Component {
 
                             <Route path={`${process.env.PUBLIC_URL}/data-table`} component={Datatable}/>
 
+                            <Route exact path={`${process.env.PUBLIC_URL}/`} component={Dashboard}/>
+
+
+
+                            {/*<Redirect to="/" />*/}
                         </App>
                     </Switch>
-                </ScrollContext>
+                </div>
             </BrowserRouter>
         )
     }

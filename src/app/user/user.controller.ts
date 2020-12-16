@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Put, Query} from "@nestjs/common";
+import {Body, Controller, Get, Res, Param, Post, Put, Query} from "@nestjs/common";
 import UserService from "./user.service";
 import {UserLoginRequest} from "./requests/user.login.request";
 import {UserUpdateRequest} from "./requests/user-update.request";
@@ -26,13 +26,32 @@ export default class UserController {
         return this.userService.updateUser(userUpdateRequest, 38);
     }
 
-
     @Post('/login')
     async login(
+        @Res() res: any,
         @Body() userLoginRequest: UserLoginRequest
     ) {
-        return this.userService.loginUser(userLoginRequest);
+        const data = await this.userService.loginUser(userLoginRequest);
+        const { access_token: token = null } = data;
+        if (token) {
+            const cookieParams = {
+                httpOnly: true,
+                signed: true,
+                maxAge: 60 * 100 * 100 * 100,
+            };
+            res.cookie('r_code', token, cookieParams);
+        }
+        res.send(data);
     }
+
+
+    @Get('/logout')
+    logout(@Res() res: any) {
+        this.userService.logOutUser();
+        res.clearCookie('r_code');
+        return res.status(200).send({ code: 200 });
+    }
+
     @Post('/reset-password')
     async resetPassword(
         @Body() resetPasswordRequest: ResetPasswordRequest
@@ -57,7 +76,7 @@ export default class UserController {
     async assignRole(
         @Param('id') id: number,
         @Body() userAssignRolesRequest: any,
-        ) {
+    ) {
         return this.userService.assignRole(id, userAssignRolesRequest);
     }
 }

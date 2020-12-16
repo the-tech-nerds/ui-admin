@@ -1,8 +1,22 @@
 import React, { Component,Fragment } from 'react'
 import {Link} from 'react-router-dom'
 //images import
-import man from '../../../assets/images/dashboard/man.png'
+import man from '../../../assets/images/dashboard/man.png';
+import *  as fetch from 'isomorphic-fetch';
 export class User_menu extends Component {
+    logOut() {
+          fetch(`/api/users/logout`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            cache: 'no-cache',
+            redirect: 'follow',
+        }).then(res => {
+            window.location.href = '/auth/login';
+          })
+    }
+
     render() {
         return (
             <Fragment>
@@ -16,7 +30,7 @@ export class User_menu extends Component {
                             <li><a href="javascript:void(0)"><i data-feather="mail"></i>Inbox</a></li>
                             <li><a href="javascript:void(0)"><i data-feather="lock"></i>Lock Screen</a></li>
                             <li><a href="javascript:void(0)"><i data-feather="settings"></i>Settings</a></li>
-                            <li><Link to={`${process.env.PUBLIC_URL}/`}><i data-feather="log-out"></i>Logout</Link></li>
+                            <li><Link onClick={this.logOut}><i data-feather="log-out"></i>Logout</Link></li>
                         </ul>
                     </li>
             </Fragment>
