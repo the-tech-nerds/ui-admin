@@ -26,15 +26,27 @@ export default class ListRole extends Component {
                                     class="-striped -highlight"
                                     extraColumns={[
                                         {
-                                            Header: <b>Show</b>,
+                                            Header: <b>Action</b>,
                                             id: 'view',
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
+
                                                     <span onClick={() => {
-                                                        window.location.href = `/roles/${row.original.id}`;
-                                                    }}>
+                                                        window.location.href = `/roles/${row.original.id}/details`;
+                                                    }} title="Show role details">
                                                         <i className="fa fa-eye" style={{
+                                                            width: 35,
+                                                            fontSize: 20,
+                                                            padding: 11,
+                                                            color: '#e4566e'
+                                                        }}
+                                                        />
+                                                    </span>
+                                                    <span onClick={() => {
+                                                        window.location.href = `/roles/${row.original.id}/edit`;
+                                                    }} title="Edit role">
+                                                        <i className="fa fa-pencil" style={{
                                                             width: 35,
                                                             fontSize: 20,
                                                             padding: 11,
@@ -50,7 +62,7 @@ export default class ListRole extends Component {
                                             },
                                             sortable: false
                                         },
-                                        {
+                                        /*{
                                             Header: <b>Edit</b>,
                                             id: 'edit',
                                             accessor: str => "edit",
@@ -74,7 +86,7 @@ export default class ListRole extends Component {
                                                 cursor: 'pointer',
                                             },
                                             sortable: false
-                                        }
+                                        }*/
                                     ]}
                                 />
                             </div>

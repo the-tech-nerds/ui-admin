@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../common/breadcrumb';
-import Datatable from '../common/datatable'
+import Datatable from '../common/datatable';
 import Modal from 'react-responsive-modal';
 import Forms from "../form/forms";
 import {AvField} from "availity-reactstrap-validation";
@@ -13,6 +13,8 @@ export default class    ListAdmin extends Component {
         super(props);
         this.state = {
             roleList: [],
+            userId:'',
+            userRoles:[],
             open: false,
             error: false,
             errorMessage: null,
@@ -60,8 +62,7 @@ export default class    ListAdmin extends Component {
         this.setState({ open: false });
     };
     render() {
-        const { open, roleList } = this.state;
-        let userRoles = [];
+        let { open, roleList, userRoles, userId } = this.state;
         return (
             <Fragment>
                 <Breadcrumb title="Admin List" parent="Users" />
@@ -75,6 +76,34 @@ export default class    ListAdmin extends Component {
                                 <Link to="/create-user" className="btn btn-secondary">Create Admin</Link>
                             </div>
                             <div className="clearfix"></div>
+                            <Modal open={open} onClose={this.onCloseModal} center>
+                                <div className="modal-header">
+                                    <h5 className="modal-title f-w-600" id="exampleModalLabel2">Assign Role to User</h5>
+                                </div>
+                                <div className="modal-body">
+                                    <Forms
+                                        options={{
+                                            method: 'POST',
+                                            url: `/api/users/${userId}/assign-roles`,
+                                            onSuccess: (response) => {
+                                                window.location.href = '/list-admins';
+                                            },
+                                        }}
+                                    >
+                                        <AvField type="select" name="roles" id={"roles_"+userId} value={userRoles} label="Roles" helpMessage="Choose a Role to assign!" multiple>
+                                            {roleList.map(role => (
+                                                <option value={role.id}>{ role.Name }</option>
+                                            ))}
+                                        </AvField>
+
+                                        <Button className="btn btn-sm btn-secondary">Assign</Button>
+                                    </Forms>
+                                </div>
+                                <div className="modal-footer">
+                                    {/*<button type="button" className="btn btn-primary" onClick={() => this.onCloseModal('VaryingMdo')}>Save</button>*/}
+                                    <button type="button" className="btn btn-sm btn-primary" onClick={() => this.onCloseModal('VaryingMdo')}>Close</button>
+                                </div>
+                            </Modal>
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
                                 <Datatable
                                     url="/api/users?type=admin"
@@ -90,8 +119,18 @@ export default class    ListAdmin extends Component {
                                                 <div>
                                                     <span onClick={() => {
                                                         window.location.href = `/users/${row.original.id}`;
-                                                    }}>
+                                                    }} title="Show user details">
                                                         <i className="fa fa-eye" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
+                                                        ></i>
+                                                    </span>
+                                                    <span onClick={() => {
+                                                        this.setState({
+                                                            userRoles: row.original.roleIds,
+                                                            userId: row.original.id
+                                                        })
+                                                        this.onOpenModal();
+                                                    }} title="Assign role to user">
+                                                        <i className="fa fa-lock" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
                                                         ></i>
                                                     </span>
                                                 </div>
@@ -102,56 +141,6 @@ export default class    ListAdmin extends Component {
                                             },
                                             sortable: false
                                         },
-                                        {
-                                            Header: <b>Action</b>,
-                                            id: 'assign',
-                                            accessor: str => "assign",
-                                            Cell: (row) => (
-                                                <div>
-                                                    <span onClick={() => {
-                                                        userRoles = row.original.Roles.split(',');
-                                                        this.onOpenModal();
-                                                    }}>
-                                                        <i className="fa fa-lock" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
-                                                        ></i>
-                                                    </span>
-
-                                                    <Modal open={open} onClose={this.onCloseModal} >
-                                                        <div className="modal-header">
-                                                            <h5 className="modal-title f-w-600" id="exampleModalLabel2">Assign Role to User</h5>
-                                                        </div>
-                                                        <div className="modal-body modal-lg">
-                                                            <Forms
-                                                                options={{
-                                                                    method: 'POST',
-                                                                    url: `/api/users/${row.original.id}/assign-roles`,
-                                                                    onSuccess: (response) => {
-                                                                        window.location.href = '/list-admins';
-                                                                    },
-                                                                }}
-                                                            >
-                                                                <AvField type="select" name="roles" value={row.original.roleIds} label="Roles" helpMessage="Choose a Role to assign!" multiple>
-                                                                    {roleList.map(role => (
-                                                                        <option value={role.id}>{ role.Name }</option>
-                                                                    ))}
-                                                                </AvField>
-
-                                                                <Button color="primary">Assign</Button>
-                                                            </Forms>
-                                                        </div>
-                                                        <div className="modal-footer">
-                                                            {/*<button type="button" className="btn btn-primary" onClick={() => this.onCloseModal('VaryingMdo')}>Save</button>*/}
-                                                            <button type="button" className="btn btn-secondary" onClick={() => this.onCloseModal('VaryingMdo')}>Close</button>
-                                                        </div>
-                                                    </Modal>
-                                                </div>
-                                            ),
-                                            style: {
-                                                textAlign: 'center',
-                                                cursor: 'pointer',
-                                            },
-                                            sortable: false
-                                        }
                                     ]}
                                     excludeColumns={['roleIds']}
                                 />
