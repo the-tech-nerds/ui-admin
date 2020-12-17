@@ -34,7 +34,6 @@ export class Forms extends Component {
         });
         dataProcessBeforeSubmit(values, (data) => {
             values = data;
-            console.log(data);
             fetch(url, {
                 method: method,
                 body: JSON.stringify(values),
@@ -47,6 +46,7 @@ export class Forms extends Component {
             }).then(async res => {
                 this.setState({loading: false});
                 const response = await res.json();
+                console.log(response);
                 if (response.code === 200 || response.code === 201) {
                     onSuccess(response);
                 } else {
@@ -82,7 +82,7 @@ export class Forms extends Component {
                 onInvalidSubmit={this.handleInvalidSubmit}
                 className={className}
             >
-                {error && <label className="text-danger">{matches[1]}</label>}
+                {error && <label className="text-danger">{matches ? matches[1] : ''}</label>}
                 {title && <h4>{title}</h4>}
                 {children}
             </AvForm>

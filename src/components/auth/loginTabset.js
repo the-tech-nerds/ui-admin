@@ -46,8 +46,7 @@ export class LoginTabset extends Component {
                                     method: 'POST',
                                     url: '/api/users/login',
                                     onSuccess: (response) => {
-                                        console.log("in user login");
-                                        window.location.href ='/users/list-user';
+                                        window.location.href ='/';
                                     }
                                 }}
                             >

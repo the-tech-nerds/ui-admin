@@ -32,7 +32,7 @@ export class App extends Component {
                         <div className="page-body">
                             {this.props.children}
                         </div>
-                            <Footer />
+                        <Footer />
                     </div>
                 </div>
                 <div className="btn-light custom-theme" onClick={ () => this.ChangeRtl(this.state.divName)}>{this.state.divName}</div>
