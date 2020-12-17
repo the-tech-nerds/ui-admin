@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import LoginTabset from './loginTabset';
 import { Tabs, TabList, TabPanel, Tab } from 'react-tabs';
 import { User } from 'react-feather';
-import { ArrowLeft, Sliders } from 'react-feather';
-import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'react-feather';
 import Slider from 'react-slick';
 import stats from '../../assets/images/dashboard/stats.png';
 import "slick-carousel/slick/slick.css";
@@ -69,8 +67,7 @@ export class Login extends Component {
                                                             method: 'POST',
                                                             url: '/api/users/login',
                                                             onSuccess: (response) => {
-                                                                console.log("in user login");
-                                                                window.location.href ='/list-users';
+                                                                window.location.href ='/';
                                                             }
                                                         }}
                                                     >

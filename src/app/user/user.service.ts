@@ -125,4 +125,11 @@ export default class UserService {
             body: roles
         });
     }
+
+    logOutUser() {
+        this.gatewayService.execute("auth", {
+            method: "GET",
+            path: '/api/v1/authentication/logout',
+        }).catch(e => {});
+    }
 }

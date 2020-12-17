@@ -7,4 +7,6 @@ export default () => ({
   redis_global_port: process.env.REDIS_GLOBAL_PORT,
   api_rate_limit_time: process.env.API_RATE_LIMIT_TIME,
   api_rate_limit_max: process.env.API_RATE_LIMIT_MAX,
+  cookie_secret: process.env.COOKIE_SECRET,
+  cookie_max_age: process.env.COOKIE_MAX_AGE,
 });
