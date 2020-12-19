@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import {CacheModule, GatewayModule} from "@technerds/common-services";
 import RoleController from "./role.controller";
 import RoleService from "./role.service";
+import {ApiResponseService} from "../common/response/api-response.service";
 
 @Module({
   imports: [
@@ -9,6 +10,6 @@ import RoleService from "./role.service";
     GatewayModule,
   ],
   controllers: [RoleController],
-  providers: [RoleService]
+  providers: [RoleService, ApiResponseService]
 })
 export class RoleModule {}

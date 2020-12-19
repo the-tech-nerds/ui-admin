@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import configuration from "./config/configuration";
 import {RoleModule} from "./role/role.module";
 import {PermissionCategoryModule} from "./permissionCategory/permissionCategory.module";
+import {ApiResponseService} from "./common/response/api-response.service";
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import {PermissionCategoryModule} from "./permissionCategory/permissionCategory.
       isGlobal: true,
       load: [configuration,commonConfig],
     }),
-    UserModule, RoleModule, PermissionCategoryModule
+    UserModule, RoleModule, PermissionCategoryModule, ApiResponseService
   ],
   controllers: [AppController],
   providers: [AppService]

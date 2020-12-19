@@ -1,10 +1,12 @@
 import {GatewayService} from "@technerds/common-services";
 import {Injectable} from "@nestjs/common";
+import {ApiResponseService} from "../common/response/api-response.service";
 
 @Injectable()
 export default class RoleService {
     constructor(
-        private readonly gatewayService: GatewayService
+        private readonly gatewayService: GatewayService,
+        private readonly responseService: ApiResponseService
     ) {
     }
 
@@ -26,10 +28,8 @@ export default class RoleService {
             id: role.id,
             'Name': role.name,
         }));
-        return {
-            code: 200,
-            data: roles,
-        };
+
+        return this.responseService.response(roles);
     }
 
     async getRolePermissions(id: number) {
@@ -37,10 +37,8 @@ export default class RoleService {
             method: "GET",
             path: `/api/v1/authorization/role/${id}/permissions`,
         });
-        return {
-            code: 200,
-            data: permission,
-        };
+
+        return this.responseService.response(permission);
     }
 
     async updateRolePermissions(id: number, roleCreateRequest: any) {
@@ -49,10 +47,8 @@ export default class RoleService {
             path: `/api/v1/authorization/role/${id}`,
             body: {...roleCreateRequest}
         });
-        return {
-            code: 200,
-            data,
-        };
+
+        return this.responseService.response(data);
     }
 
     async getRoleDetailsById(id: number, roleCreateRequest: any) {
@@ -61,10 +57,8 @@ export default class RoleService {
             path: `/api/v1/authorization/role/${id}/details`,
             body: {...roleCreateRequest}
         });
-        return {
-            code: 200,
-            data,
-        };
+
+        return this.responseService.response(data);
     }
 
     async getPermissionsFromRole(roleId: number) {
@@ -73,9 +67,7 @@ export default class RoleService {
             method: "GET",
             path: `/api/v1/authorization/permission/categories/role/${roleId}`,
         });
-        return {
-            code: 200,
-            data,
-        };
+
+        return this.responseService.response(data);
     }
 }
