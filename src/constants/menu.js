@@ -18,6 +18,26 @@ export const MENUITEMS = [
         path: '/dashboard', title: 'Dashboard', icon: Home, type: 'link', badgeType: 'primary', active: false
     },
     {
+        title: 'Users', icon: UserPlus, type: 'sub', active: false, children: [
+            { path: '/list-users', title: 'User List', type: 'link' },
+            { path: '/list-admins', title: 'Admin List', type: 'link' },
+            { path: '/create-user', title: 'Add Admin', type: 'link' },
+        ]
+    },
+    {
+        title: 'Roles', icon: CheckCircle, type: 'sub', active: false, children: [
+            { path: '/list-roles', title: 'Role List', type: 'link' },
+            { path: '/create-role', title: 'Add Role', type: 'link' },
+        ]
+    },
+
+    /*{
+        title: 'Menus', icon: AlignLeft, type: 'sub', active: false, children: [
+            { path: '/menus/list-menu', title: 'List Menu', type: 'link' },
+            { path: '/menus/create-menu', title: 'Create Menu', type: 'link' },
+        ]
+    },
+    {
         title: 'Products', icon: Box, type: 'sub', active: false, children: [
             {
                 title: 'Physical', type: 'sub', active: false, children: [
@@ -60,25 +80,6 @@ export const MENUITEMS = [
         title: 'Media', path: '/media', icon: Camera, type: 'link', active: false
     },
     {
-        title: 'Menus', icon: AlignLeft, type: 'sub', active: false, children: [
-            { path: '/menus/list-menu', title: 'List Menu', type: 'link' },
-            { path: '/menus/create-menu', title: 'Create Menu', type: 'link' },
-        ]
-    },
-    {
-        title: 'Users', icon: UserPlus, type: 'sub', active: false, children: [
-            { path: '/list-users', title: 'User List', type: 'link' },
-            { path: '/list-admins', title: 'Admin List', type: 'link' },
-            { path: '/create-user', title: 'Add Admin', type: 'link' },
-        ]
-    },
-    {
-        title: 'Roles', icon: CheckCircle, type: 'sub', active: false, children: [
-            { path: '/list-roles', title: 'Role List', type: 'link' },
-            { path: '/create-role', title: 'Add Role', type: 'link' },
-        ]
-    },
-    {
         title: 'Vendors', icon: Users, type: 'sub', active: false, children: [
             { path: '/vendors/list_vendors', title: 'Vendor List', type: 'link' },
             { path: '/vendors/create-vendors', title: 'Create Vendor', type: 'link' },
@@ -104,5 +105,5 @@ export const MENUITEMS = [
     },
     {
         title: 'Login',path:'/auth/login', icon: LogIn, type: 'link', active: false
-    }
+    }*/
 ]

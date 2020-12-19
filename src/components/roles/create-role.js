@@ -65,7 +65,6 @@ export default class CreateRole extends Component {
     }
 
     checkPermission(category_id, permission_id) {
-        console.log(category_id, permission_id);
     }
 
     render() {

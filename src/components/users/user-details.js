@@ -39,7 +39,6 @@ export default class UserDetails extends Component {
             .then(async res => {
                 this.setState({ loading: false });
                 const response = await res.json();
-                console.log(response.data)
                 if (response.code === 200) {
                     this.setState({
                         user: response.data,
