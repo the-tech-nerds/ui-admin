@@ -1,10 +1,12 @@
 import {GatewayService} from "@technerds/common-services";
 import {Injectable} from "@nestjs/common";
+import {ApiResponseService} from "../common/response/api-response.service";
 
 @Injectable()
 export default class PermissionCategoryService {
     constructor(
         private readonly gatewayService: GatewayService,
+        private readonly responseService: ApiResponseService,
     ) {
     }
 
@@ -21,9 +23,7 @@ export default class PermissionCategoryService {
             method: "GET",
             path: '/api/v1/authorization/permission/categories',
         });
-        return {
-            code: 200,
-            data: categoryList,
-        };
+
+        return this.responseService.response(categoryList);
     }
 }

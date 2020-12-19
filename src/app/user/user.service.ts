@@ -3,11 +3,13 @@ import {Injectable} from "@nestjs/common";
 import {UserLoginRequest} from "./requests/user.login.request";
 import {ResetPasswordRequest} from "./requests/reset-password.request";
 import * as moment  from "moment";
+import {ApiResponseService} from "../common/response/api-response.service";
 
 @Injectable()
 export default class UserService {
     constructor(
-        private readonly gatewayService: GatewayService
+        private readonly gatewayService: GatewayService,
+        private readonly responseService: ApiResponseService
     ) {
     }
 
@@ -56,10 +58,8 @@ export default class UserService {
             'Phone': user.phone,
             'Active': user.is_active ? 'Yes' : 'No'
         }));
-        return {
-            code: 200,
-            data: users,
-        };
+
+        return this.responseService.response(users);
     }
 
     async listAdmins() {
@@ -81,10 +81,8 @@ export default class UserService {
             "Roles": user?.roles?.reduce((acc: any, role) => (acc + role.name + ', '), '').slice(0, -2) || 'n/a',
             'Active': user.is_active ? 'Yes' : 'No',
         }));
-        return {
-            code: 200,
-            data: users,
-        };
+
+        return this.responseService.response(users);
     }
 
     async getUser(userId: number) {
@@ -102,20 +100,18 @@ export default class UserService {
             gender_type,
             roles
         } = user;
-        return {
-            code: 200,
-            data: {
-                id,
-                first_name,
-                last_name,
-                email,
-                phone,
-                birthday : birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
-                gender_type,
-                gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other',
-                roles
-            }
-        }
+
+        return this.responseService.response({
+            id,
+            first_name,
+            last_name,
+            email,
+            phone,
+            birthday : birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
+            gender_type,
+            gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other',
+            roles
+        });
     }
 
     async assignRole(userId: number, roles: []) {
