@@ -32,7 +32,6 @@ export default class    ListAdmin extends Component {
         })
             .then(async res => {
                 const response = await res.json();
-                console.log(response.data)
                 if (response.code === 200) {
                     this.setState({
                         roleList: response.data,

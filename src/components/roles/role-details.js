@@ -33,7 +33,6 @@ export default class EditRole extends Component {
                 this.setState({loading: false});
                 const response = await res.json();
                 if (response.code === 200) {
-                    console.log(response);
                     this.setState({
                         roleDetails: response.data.data
                     });
