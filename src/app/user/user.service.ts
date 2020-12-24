@@ -114,6 +114,39 @@ export default class UserService {
         });
     }
 
+    async getCurrentUser() {
+        const {data: user} = await this.gatewayService.execute("auth", {
+            method: "GET",
+            path: `/api/v1/user/profile/info`,
+        });
+        const {
+            id,
+            first_name,
+            last_name,
+            email,
+            phone,
+            image_url,
+            birthday,
+            is_mobile_verified,
+            gender_type,
+            roles
+        } = user;
+
+        return this.responseService.response({
+            id,
+            first_name,
+            last_name,
+            email,
+            phone,
+            image_url,
+            birthday : birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
+            is_mobile_verified,
+            gender_type,
+            gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other',
+            roles: roles?.reduce((acc: any, role: any) => (acc + role.name + ', '), '').slice(0, -2) || 'n/a',
+        });
+    }
+
     async assignRole(userId: number, roles: []) {
         return await this.gatewayService.execute("auth", {
             method: "POST",
