@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Res, Param, Post, Put, Query} from "@nestjs/common";
+import {Body, Controller, Get, Res, Param, Post, Put, Query } from "@nestjs/common";
 import UserService from "./user.service";
 import {UserLoginRequest} from "./requests/user.login.request";
 import {UserUpdateRequest} from "./requests/user-update.request";
@@ -70,6 +70,11 @@ export default class UserController {
     @Get('/:id')
     async getUser(@Param('id') id: number) {
         return this.userService.getUser(id);
+    }
+
+    @Get('/current/user')
+    async getCurrentUser() {
+        return this.userService.getCurrentUser();
     }
 
     @Post('/:id/assign-roles')
