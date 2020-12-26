@@ -17,6 +17,7 @@ export default class EditRole extends Component {
             selectedPermissions: [],
             selectedRole: {},
             role: '',
+            role_id:'',
         }
     }
 
@@ -114,6 +115,8 @@ export default class EditRole extends Component {
 
     render() {
         let {categories, loading, selectedRole} = this.state;
+        const url = window.location.href.split('/');
+        const roleId = url[4];
         return (
             <Fragment>
                 <Breadcrumb title="Edit Role" parent="Roles"/>
@@ -129,7 +132,7 @@ export default class EditRole extends Component {
                                     <Forms
                                         options={{
                                             method: 'PUT',
-                                            url: '/api/roles/1/update',
+                                            url: `/api/roles/${roleId}/update`,
                                             onSuccess: (response) => {
                                                 window.location.href = '/list-roles';
                                             },

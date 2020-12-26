@@ -10,24 +10,30 @@ import {
     Users,
     Chrome,
     CheckCircle,
-    BarChart,Settings,Archive, LogIn
+    BarChart, Settings, Archive, LogIn
 } from 'react-feather';
 
 export const MENUITEMS = [
     {
-        path: '/dashboard', title: 'Dashboard', icon: Home, type: 'link', badgeType: 'primary', active: false
+        path: '/dashboard', title: 'Dashboard', icon: Home, type: 'link', badgeType: 'primary', active: false,
+        permissions: ['show-dashboard']
     },
     {
-        title: 'Users', icon: UserPlus, type: 'sub', active: false, children: [
-            { path: '/list-users', title: 'User List', type: 'link' },
-            { path: '/list-admins', title: 'Admin List', type: 'link' },
-            { path: '/create-user', title: 'Add Admin', type: 'link' },
+        title: 'Users', icon: UserPlus, type: 'sub', active: false,
+        permissions: [],
+        children: [
+            {
+                path: '/list-users', title: 'User List', type: 'link',
+                permission: 'get-user'
+            },
+            {path: '/list-admins', title: 'Admin List', type: 'link'},
+            {path: '/create-user', title: 'Add Admin', type: 'link'},
         ]
     },
     {
         title: 'Roles', icon: CheckCircle, type: 'sub', active: false, children: [
-            { path: '/list-roles', title: 'Role List', type: 'link' },
-            { path: '/create-role', title: 'Add Role', type: 'link' },
+            {path: '/list-roles', title: 'Role List', type: 'link'},
+            {path: '/create-role', title: 'Add Role', type: 'link'},
         ]
     },
 
