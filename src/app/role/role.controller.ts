@@ -1,5 +1,6 @@
 import {Body, Controller, Get, Param, Post, Put} from "@nestjs/common";
 import RoleService from "./role.service";
+// import {HasPermissions, PermissionTypeEnum, PermissionTypes} from "@technerds/common-services";
 
 @Controller('/api/roles')
 export default class RoleController {
@@ -36,7 +37,7 @@ export default class RoleController {
     async getRoleDetailsById(@Body() roleCreateRequest: any, @Param('id') id: number) {
         return this.roleService.getRoleDetailsById(id, roleCreateRequest);
     }
-
+    // @HasPermissions([PermissionTypes.ROLE.], PermissionTypeEnum.hasPermission)
     @Get('/:id/details')
     async getPermissionsFromRole(@Param('id') roleId: number) {
         return this.roleService.getPermissionsFromRole(roleId);

@@ -67,7 +67,6 @@ export default class RoleService {
             method: "GET",
             path: `/api/v1/authorization/permission/categories/role/${roleId}`,
         });
-
         return this.responseService.response(data);
     }
 }
