@@ -54,6 +54,10 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
     if (url.includes("/api")) {
         next();
     } else {
+        if ((!req.signedCookies || !req.signedCookies.r_code) && url !== '/auth/login'){
+            res.redirect('/auth/login');
+            return;
+        }
         res.render('pages/main');
     }
 };
