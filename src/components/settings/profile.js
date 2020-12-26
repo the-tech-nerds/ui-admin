@@ -16,7 +16,7 @@ export class Profile extends Component {
         this.getUserInfo();
     }
     getUserInfo(){
-        fetch('/api/users/38').then(async res => {
+        fetch('/api/users/current/user').then(async res => {
             const response = await res.json();
             if (response.code === 200 ) {
                 this.setState({

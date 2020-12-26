@@ -23,7 +23,7 @@ export default class UserController {
     async update(
         @Body() userUpdateRequest: UserUpdateRequest
     ) {
-        return this.userService.updateUser(userUpdateRequest, 38);
+        return this.userService.updateUser(userUpdateRequest);
     }
 
     @Post('/login')
@@ -56,7 +56,7 @@ export default class UserController {
     async resetPassword(
         @Body() resetPasswordRequest: ResetPasswordRequest
     ) {
-        resetPasswordRequest.user_id = 38;
+        resetPasswordRequest.user_id = 1;
         return this.userService.resetPassword(resetPasswordRequest);
     }
     @Get('/')

@@ -20,11 +20,12 @@ export default class UserService {
             body: {...user, type: 2},
         });
     }
-    updateUser(user: any, userId: any) {
+    updateUser(user: any) {
         user.gender_type = Number(user.gender_type);
+        console.log("in update user");
         return this.gatewayService.execute("auth", {
             method: "PUT",
-            path: '/api/v1/user/info/' + userId,
+            path: '/api/v1/user/profile/info/',
             body: { ...user},
         });
     }
