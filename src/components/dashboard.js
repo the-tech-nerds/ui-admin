@@ -7,12 +7,12 @@ import { Chart } from "react-google-charts";
 import CanvasJSReact from '../assets/canvas/canvasjs.react';
 import { Pie, Doughnut, Bar, Line } from 'react-chartjs-2';
 import {
-    pieOptions, 
-    doughnutOption, 
-    lineOptions, 
-    buyOption, 
-    employeeData, 
-    employeeOptions 
+    pieOptions,
+    doughnutOption,
+    lineOptions,
+    buyOption,
+    employeeData,
+    employeeOptions
 } from '../constants/chartData'
 // image impoer
 import user2 from '../assets/images/dashboard/user2.jpg';
@@ -162,7 +162,7 @@ export class Dashboard extends Component {
             <Fragment>
                 <Breadcrumb title="Dashboard" parent="Dashboard" />
                 <div className="container-fluid">
-                    <div className="row">
+                    {/*<div className="row">
                         <div className="col-xl-3 col-md-6 xl-50">
                             <div className="card o-hidden widget-cards">
                                 <div className="bg-warning card-body">
@@ -837,7 +837,7 @@ export class Dashboard extends Component {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
             </Fragment>
 
