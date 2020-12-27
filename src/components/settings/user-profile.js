@@ -1,5 +1,5 @@
 import React from 'react'
-import designer from "../../assets/images/dashboard/designer.jpg";
+import designer from '../../assets/images/dashboard/man.png'
 import ProfileInfo from "./profile-info";
 
 export  function UserProfile({user}){
