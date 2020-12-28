@@ -148,7 +148,7 @@ export class sidebar extends Component {
                 <div className="page-sidebar">
                     <div className="main-header-left d-none d-lg-block">
                         <div className="logo-wrapper">
-                            <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
+                            <Link to={`${process.env.PUBLIC_URL}/`}>
                                 <img className="blur-up lazyloaded" src={logo} alt="" />
                             </Link>
                         </div>

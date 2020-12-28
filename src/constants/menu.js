@@ -15,7 +15,7 @@ import {
 
 export const MENUITEMS = [
     {
-        path: '/dashboard', title: 'Dashboard', icon: Home, type: 'link', badgeType: 'primary', active: false,
+        path: '/', title: 'Dashboard', icon: Home, type: 'link', badgeType: 'primary', active: false,
         permissions: ['show-dashboard']
     },
     {
