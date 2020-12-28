@@ -99,8 +99,7 @@ export default class    ListAdmin extends Component {
                                     </Forms>
                                 </div>
                                 <div className="modal-footer">
-                                    {/*<button type="button" className="btn btn-primary" onClick={() => this.onCloseModal('VaryingMdo')}>Save</button>*/}
-                                    <button type="button" className="btn btn-sm btn-primary" onClick={() => this.onCloseModal('VaryingMdo')}>Close</button>
+                                    <button type="button" className="btn btn-sm btn-d" onClick={() => this.onCloseModal('VaryingMdo')}>Close</button>
                                 </div>
                             </Modal>
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
