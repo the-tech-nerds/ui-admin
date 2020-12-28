@@ -16,8 +16,8 @@ export function Tabset_profile({user, response}){
                     <TabPanel>
                         <EditProfile user={user} response={response}/>
                     </TabPanel>
-                    <TabPanel>
-                        {/* <div className="tab-pane fade"> */}
+                    {/*<TabPanel>
+                         <div className="tab-pane fade">
                             <div className="account-setting">
 
                                 <h5 className="f-w-600 f-16">Notifications</h5>
@@ -82,8 +82,8 @@ export function Tabset_profile({user, response}){
                                 </div>
                                 <button type="button" className="btn btn-primary">Delete Account</button>
                             </div>
-                        {/* </div> */}
-                    </TabPanel>
+                         </div>
+                    </TabPanel>*/}
                     <TabPanel>
                       <ChangePassword/>
                     </TabPanel>
