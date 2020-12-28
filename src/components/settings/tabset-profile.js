@@ -10,7 +10,7 @@ export function Tabset_profile({user, response}){
                 <Tabs>
                     <TabList className="nav nav-tabs tab-coupon" >
                         <Tab className="nav-link"><User className="mr-2" />Profile</Tab>
-                        <Tab className="nav-link"><Settings className="mr-2" />Setting</Tab>
+                        {/*<Tab className="nav-link"><Settings className="mr-2" />Setting</Tab>*/}
                         <Tab className="nav-link"><Key className="mr-2" />Reset Password</Tab>
                     </TabList>
                     <TabPanel>
