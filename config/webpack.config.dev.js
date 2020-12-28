@@ -427,7 +427,6 @@ module.exports = {
   },
   plugins: [
     // Generates an `index.html` file with the <script> injected.
-
     new CleanWebpackPlugin(),
     new WriteFilePlugin(),
     // new BrowserSyncPlugin({

@@ -6,11 +6,15 @@ import { AppModule } from './app/app.module';
 import {LocalsMiddleware} from "./app/locals.middleware";
 import * as hbs from 'hbs';
 const bodyParser = require('body-parser');
+import * as compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
       AppModule,
   );
+
+  app.use(compression());
+
   app.useStaticAssets(join(__dirname, '..', 'build'));
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'src/views'));

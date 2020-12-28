@@ -42,6 +42,18 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
 
     const { url } = req;
 
+    if (req.url.includes(".js")) {
+        req.url = req.url + '.gz';
+        res.set('Content-Encoding', 'gzip');
+        res.set('Content-Type', 'text/javascript');
+    }
+
+    if (req.url.includes(".css")) {
+        req.url = req.url + '.gz';
+        res.set('Content-Encoding', 'gzip');
+        res.set('Content-Type', 'text/css');
+    }
+
     if (req.signedCookies && req.signedCookies.r_code) {
         req.headers.access_token = req.signedCookies.r_code;
 
@@ -54,7 +66,8 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
     if (url.includes("/api")) {
         next();
     } else {
-        if ((!req.signedCookies || !req.signedCookies.r_code) && url !== '/auth/login'){
+        if ((!req.signedCookies || !req.signedCookies.r_code) && req.url !== '/auth/login'){
+            console.log('here');
             res.redirect('/auth/login');
             return;
         }
