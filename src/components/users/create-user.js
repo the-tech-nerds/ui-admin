@@ -22,7 +22,7 @@ export class Create_user extends Component {
                                             method: 'POST',
                                             url: '/api/users',
                                             onSuccess: (response) => {
-                                                window.location.href ='/users/list-user';
+                                                window.location.href ='/list-admins';
                                             }
                                         }}
                                     >

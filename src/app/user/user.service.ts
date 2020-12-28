@@ -16,8 +16,8 @@ export default class UserService {
     createUser(user: any) {
         return this.gatewayService.execute("auth", {
             method: "POST",
-            path: '/api/v1/authentication/register',
-            body: {...user, type: 2},
+            path: '/api/v1/authentication/register/admin',
+            body: user,
         });
     }
     updateUser(user: any) {
@@ -49,6 +49,9 @@ export default class UserService {
     async listUsers() {
         const {data: userList} = await this.gatewayService.execute("auth", {
             method: "GET",
+            qs: {
+                userType: '2',
+            },
             path: '/api/v1/user/all',
         });
         const users = userList.map((user: any) => ({
@@ -67,7 +70,7 @@ export default class UserService {
         const {data: userList} = await this.gatewayService.execute("auth", {
             method: "GET",
             qs: {
-                userType: "2",
+                userType: '1',
             },
             path: '/api/v1/user/all',
         });

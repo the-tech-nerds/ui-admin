@@ -67,7 +67,6 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
         next();
     } else {
         if ((!req.signedCookies || !req.signedCookies.r_code) && req.url !== '/auth/login'){
-            console.log('here');
             res.redirect('/auth/login');
             return;
         }
