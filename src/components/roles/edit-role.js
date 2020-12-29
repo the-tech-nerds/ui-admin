@@ -171,6 +171,7 @@ export default class EditRole extends Component {
                                                                             <AvCheckbox
                                                                                 label={permission.name}
                                                                                 value={permission.id}
+                                                                                className="checkbox_animated"
                                                                                 id={"perm_" + permission.id}
                                                                                 key={"perm_" + permission.id}
                                                                             />
