@@ -7,6 +7,7 @@ import {LocalsMiddleware} from "./app/locals.middleware";
 import * as hbs from 'hbs';
 const bodyParser = require('body-parser');
 import * as compression from 'compression';
+import { ErrorFilter } from './app/filters/error.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -33,7 +34,7 @@ async function bootstrap() {
   const cookieSecret = configService.get('cookie_secret');
   app.use(cookieParser(cookieSecret));
   app.use(cookieEncrypter(cookieSecret));
-
+  app.useGlobalFilters(new ErrorFilter());
   app.use(LocalsMiddleware);
 
   await app.listen(3001);
