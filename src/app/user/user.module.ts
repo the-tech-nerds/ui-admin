@@ -10,6 +10,7 @@ import {ApiResponseService} from "../common/response/api-response.service";
     GatewayModule,
   ],
   controllers: [UserController],
-  providers: [UserService, ApiResponseService]
+  providers: [UserService, ApiResponseService],
+  exports:[UserService]
 })
 export class UserModule {}
