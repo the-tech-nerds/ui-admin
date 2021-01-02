@@ -88,6 +88,8 @@ export default class ListRole extends Component {
                                             sortable: false
                                         }*/
                                     ]}
+
+                                    excludeColumns={['id']}
                                 />
                             </div>
                         </div>

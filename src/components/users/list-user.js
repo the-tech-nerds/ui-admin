@@ -22,6 +22,7 @@ export class List_user extends Component {
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"
+                                    excludeColumns={['id']}
                                 />
                             </div>
                         </div>
