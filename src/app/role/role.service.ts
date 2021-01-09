@@ -24,8 +24,10 @@ export default class RoleService {
             path: '/api/v1/authorization/roles',
 
         });
-        const roles = roleList.map((role: any) => ({
+
+        const roles = roleList.map((role: any, index: any) => ({
             id: role.id,
+            'SL No': ++index,
             'Name': role.name,
         }));
 
