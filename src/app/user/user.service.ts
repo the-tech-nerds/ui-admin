@@ -54,8 +54,10 @@ export default class UserService {
             },
             path: '/api/v1/user/all',
         });
-        const users = userList.map((user: any) => ({
+
+        const users = userList.map((user: any, index: any) => ({
             id: user.id,
+            'SL No': ++index,
             'First Name': user.first_name,
             'Last Name': user.last_name,
             'Email': user.email,
@@ -74,8 +76,10 @@ export default class UserService {
             },
             path: '/api/v1/user/all',
         });
-        const users = userList.map((user: any) => ({
+
+        const users = userList.map((user: any, index: any) => ({
             id: user.id,
+            'SL No': ++index,
             roleIds: user?.roles?.map((role: any) => role.id) || [],
             'First Name': user.first_name,
             'Last Name': user.last_name,
