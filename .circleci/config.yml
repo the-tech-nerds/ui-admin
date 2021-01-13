@@ -1,0 +1,123 @@
+version: 2.1
+executors:
+  node:
+    docker:
+      - image: 'circleci/node:14.13.1'
+    shell: /bin/bash
+    working_directory: ~/app
+    resource_class: small
+  aws:
+    docker:
+      - image: 'circleci/python:2.7-jessie'
+    shell: /bin/bash
+    working_directory: ~/app
+
+# define reusable commands in this section below
+commands:
+  setup_aws_credentials_file:
+    description: "setup .aws/credentials file to run docker commands"
+    steps:
+      - run:
+          name: Setup aws credentials
+          command: |
+            set -euxo pipefail
+            mkdir -p ~/.aws
+            echo "[default]" > ~/.aws/credentials
+            echo "aws_access_key_id=$AWS_ACCESS_KEY" >> ~/.aws/credentials
+            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+            echo "region=$AWS_DEFAULT_REGION" >> ~/.aws/credentials
+            echo "[prod]" >> ~/.aws/credentials
+            echo "role_arn = arn:aws:iam::${PROD_AWS_ACCOUNT_ID}:role/developer" >> ~/.aws/credentials
+            echo "source_profile = default" >> ~/.aws/credentials
+jobs:
+  npm-install:
+    resource_class: small
+    executor: node
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "65:14:83:3a:23:55:a6:8f:d3:de:c5:c6:59:f1:90:6d"
+      - run:
+          name: GIT_COMMIT
+          command: |
+            echo $CIRCLE_SHA1 > GIT_COMMIT
+      - run:
+          name: Install Node.js dependencies with Npm
+          command: |
+            # using npm i instead of npm ci because ci drops node_modules/ so
+            # builds are way slower. It's preferred to use npm ci long term
+            # though so this may change
+            npm install
+      - persist_to_workspace:
+          root: ~/app
+          paths:
+            - .
+  npm-build:
+    executor: node
+    resource_class: medium
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Build npm
+          command: |
+            npm run build
+            node scripts/build
+  docker-build-image:
+    resource_class: small
+    executor: aws
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Setup aws-cli scripts to work with ECR
+          command: sudo pip install awscli
+      - setup_remote_docker
+      - setup_aws_credentials_file
+      - run:
+          name: Setup Build Environment Variables
+          command: |
+            set -euxo pipefail
+            echo "export DEV_IMAGE_NAME=${ECR_DEV_REPO_BASE}/${CIRCLE_PROJECT_REPONAME}:c-${CIRCLE_BRANCH,,}-${CIRCLE_BUILD_NUM}" >> $BASH_ENV
+            echo "export DEV_IMAGE_NAME_LATEST=${ECR_DEV_REPO_BASE}/${CIRCLE_PROJECT_REPONAME}:latest" >> $BASH_ENV
+      - run:
+          name: Build & Push Docker To ECR (DEV)
+          command: |
+            set -euxo pipefail
+            $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+            aws ecr describe-repositories --repository-names ${CIRCLE_PROJECT_REPONAME} 2>&1 > /dev/null
+            status=$?
+            if [[ ! "${status}" -eq 0 ]]; then
+                aws ecr create-repository --repository-name ${CIRCLE_PROJECT_REPONAME}
+            fi
+            if [ "master" == "$CIRCLE_BRANCH" ]
+            then
+              docker build -t $DEV_IMAGE_NAME .
+              docker tag $DEV_IMAGE_NAME $DEV_IMAGE_NAME_LATEST
+              docker push $DEV_IMAGE_NAME_LATEST
+              echo "Pushed ${DEV_IMAGE_NAME_LATEST}"
+            fi
+workflows:
+  version: 2
+  build:
+    jobs:
+      - npm-install:
+          context: khanfreshcorner
+          filters:
+            branches:
+              only: master
+      - npm-build:
+          context: khanfreshcorner
+          requires:
+            - npm-install
+          filters:
+            branches:
+              only: master
+      - docker-build-image:
+          context: khanfreshcorner
+          requires:
+            - npm-build
+          filters:
+            branches:
+              only: master
