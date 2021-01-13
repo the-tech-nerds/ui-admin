@@ -104,20 +104,20 @@ workflows:
     jobs:
       - npm-install:
           context: khanfreshcorner
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - npm-build:
           context: khanfreshcorner
           requires:
             - npm-install
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - docker-build-image:
           context: khanfreshcorner
           requires:
             - npm-build
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
