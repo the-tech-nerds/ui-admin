@@ -63,7 +63,7 @@ jobs:
           name: Build npm
           command: |
             npm run build
-            node scripts/build
+            CI=false node scripts/build
   docker-build-image:
     resource_class: small
     executor: aws
