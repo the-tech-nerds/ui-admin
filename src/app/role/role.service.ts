@@ -1,4 +1,4 @@
-import {GatewayService} from "@technerds/common-services";
+import {GatewayService} from "@the-tech-nerds/common-services";
 import {Injectable} from "@nestjs/common";
 import {ApiResponseService} from "../common/response/api-response.service";
 

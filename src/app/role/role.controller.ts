@@ -1,6 +1,6 @@
 import {Body, Controller, Get, Param, Post, Put} from "@nestjs/common";
 import RoleService from "./role.service";
-// import {HasPermissions, PermissionTypeEnum, PermissionTypes} from "@technerds/common-services";
+// import {HasPermissions, PermissionTypeEnum, PermissionTypes} from "@the-tech-nerds/common-services";
 
 @Controller('/api/roles')
 export default class RoleController {

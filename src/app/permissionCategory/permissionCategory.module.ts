@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import {CacheModule, GatewayModule} from "@technerds/common-services";
+import {CacheModule, GatewayModule} from "@the-tech-nerds/common-services";
 import PermissionCategoryController from "./permissionCategory.controller";
 import PermissionCategoryService from "./permissionCategory.service";
 import {ApiResponseService} from "../common/response/api-response.service";

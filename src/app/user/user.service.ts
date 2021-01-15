@@ -1,4 +1,4 @@
-import {GatewayService} from "@technerds/common-services";
+import {GatewayService} from "@the-tech-nerds/common-services";
 import {Injectable} from "@nestjs/common";
 import {UserLoginRequest} from "./requests/user.login.request";
 import {ResetPasswordRequest} from "./requests/reset-password.request";

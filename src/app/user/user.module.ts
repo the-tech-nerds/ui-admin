@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import {CacheModule, GatewayModule} from "@technerds/common-services";
+import {CacheModule, GatewayModule} from "@the-tech-nerds/common-services";
 import UserController from "./user.controller";
 import UserService from "./user.service";
 import {ApiResponseService} from "../common/response/api-response.service";
