@@ -1,8 +1,7 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react';
+import { Alert } from 'react-bootstrap';
 import * as fetch from 'isomorphic-fetch';
-import {AvForm,} from 'availity-reactstrap-validation';
-
-;
+import {AvForm} from 'availity-reactstrap-validation';
 
 export class Forms extends Component {
 
@@ -46,7 +45,6 @@ export class Forms extends Component {
             }).then(async res => {
                 this.setState({loading: false});
                 const response = await res.json();
-                console.log(response);
                 if (response.code === 200 || response.code === 201) {
                     onSuccess(response);
                 } else {
@@ -76,13 +74,15 @@ export class Forms extends Component {
         const {error = false, errorMessage = '', loading = false} = this.state;
         const className = loading ? 'blur' : '';
         const matches = String(errorMessage).match(/\[(.*?)\]/);
+        let formattedErrMessage = matches ? matches[1].replace(/['"]+/g, '') : '';
+
         return (
             <AvForm
                 onValidSubmit={this.handleValidSubmit}
                 onInvalidSubmit={this.handleInvalidSubmit}
                 className={className}
             >
-                {error && <label className="text-danger">{matches ? matches[1] : ''}</label>}
+                {error && <Alert variant='danger'>{ formattedErrMessage }</Alert>}
                 {title && <h4>{title}</h4>}
                 {children}
             </AvForm>
