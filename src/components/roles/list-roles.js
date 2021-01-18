@@ -54,6 +54,12 @@ export default class ListRole extends Component {
                                                         }}
                                                         />
                                                     </span>
+
+                                                    <span onClick={() => {
+                                                        window.location.href = `/roles/${row.original.id}`;
+                                                    }} title="Change Status">
+                                                        <button className={"btn btn-xs " + (row.original.isActive ? 'btn-success' : 'btn-warning') }>{ row.original.isActive ? 'Active' : 'Inactive' }</button>
+                                                    </span>
                                                 </div>
                                             ),
                                             style: {
@@ -89,7 +95,7 @@ export default class ListRole extends Component {
                                         }*/
                                     ]}
 
-                                    excludeColumns={['id']}
+                                    excludeColumns={['id', 'hasUser', 'isActive']}
                                 />
                             </div>
                         </div>

@@ -26,7 +26,9 @@ export default class RoleService {
         });
 
         const roles = roleList.map((role: any, index: any) => ({
+            hasUser: role.users.length > 0,
             id: role.id,
+            'isActive': role.is_active,
             'SL No': ++index,
             'Name': role.name,
         }));
@@ -48,6 +50,16 @@ export default class RoleService {
             method: "PUT",
             path: `/api/v1/authorization/role/${id}`,
             body: {...roleCreateRequest}
+        });
+
+        return this.responseService.response(data);
+    }
+
+    async changeRoleStatus(id: number) {
+        console.log("in role status change")
+        const data = await this.gatewayService.execute("auth", {
+            method: "PUT",
+            path: `/api/v1/authorization/role/${id}/status`,
         });
 
         return this.responseService.response(data);
