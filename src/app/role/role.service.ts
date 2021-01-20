@@ -56,7 +56,6 @@ export default class RoleService {
     }
 
     async changeRoleStatus(id: number) {
-        console.log("in role status change")
         const data = await this.gatewayService.execute("auth", {
             method: "PUT",
             path: `/api/v1/authorization/role/${id}/status`,

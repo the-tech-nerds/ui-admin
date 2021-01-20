@@ -3,15 +3,16 @@ import {Link} from 'react-router-dom'
 import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable';
 import Forms from "../form/forms";
-import {AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
 import Modal from "react-responsive-modal";
+import {Alert} from "react-bootstrap";
 
 export default class ListRole extends Component {
     constructor(props) {
         super(props);
         this.state = {
             roleId:'',
+            hasUser: false,
             open: false,
             error: false,
             errorMessage: null,
@@ -27,7 +28,7 @@ export default class ListRole extends Component {
     };
 
     render() {
-        let { open, roleId } = this.state;
+        let { open, roleId, hasUser } = this.state;
         return (
             <Fragment>
                 <Breadcrumb title="Role List" parent="Users"/>
@@ -42,30 +43,23 @@ export default class ListRole extends Component {
                             </div>
                             <div className="clearfix"></div>
                             <Modal open={open} onClose={this.onCloseModal} center>
-                                <div className="modal-header">
+                                <div className="modal-header bg-warning">
                                     <h5 className="modal-title f-w-600" id="exampleModalLabel2">Change Status</h5>
                                 </div>
                                 <div className="modal-body">
                                     <Forms
                                         options={{
                                             method: 'PUT',
-                                            url: `/roles/${roleId}/change-status`,
+                                            url: `/api/roles/${roleId}/change-status`,
                                             onSuccess: (response) => {
                                                 window.location.href = '/list-roles';
                                             },
                                         }}
                                     >
-                                        <AvField type="select" name="roles" id={"roles_"+userId} value={userRoles} label="Roles" helpMessage="Choose a Role to assign!" multiple>
-                                            {roleList.map(role => (
-                                                <option value={role.id}>{ role.Name }</option>
-                                            ))}
-                                        </AvField>
-
-                                        <Button className="btn btn-sm btn-secondary">Assign</Button>
+                                        <Alert variant={hasUser ? 'danger' : 'warning'}>{hasUser ? 'This role is assigned. ' : ''} Are you sure to change status?  </Alert>
+                                        <Button className="btn btn-xs float-right" color="warning">Change Status</Button>
+                                        <br/>
                                     </Forms>
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-sm btn-d" onClick={() => this.onCloseModal('VaryingMdo')}>Close</button>
                                 </div>
                             </Modal>
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
@@ -107,7 +101,8 @@ export default class ListRole extends Component {
 
                                                     <span onClick={() => {
                                                         this.setState({
-                                                            roleId: row.original.id
+                                                            roleId: row.original.id,
+                                                            hasUser: row.original.hasUser,
                                                         })
                                                         this.onOpenModal();
                                                     }} title="Change Status">
