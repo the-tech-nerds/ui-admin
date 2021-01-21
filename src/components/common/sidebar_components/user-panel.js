@@ -27,9 +27,6 @@ export class User_panel extends Component {
                     this.setState({
                         user: response.data
                     });
-                    const { roles, permissions } = response.data;
-                    localStorage.setItem('permissions', JSON.stringify(permissions));
-                    localStorage.setItem('roles', JSON.stringify(roles));
                 } else {
                     window.location.href = '/api/users/logout';
                 }
