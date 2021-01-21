@@ -74,12 +74,8 @@ export class sidebar extends Component {
                             menuItem.active = true
                         }
                     }
-                    if (this.hasSomeMenuWithPermissions(submenuItems.permissions, this.permissions))
-                        return true;
                 })
             }
-            if (this.hasSomeMenuWithPermissions(menuItem.permissions, this.permissions))
-                return true;
         })
 
         item.active = !item.active;
