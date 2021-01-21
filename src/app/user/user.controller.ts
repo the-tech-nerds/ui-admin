@@ -11,7 +11,6 @@ export default class UserController {
     ) {
     }
 
-
     @Post('/')
     async create(
         @Body() userCreateRequest: any
@@ -49,7 +48,7 @@ export default class UserController {
     logout(@Res() res: any) {
         this.userService.logOutUser();
         res.clearCookie('r_code');
-        return res.status(200).send({ code: 200 });
+        res.redirect('/auth/login');
     }
 
     @Post('/reset-password')

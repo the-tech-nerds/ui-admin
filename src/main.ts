@@ -8,6 +8,8 @@ import * as hbs from 'hbs';
 const bodyParser = require('body-parser');
 import * as compression from 'compression';
 import { ErrorFilter } from './app/filters/error.filter';
+import {JwtService} from "@nestjs/jwt";
+import { PermissionTypes } from '@the-tech-nerds/common-services';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -35,6 +37,18 @@ async function bootstrap() {
   app.use(cookieParser(cookieSecret));
   app.use(cookieEncrypter(cookieSecret));
   app.useGlobalFilters(new ErrorFilter());
+  const jwtService = new JwtService({
+    secret: configService.get('jwt_secret'),
+  });
+
+  app.use(function (req: any, res: any, next: any) {
+    if (req.signedCookies && req.signedCookies.r_code) {
+      res.parsedJWT = jwtService.decode(req.signedCookies.r_code);
+    }
+    res.permissionTypes = PermissionTypes;
+    next();
+  })
+
   app.use(LocalsMiddleware);
 
   await app.listen(3001);

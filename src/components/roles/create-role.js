@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import Forms from "../form/forms";
+import App from "../app";
 import {AvCheckbox, AvCheckboxGroup, AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
 import * as fetch from "isomorphic-fetch";
@@ -70,7 +71,7 @@ export default class CreateRole extends Component {
     render() {
         const {categories, loading, selectedPermissions, role} = this.state;
         return (
-            <Fragment>
+            <App>
                 <Breadcrumb title="Create Role" parent="Roles"/>
                 <div className="container-fluid">
                     <div className="row">
@@ -143,7 +144,7 @@ export default class CreateRole extends Component {
                         </div>
                     </div>
                 </div>
-            </Fragment>
+            </App>
         )
     }
 }

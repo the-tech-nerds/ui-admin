@@ -32,6 +32,11 @@ function resolveFiles(path: string, type: string, toPath: string) {
     });
 }
 
+const encodeValue = (value: any) => {
+    return encodeURIComponent(JSON.stringify(value))
+}
+
+
 export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
     res.header({ 'Cache-Control': 'no-cache, max-age=0, must-revalidate, no-store' });
     const staticCssPath = path.join(__dirname, '..', '..', 'build', 'static', 'css');
@@ -39,6 +44,7 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
     res.locals.css = (await resolveFiles(staticCssPath, 'css/', 'static') || []);
     res.locals.js = (await resolveFiles(staticJsPath, 'js/', 'static') || [])
         .filter((fileName: any) => !fileName.includes(".map"));
+    res.locals.permissionTypes =  encodeValue(res.permissionTypes);
 
     const { url } = req;
 
@@ -70,6 +76,11 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
             res.redirect('/auth/login');
             return;
         }
-        res.render('pages/main');
+
+        res.render('pages/main', {
+            roles: res.parsedJWT ? encodeValue(res.parsedJWT.roles.map((role: any) => role.name)) : null,
+            permissions: res.parsedJWT ? encodeValue(res.parsedJWT.permissions.
+                                                map((permission: any) => permission.name)) : null,
+        });
     }
 };

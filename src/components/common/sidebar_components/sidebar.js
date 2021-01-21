@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import User_panel from './user-panel';
 import { Link } from 'react-router-dom';
 import { MENUITEMS } from '../../../constants/menu';
+import { getUserPermissions, getUserRoles } from '../../../utils/utils.js';
 
 // image import
 import logo from '../../../assets/images/dashboard/multikart-logo.png'
@@ -12,12 +13,26 @@ export class sidebar extends Component {
     onItemSelection = (arg, e) => {
         this.setState({ selectedPath: arg.path });
     };
+    permissions = getUserPermissions();
+    roles = getUserRoles();
 
     componentWillMount() {
         this.setState({
             mainmenu: MENUITEMS
-        })
+        });
     }
+
+    hasSomeMenuWithPermissions = (item, permissions) => {
+       if (!this.permissions || !this.roles) {
+           return false;
+       }
+        if (this.roles && this.roles.includes("Super Admin")) {
+            return true;
+        }
+
+        return item.filter(permission => permissions.includes(permission)).length > 0;
+    }
+
     componentDidMount() {
         var currentUrl = window.location.pathname;
 
@@ -40,14 +55,13 @@ export class sidebar extends Component {
     }
 
     setNavActive(item) {
-
-        MENUITEMS.filter(menuItem => {
+        const currentMenu = this.state.mainmenu.filter(menuItem => {
             if (menuItem !== item)
                 menuItem.active = false
             if (menuItem.children && menuItem.children.includes(item))
                 menuItem.active = true
             if (menuItem.children) {
-                menuItem.children.filter(submenuItems => {
+                menuItem.children = menuItem.children.filter(submenuItems => {
                     if (submenuItems !== item) {
                         submenuItems.active = false
                     }
@@ -60,16 +74,18 @@ export class sidebar extends Component {
                             menuItem.active = true
                         }
                     }
+                    if (this.hasSomeMenuWithPermissions(submenuItems.permissions, this.permissions))
+                        return true;
                 })
             }
+            if (this.hasSomeMenuWithPermissions(menuItem.permissions, this.permissions))
+                return true;
         })
-        item.active = !item.active
 
+        item.active = !item.active;
         this.setState({
-            mainmenu: MENUITEMS
+            mainmenu: currentMenu
         })
-
-
     }
 
     render() {
@@ -142,7 +158,6 @@ export class sidebar extends Component {
                     : ''}
             </li>
         )
-
         return (
             <Fragment>
                 <div className="page-sidebar">

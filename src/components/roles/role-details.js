@@ -1,8 +1,6 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component, Fragment} from 'react';
+import App from "../app";
 import Breadcrumb from '../common/breadcrumb';
-import Forms from "../form/forms";
-import {AvCheckbox, AvCheckboxGroup, AvField} from "availity-reactstrap-validation";
-import {Button} from "reactstrap";
 import * as fetch from "isomorphic-fetch";
 import Loader from "../common/loader";
 import {ListGroup} from 'react-bootstrap';
@@ -58,7 +56,7 @@ export default class EditRole extends Component {
     render() {
         let {roleDetails, loading} = this.state;
         return (
-            <Fragment>
+            <App>
                 <Breadcrumb title="Edit Role" parent="Roles"/>
                 <div className="container-fluid">
                     <div className="row">
@@ -99,7 +97,7 @@ export default class EditRole extends Component {
                         </div>
                     </div>
                 </div>
-            </Fragment>
+            </App>
         )
     }
 }

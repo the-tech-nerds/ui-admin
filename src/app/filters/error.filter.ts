@@ -16,7 +16,6 @@ export class ErrorFilter implements ExceptionFilter {
             error instanceof HttpException
                 ? error.getStatus()
                 : HttpStatus.INTERNAL_SERVER_ERROR;
-
         if (status === HttpStatus.UNAUTHORIZED) {
             return res.redirect('/logout');
         }  else if(status === HttpStatus.NOT_FOUND){
