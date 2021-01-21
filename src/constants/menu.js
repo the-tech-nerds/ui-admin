@@ -16,7 +16,6 @@ import {getPermissionTypes} from "../utils/utils";
 
 
 const PermissionTypes = window.permission_types !== 'undefined' ? getPermissionTypes() : null;
-console.log(PermissionTypes);
 
 export const MENUITEMS = PermissionTypes ? [
     {
