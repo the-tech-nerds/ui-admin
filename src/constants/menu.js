@@ -12,10 +12,10 @@ import {
     CheckCircle,
     BarChart, Settings, Archive, LogIn
 } from 'react-feather';
+import {getPermissionTypes} from "../utils/utils";
 
 
-const PermissionTypes = window.permission_types !== 'undefined' ? JSON.parse(decodeURIComponent(window.permission_types)) : null;
-
+const PermissionTypes = window.permission_types !== 'undefined' ? getPermissionTypes() : null;
 
 export const MENUITEMS = PermissionTypes ? [
     {
@@ -36,10 +36,10 @@ export const MENUITEMS = PermissionTypes ? [
     },
     {
         title: 'Roles', icon: CheckCircle, type: 'sub', active: false,
-        permissions: [PermissionTypes.Role.CREATE, PermissionTypes.Role.GET],
+        permissions: [PermissionTypes.ROLE.CREATE, PermissionTypes.ROLE.GET],
         children: [
-            {path: '/list-roles', title: 'Role List', type: 'link', permissions: [PermissionTypes.Role.GET]},
-            {path: '/create-role', title: 'Add Role', type: 'link', permissions: [PermissionTypes.Role.CREATE]},
+            {path: '/list-roles', title: 'Role List', type: 'link', permissions: [PermissionTypes.ROLE.GET]},
+            {path: '/create-role', title: 'Add Role', type: 'link', permissions: [PermissionTypes.ROLE.CREATE]},
         ]
     },
 
