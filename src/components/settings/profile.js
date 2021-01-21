@@ -3,6 +3,7 @@ import Tabset_profile from './tabset-profile';
 import Breadcrumb from '../common/breadcrumb';
 import * as fetch from "isomorphic-fetch";
 import UserProfile from "./user-profile";
+import App from "../app";
 export class Profile extends Component {
     constructor(props) {
         super(props);
@@ -31,23 +32,23 @@ export class Profile extends Component {
     render() {
         const {user} = this.state
         return (
-            <Fragment>
+            <App>
                 <Breadcrumb title="Profile" parent="Settings" />
                  <div className="container-fluid">
-                <div className="row">
-                    <div className="col-xl-4">
-                        {user &&<UserProfile user = {user}/>}
-                    </div>
-                    <div className="col-xl-8">
-                        <div className="card profile-card">
-                            <div className="card-body">
-                                {user &&<Tabset_profile user={user} response = {this.handleUserResponse}/>}
+                    <div className="row">
+                        <div className="col-xl-4">
+                            {user &&<UserProfile user = {user}/>}
+                        </div>
+                        <div className="col-xl-8">
+                            <div className="card profile-card">
+                                <div className="card-body">
+                                    {user &&<Tabset_profile user={user} response = {this.handleUserResponse}/>}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            </Fragment>
+            </App>
         )
     }
 }

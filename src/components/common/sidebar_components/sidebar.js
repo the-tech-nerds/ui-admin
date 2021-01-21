@@ -23,9 +23,9 @@ export class sidebar extends Component {
     }
 
     hasSomeMenuWithPermissions = (item, permissions) => {
-       if (!this.permissions || !this.roles) {
-           return false;
-       }
+        if (!this.permissions || !this.roles) {
+            return false;
+        }
         if (this.roles && this.roles.includes("Super Admin")) {
             return true;
         }
@@ -74,12 +74,8 @@ export class sidebar extends Component {
                             menuItem.active = true
                         }
                     }
-                    if (this.hasSomeMenuWithPermissions(submenuItems.permissions, this.permissions))
-                        return true;
                 })
             }
-            if (this.hasSomeMenuWithPermissions(menuItem.permissions, this.permissions))
-                return true;
         })
 
         item.active = !item.active;
@@ -92,7 +88,19 @@ export class sidebar extends Component {
         const theme = {
             selectionColor: "#C51162"
         };
-        const mainmenu = this.state.mainmenu.map((menuItem, i) =>
+
+        const filteredMenu = this.state.mainmenu.filter(menuItem => {
+            if (menuItem.children) {
+                menuItem.children = menuItem.children.filter(submenuItems => {
+                    if (this.hasSomeMenuWithPermissions(submenuItems.permissions, this.permissions))
+                        return true;
+                })
+            }
+            if (this.hasSomeMenuWithPermissions(menuItem.permissions, this.permissions))
+                return true;
+        });
+
+        const mainmenu = filteredMenu.map((menuItem, i) =>
             <li className={`${menuItem.active ? 'active' : ''}`} key={i}>
                 {(menuItem.sidebartitle) ?
                     <div className="sidebar-title">{menuItem.sidebartitle}</div>
