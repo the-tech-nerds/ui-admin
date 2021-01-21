@@ -33,6 +33,11 @@ export default class RoleController {
         return this.roleService.updateRolePermissions(id, roleCreateRequest);
     }
 
+    @Put('/:id/change-status')
+    async changeRoleStatus(@Param('id') id: number) {
+        return this.roleService.changeRoleStatus(id);
+    }
+
     @Put('/:id/details')
     async getRoleDetailsById(@Body() roleCreateRequest: any, @Param('id') id: number) {
         return this.roleService.getRoleDetailsById(id, roleCreateRequest);

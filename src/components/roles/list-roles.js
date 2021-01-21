@@ -3,9 +3,33 @@ import {Link} from 'react-router-dom';
 import App from "../app";
 import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable';
+import Forms from "../form/forms";
+import {Button} from "reactstrap";
+import Modal from "react-responsive-modal";
+import {Alert} from "react-bootstrap";
 
 export default class ListRole extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            roleId:'',
+            hasUser: false,
+            open: false,
+            error: false,
+            errorMessage: null,
+        };
+    }
+
+    onOpenModal = () => {
+        this.setState({ open: true });
+    };
+
+    onCloseModal = () => {
+        this.setState({ open: false });
+    };
+
     render() {
+        let { open, roleId, hasUser } = this.state;
         return (
             <App>
                 <Breadcrumb title="Role List" parent="Users"/>
@@ -19,6 +43,26 @@ export default class ListRole extends Component {
                                 <Link to="/create-role" className="btn btn-secondary">Create Role</Link>
                             </div>
                             <div className="clearfix"></div>
+                            <Modal open={open} onClose={this.onCloseModal} center>
+                                <div className="modal-header bg-warning">
+                                    <h5 className="modal-title f-w-600" id="exampleModalLabel2">Change Status</h5>
+                                </div>
+                                <div className="modal-body">
+                                    <Forms
+                                        options={{
+                                            method: 'PUT',
+                                            url: `/api/roles/${roleId}/change-status`,
+                                            onSuccess: (response) => {
+                                                window.location.href = '/list-roles';
+                                            },
+                                        }}
+                                    >
+                                        <Alert variant={hasUser ? 'danger' : 'warning'}>{hasUser ? 'This role is assigned. ' : ''} Are you sure to change status?  </Alert>
+                                        <Button className="btn btn-xs float-right" color="warning">Change Status</Button>
+                                        <br/>
+                                    </Forms>
+                                </div>
+                            </Modal>
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
                                 <Datatable
                                     url="/api/roles"
@@ -55,6 +99,16 @@ export default class ListRole extends Component {
                                                         }}
                                                         />
                                                     </span>
+
+                                                    <span onClick={() => {
+                                                        this.setState({
+                                                            roleId: row.original.id,
+                                                            hasUser: row.original.hasUser,
+                                                        })
+                                                        this.onOpenModal();
+                                                    }} title="Change Status">
+                                                        <button className={"btn btn-xs " + (row.original.isActive ? 'btn-success' : 'btn-warning') }>{ row.original.isActive ? 'Active' : 'Inactive' }</button>
+                                                    </span>
                                                 </div>
                                             ),
                                             style: {
@@ -90,7 +144,7 @@ export default class ListRole extends Component {
                                         }*/
                                     ]}
 
-                                    excludeColumns={['id']}
+                                    excludeColumns={['id', 'hasUser', 'isActive']}
                                 />
                             </div>
                         </div>
