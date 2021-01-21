@@ -184,7 +184,7 @@ class Root extends Component {
 
                         {/*<Route path={`${process.env.PUBLIC_URL}/reports/report`} component={Reports}/>*/}
 
-                        {/*<Route path={`${process.env.PUBLIC_URL}/settings/profile`} component={Profile}/>*/}
+                        <Route path={`${process.env.PUBLIC_URL}/settings/profile`} component={Profile}/>
 
                         {/*<Route path={`${process.env.PUBLIC_URL}/invoice`} component={Invoice}/>*/}
 
