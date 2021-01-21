@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import './index.scss';
-import App from './components/app';
 // import {ScrollContext} from 'react-router-scroll-4';
 // Components
 import Dashboard from './components/dashboard';
@@ -51,9 +50,27 @@ import ListRole from "./components/roles/list-roles";
 import CreateRole from "./components/roles/create-role";
 import EditRole from "./components/roles/edit-role";
 import RoleDetails from "./components/roles/role-details";
-
+import NotFound from "./components/404/not-found";
+import {getPermissionTypes, getUserPermissions, getUserRoles} from "./utils/utils";
 
 class Root extends Component {
+    permissions = [];
+    roles = [];
+    PermissionTypes = {};
+    constructor(props) {
+        super(props);
+        this.permissions = getUserPermissions();
+        this.roles = getUserRoles();
+        this.PermissionTypes = getPermissionTypes();
+    }
+
+    hasPermission = (permission) => {
+        if (this.roles.includes("Super Admin")) {
+            return true;
+        }
+        return this.permissions.includes(permission);
+    }
+
     render() {
         return (
             <BrowserRouter basename={'/'}>
@@ -61,75 +78,122 @@ class Root extends Component {
                     <Switch>
                         <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} component={Login}/>
                         <Route exact path={`${process.env.PUBLIC_URL}/dashboard`} component={Dashboard}/>
-                        <App>
-                            <Route exact path={`${process.env.PUBLIC_URL}/products/physical/category`} component={Category}/>
-                            <Route path={`${process.env.PUBLIC_URL}/products/physical/sub-category`}
-                                   component={Sub_category}/>
-                            <Route path={`${process.env.PUBLIC_URL}/products/physical/product-list`}
-                                   component={Product_list}/>
-                            <Route path={`${process.env.PUBLIC_URL}/products/physical/product-detail`}
-                                   component={Product_detail}/>
-                            <Route path={`${process.env.PUBLIC_URL}/products/physical/add-product`}
-                                   component={Add_product}/>
+                        {/*<Switch>*/}
+                        {/*    <Route exact path={`${process.env.PUBLIC_URL}/products/physical/category`} component={Category}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/products/physical/sub-category`}*/}
+                        {/*           component={Sub_category}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/products/physical/product-list`}*/}
+                        {/*           component={Product_list}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/products/physical/product-detail`}*/}
+                        {/*           component={Product_detail}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/products/physical/add-product`}*/}
+                        {/*           component={Add_product}/>*/}
 
-                            <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-category`}
-                                   component={Digital_category}/>
-                            <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-sub-category`}
-                                   component={Digital_sub_category}/>
-                            <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-product-list`}
-                                   component={Digital_pro_list}/>
-                            <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-add-product`}
-                                   component={Digital_add_pro}/>
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-category`}*/}
+                        {/*           component={Digital_category}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-sub-category`}*/}
+                        {/*           component={Digital_sub_category}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-product-list`}*/}
+                        {/*           component={Digital_pro_list}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-add-product`}*/}
+                        {/*           component={Digital_add_pro}/>*/}
 
-                            <Route path={`${process.env.PUBLIC_URL}/sales/orders`} component={Orders}/>
-                            <Route path={`${process.env.PUBLIC_URL}/sales/transactions`}
-                                   component={Transactions_sales}/>
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/sales/orders`} component={Orders}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/sales/transactions`}*/}
+                        {/*           component={Transactions_sales}/>*/}
 
-                            <Route path={`${process.env.PUBLIC_URL}/coupons/list-coupons`} component={ListCoupons}/>
-                            <Route path={`${process.env.PUBLIC_URL}/coupons/create-coupons`}
-                                   component={Create_coupons}/>
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/coupons/list-coupons`} component={ListCoupons}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/coupons/create-coupons`}*/}
+                        {/*           component={Create_coupons}/>*/}
 
-                            <Route path={`${process.env.PUBLIC_URL}/pages/list-page`} component={ListPages}/>
-                            <Route path={`${process.env.PUBLIC_URL}/pages/create-page`} component={Create_page}/>
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/pages/list-page`} component={ListPages}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/pages/create-page`} component={Create_page}/>*/}
 
-                            <Route path={`${process.env.PUBLIC_URL}/media`} component={Media}/>
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/media`} component={Media}/>*/}
 
-                            <Route path={`${process.env.PUBLIC_URL}/menus/list-menu`} component={List_menu}/>
-                            <Route path={`${process.env.PUBLIC_URL}/menus/create-menu`} component={Create_menu}/>
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/menus/list-menu`} component={List_menu}/>*/}
+                        {/*    <Route path={`${process.env.PUBLIC_URL}/menus/create-menu`} component={Create_menu}/>*/}
 
-                            <Route exact path={`${process.env.PUBLIC_URL}/list-users`} component={List_user}/>
-                            <Route exact path={`${process.env.PUBLIC_URL}/list-admins`} component={ListAdmin}/>
-                            <Route exact path={`${process.env.PUBLIC_URL}/create-user`} component={Create_user}/>
-                            <Route path={`${process.env.PUBLIC_URL}/users/:id`} component={UserDetails}/>
+                        {this.hasPermission(this.PermissionTypes.USER.GET) &&
+                            <Route
+                                exact
+                                path={`${process.env.PUBLIC_URL}/list-users`}
+                                component={List_user}
+                            />
+                        }
+                        {this.hasPermission(this.PermissionTypes.USER.GET) &&
+                            <Route
+                                exact
+                                path={`${process.env.PUBLIC_URL}/list-admins`}
+                                component={ListAdmin}
+                            />
+                        }
+                        {this.hasPermission(this.PermissionTypes.USER.CREATE) &&
+                            <Route
+                                exact
+                                path={`${process.env.PUBLIC_URL}/create-user`}
+                                component={Create_user}
+                            />
+                        }
 
-                            <Route path={`${process.env.PUBLIC_URL}/list-roles`} component={ListRole} exact={true}/>
-                            <Route path={`${process.env.PUBLIC_URL}/create-role`} component={CreateRole} exact={true}/>
-                            <Route path={`${process.env.PUBLIC_URL}/roles/:id/edit`} component={EditRole} exact={true}/>
-                            <Route path={`${process.env.PUBLIC_URL}/roles/:id/details`} component={RoleDetails} exact={true}/>
+                        {this.hasPermission(this.PermissionTypes.USER.GET) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/users/:id`}
+                                component={UserDetails}
+                            />
+                        }
 
-                            <Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors}/>
-                            <Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`}
-                                   component={Create_vendors}/>
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/list-roles`}
+                                component={ListRole} exact={true}
+                            />
+                        }
 
-                            <Route path={`${process.env.PUBLIC_URL}/localization/transactions`}
-                                   component={Translations}/>
-                            <Route path={`${process.env.PUBLIC_URL}/localization/currency-rates`} component={Rates}/>
-                            <Route path={`${process.env.PUBLIC_URL}/localization/taxes`} component={Taxes}/>
+                        {this.hasPermission(this.PermissionTypes.ROLE.CREATE) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/create-role`}
+                                component={CreateRole}
+                                exact={true}
+                            />
+                        }
 
-                            <Route path={`${process.env.PUBLIC_URL}/reports/report`} component={Reports}/>
+                        {this.hasPermission(this.PermissionTypes.ROLE.UPDATE) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/roles/:id/edit`}
+                                component={EditRole}
+                                exact={true}
+                            />
+                        }
 
-                            <Route path={`${process.env.PUBLIC_URL}/settings/profile`} component={Profile}/>
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/roles/:id/details`}
+                            component={RoleDetails}
+                            exact={true}
+                        />
+                        }
+                        {/*<Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors}/>*/}
+                        {/*<Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`}*/}
+                        {/*       component={Create_vendors}/>*/}
 
-                            <Route path={`${process.env.PUBLIC_URL}/invoice`} component={Invoice}/>
+                        {/*<Route path={`${process.env.PUBLIC_URL}/localization/transactions`}*/}
+                        {/*       component={Translations}/>*/}
+                        {/*<Route path={`${process.env.PUBLIC_URL}/localization/currency-rates`} component={Rates}/>*/}
+                        {/*<Route path={`${process.env.PUBLIC_URL}/localization/taxes`} component={Taxes}/>*/}
 
-                            <Route path={`${process.env.PUBLIC_URL}/data-table`} component={Datatable}/>
+                        {/*<Route path={`${process.env.PUBLIC_URL}/reports/report`} component={Reports}/>*/}
 
-                            <Route exact path={`${process.env.PUBLIC_URL}/`} component={Dashboard}/>
+                        {/*<Route path={`${process.env.PUBLIC_URL}/settings/profile`} component={Profile}/>*/}
 
+                        {/*<Route path={`${process.env.PUBLIC_URL}/invoice`} component={Invoice}/>*/}
 
+                        {/*<Route path={`${process.env.PUBLIC_URL}/data-table`} component={Datatable}/>*/}
 
-                            {/*<Redirect to="/" />*/}
-                        </App>
+                        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Dashboard}/>
+                        {/*<Redirect to="/" />*/}
+                        {/*</Switch>*/}
+                        <Route component={NotFound} />
                     </Switch>
                 </div>
             </BrowserRouter>

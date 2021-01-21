@@ -2,12 +2,13 @@ import React, { Component, Fragment } from 'react';
 import Breadcrumb from '../common/breadcrumb';
 //import data from '../../assets/data/listUser';
 import Datatable from '../common/datatable'
+import App from "../app";
 
 
 export class List_user extends Component {
     render() {
         return (
-            <Fragment>
+            <App>
                 <Breadcrumb title="User List" parent="Users" />
                 <div className="container-fluid">
                     <div className="card">
@@ -28,7 +29,7 @@ export class List_user extends Component {
                         </div>
                     </div>
                 </div>
-            </Fragment>
+            </App>
         )
     }
 }

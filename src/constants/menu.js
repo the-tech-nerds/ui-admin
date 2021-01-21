@@ -13,27 +13,33 @@ import {
     BarChart, Settings, Archive, LogIn
 } from 'react-feather';
 
-export const MENUITEMS = [
+
+const PermissionTypes = window.permission_types !== 'undefined' ? JSON.parse(decodeURIComponent(window.permission_types)) : null;
+
+
+export const MENUITEMS = PermissionTypes ? [
     {
         path: '/', title: 'Dashboard', icon: Home, type: 'link', badgeType: 'primary', active: false,
-        permissions: ['show-dashboard']
+        permissions: [PermissionTypes.USER.GET, PermissionTypes.USER.CREATE],
     },
     {
         title: 'Users', icon: UserPlus, type: 'sub', active: false,
-        permissions: [],
+        permissions: ['user get', 'user create'],
         children: [
             {
                 path: '/list-users', title: 'User List', type: 'link',
-                permission: 'get-user'
+                permissions: [PermissionTypes.USER.GET]
             },
-            {path: '/list-admins', title: 'Admin List', type: 'link'},
-            {path: '/create-user', title: 'Add Admin', type: 'link'},
+            {path: '/list-admins', title: 'Admin List', type: 'link', permissions: [PermissionTypes.USER.GET]},
+            {path: '/create-user', title: 'Add Admin', type: 'link', permissions: [PermissionTypes.USER.CREATE]},
         ]
     },
     {
-        title: 'Roles', icon: CheckCircle, type: 'sub', active: false, children: [
-            {path: '/list-roles', title: 'Role List', type: 'link'},
-            {path: '/create-role', title: 'Add Role', type: 'link'},
+        title: 'Roles', icon: CheckCircle, type: 'sub', active: false,
+        permissions: [PermissionTypes.Role.CREATE, PermissionTypes.Role.GET],
+        children: [
+            {path: '/list-roles', title: 'Role List', type: 'link', permissions: [PermissionTypes.Role.GET]},
+            {path: '/create-role', title: 'Add Role', type: 'link', permissions: [PermissionTypes.Role.CREATE]},
         ]
     },
 
@@ -112,4 +118,4 @@ export const MENUITEMS = [
     {
         title: 'Login',path:'/auth/login', icon: LogIn, type: 'link', active: false
     }*/
-]
+] : [];

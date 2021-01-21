@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import App from "../app";
 
 // image import
 import one from '../../assets/images/pro3/1.jpg';
@@ -64,7 +64,7 @@ export default class UserDetails extends Component {
     render() {
         const { user, loading } = this.state;
         return (
-            <Fragment>
+            <App>
                 <Breadcrumb title="User Detail" parent="User" />
 
                 <div className="container-fluid">
@@ -100,7 +100,7 @@ export default class UserDetails extends Component {
                     </div>
 
                 </div>
-            </Fragment>
+            </App>
         )
     }
 }

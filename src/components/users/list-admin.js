@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import App from "../app";
 import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable';
 import Modal from 'react-responsive-modal';
@@ -63,7 +64,7 @@ export default class    ListAdmin extends Component {
     render() {
         let { open, roleList, userRoles, userId } = this.state;
         return (
-            <Fragment>
+            <App>
                 <Breadcrumb title="Admin List" parent="Users" />
                 <div className="container-fluid">
                     <div className="card">
@@ -146,7 +147,7 @@ export default class    ListAdmin extends Component {
                         </div>
                     </div>
                 </div>
-            </Fragment>
+            </App>
         )
     }
 }

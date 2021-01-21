@@ -1,4 +1,4 @@
-import {GatewayService} from "@technerds/common-services";
+import {GatewayService} from "@the-tech-nerds/common-services";
 import {Injectable} from "@nestjs/common";
 import {UserLoginRequest} from "./requests/user.login.request";
 import {ResetPasswordRequest} from "./requests/reset-password.request";
@@ -22,7 +22,6 @@ export default class UserService {
     }
     updateUser(user: any) {
         user.gender_type = Number(user.gender_type);
-        console.log("in update user");
         return this.gatewayService.execute("auth", {
             method: "PUT",
             path: '/api/v1/user/profile/info/',

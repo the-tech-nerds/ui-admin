@@ -5,6 +5,7 @@ import CountUp from 'react-countup';
 import { Chart } from "react-google-charts";
 
 import CanvasJSReact from '../assets/canvas/canvasjs.react';
+import App from "./app";
 import { Pie, Doughnut, Bar, Line } from 'react-chartjs-2';
 import {
     pieOptions,
@@ -159,7 +160,7 @@ export class Dashboard extends Component {
         }
         return (
 
-            <Fragment>
+            <App>
                 <Breadcrumb title="Dashboard" parent="Dashboard" />
                 <div className="container-fluid">
                     {/*<div className="row">
@@ -839,7 +840,7 @@ export class Dashboard extends Component {
                         </div>
                     </div>*/}
                 </div>
-            </Fragment>
+            </App>
 
         )
     }

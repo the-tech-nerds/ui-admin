@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import man from '../../../assets/images/dashboard/man.png'
 import * as fetch from "isomorphic-fetch";
+import Loader from "../loader";
 
 export class User_panel extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            user:{},
+            user: null,
             error: false,
             errorMessage: null,
         }
@@ -26,30 +27,28 @@ export class User_panel extends Component {
                     this.setState({
                         user: response.data
                     });
+                    const { roles, permissions } = response.data;
+                    localStorage.setItem('permissions', JSON.stringify(permissions));
+                    localStorage.setItem('roles', JSON.stringify(roles));
                 } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    });
+                    window.location.href = '/api/users/logout';
                 }
             })
             .catch(error => {
-                this.setState({
-                    error: true,
-                    errorMessage: error,
-                })
+                window.location.href = '/auth/login';
             })
     }
     render() {
-        const { user } = this.state;
+        const { user = null } = this.state;
         return (
             <div>
-                <div className="sidebar-user text-center">
+                {user && <div className="sidebar-user text-center">
                     <div><img className="img-60 rounded-circle lazyloaded blur-up" src={man} alt="#" />
                     </div>
                     <h6 className="mt-3 f-14">{user.first_name+' '+user.last_name}</h6>
                     <p>{ user.roles }</p>
-                </div>
+                </div>}
+                {!user && <Loader />}
             </div>
         )
     }

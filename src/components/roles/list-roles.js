@@ -1,12 +1,13 @@
 import React, {Component, Fragment} from 'react';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import App from "../app";
 import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable';
 
 export default class ListRole extends Component {
     render() {
         return (
-            <Fragment>
+            <App>
                 <Breadcrumb title="Role List" parent="Users"/>
                 <div className="container-fluid">
                     <div className="card">
@@ -95,7 +96,7 @@ export default class ListRole extends Component {
                         </div>
                     </div>
                 </div>
-            </Fragment>
+            </App>
         )
     }
 }

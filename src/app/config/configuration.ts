@@ -9,4 +9,6 @@ export default () => ({
   api_rate_limit_max: process.env.API_RATE_LIMIT_MAX,
   cookie_secret: process.env.COOKIE_SECRET,
   cookie_max_age: process.env.COOKIE_MAX_AGE,
+  jwt_secret: process.env.JWT_SECRET,
+  jwt_expiration: process.env.JWT_EXPIRATION,
 });

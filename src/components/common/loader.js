@@ -2,7 +2,7 @@ import React from 'react';
 const Loader = () => (
     <div style={{
         margin: 'auto',
-        padding: '200px',
+        padding: '2rem',
     }}>
         <i className="fa fa-circle-o-notch fa-spin" style={
             {

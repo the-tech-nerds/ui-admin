@@ -1,5 +1,6 @@
 import React, { Component,Fragment } from 'react'
 import Breadcrumb from '../common/breadcrumb';
+import App from "../app";
 import Forms from "../form/forms";
 import {AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
@@ -7,7 +8,7 @@ import {Button} from "reactstrap";
 export class Create_user extends Component {
     render() {
         return (
-            <Fragment>
+            <App>
                 <Breadcrumb title="Create Admin" parent="Users" />
                 <div className="container-fluid">
                     <div className="row">
@@ -38,7 +39,7 @@ export class Create_user extends Component {
                         </div>
                     </div>
                 </div>
-            </Fragment>
+            </App>
         )
     }
 }
