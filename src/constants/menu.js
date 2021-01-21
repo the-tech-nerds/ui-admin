@@ -36,10 +36,10 @@ export const MENUITEMS = PermissionTypes ? [
     },
     {
         title: 'Roles', icon: CheckCircle, type: 'sub', active: false,
-        permissions: [],
+        permissions: [PermissionTypes.Role.CREATE, PermissionTypes.Role.GET],
         children: [
-            {path: '/list-roles', title: 'Role List', type: 'link', permissions: []},
-            {path: '/create-role', title: 'Add Role', type: 'link', permissions: []},
+            {path: '/list-roles', title: 'Role List', type: 'link', permissions: [PermissionTypes.Role.GET]},
+            {path: '/create-role', title: 'Add Role', type: 'link', permissions: [PermissionTypes.Role.CREATE]},
         ]
     },
 

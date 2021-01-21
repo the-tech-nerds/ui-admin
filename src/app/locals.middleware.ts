@@ -26,10 +26,7 @@ async function getFiles(path = "./") {
 }
 
 function resolveFiles(path: string, type: string, toPath: string) {
-    return getFiles(path).then(files => {
-        // console.log(files);
-        return files.map((file: any) => `/${toPath}/${type}${file.name}`)
-    });
+    return getFiles(path).then(files => files.map((file: any) => `/${toPath}/${type}${file.name}`);
 }
 
 const encodeValue = (value: any) => {

@@ -62,7 +62,6 @@ class Root extends Component {
         this.permissions = getUserPermissions();
         this.roles = getUserRoles();
         this.PermissionTypes = getPermissionTypes();
-        console.log(this.PermissionTypes);
     }
 
     hasPermission = (permission) => {

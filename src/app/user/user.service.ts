@@ -22,7 +22,6 @@ export default class UserService {
     }
     updateUser(user: any) {
         user.gender_type = Number(user.gender_type);
-        console.log("in update user");
         return this.gatewayService.execute("auth", {
             method: "PUT",
             path: '/api/v1/user/profile/info/',
