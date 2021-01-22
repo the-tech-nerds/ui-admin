@@ -79,8 +79,6 @@ export class sidebar extends Component {
     }
 
     setNavActive(item) {
-        console.log('item');
-        console.log(item);
         this.filteredMenu.filter(menuItem => {
             if (menuItem != item)
                 menuItem.active = false
