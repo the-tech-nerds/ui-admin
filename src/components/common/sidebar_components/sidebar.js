@@ -78,6 +78,35 @@ export class sidebar extends Component {
         })
     }
 
+    setNavActive(item) {
+        this.filteredMenu.filter(menuItem => {
+            if (menuItem != item)
+                menuItem.active = false
+            if (menuItem.children && menuItem.children.includes(item))
+                menuItem.active = true
+            if (menuItem.children) {
+                menuItem.children.filter(submenuItems => {
+                    if (submenuItems != item) {
+                        submenuItems.active = false
+                    }
+                    if (submenuItems.children) {
+                        submenuItems.children.map(childItem => {
+                            childItem.active = false;
+                        })
+                        if (submenuItems.children.includes(item)) {
+                            submenuItems.active = true
+                            menuItem.active = true
+                        }
+                    }
+                })
+            }
+        })
+        item.active = !item.active;
+        this.setState({
+            mainmenu: this.filteredMenu
+        })
+    }
+
     render() {
         const theme = {
             selectionColor: "#C51162"
