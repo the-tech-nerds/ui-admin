@@ -31,7 +31,7 @@ export default class UserController {
         @Body() userLoginRequest: UserLoginRequest
     ) {
         const data = await this.userService.loginUser(userLoginRequest);
-        const { access_token: token = null } = data;
+        const { access_token: token = null, id = null } = data;
         if (token) {
             const cookieParams = {
                 httpOnly: true,
@@ -39,6 +39,7 @@ export default class UserController {
                 maxAge: 60 * 100 * 100 * 100,
             };
             res.cookie('r_code', token, cookieParams);
+            res.cookie('id', id, cookieParams);
         }
         res.send(data);
     }

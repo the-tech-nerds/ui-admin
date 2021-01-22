@@ -15,10 +15,21 @@ export class sidebar extends Component {
     };
     permissions = getUserPermissions();
     roles = getUserRoles();
-
+    filteredMenu = [];
     componentWillMount() {
+        this.filteredMenu = MENUITEMS.filter(menuItem => {
+            if (menuItem.children) {
+                menuItem.children = menuItem.children.filter(submenuItems => {
+                    if (this.hasSomeMenuWithPermissions(submenuItems.permissions, this.permissions))
+                        return true;
+                })
+            }
+            if (this.hasSomeMenuWithPermissions(menuItem.permissions, this.permissions))
+                return true;
+        });
+
         this.setState({
-            mainmenu: MENUITEMS
+            mainmenu: this.filteredMenu
         });
     }
 
@@ -33,36 +44,51 @@ export class sidebar extends Component {
         return item.filter(permission => permissions.includes(permission)).length > 0;
     }
 
+    recursiveActiveMenuCheck = (item, url, active = false) => {
+        if (item.path && item.path == url) {
+            active = true;
+        }
+
+        if (!item.children) {
+            return active;
+        }
+
+        return item.children.some((childrenItem) => this.recursiveActiveMenuCheck(childrenItem, url, active));
+    }
+
+    recursiveActiveMenuBuild = (item, url, active = false) => {
+        if (item.path && item.path == url) {
+            item.active = true;
+        }
+
+        if (item.children) {
+            item.active = this.recursiveActiveMenuCheck(item, url);
+            item.children = item.children.map(subItem => this.recursiveActiveMenuBuild(subItem, url, active));
+        }
+
+        return item;
+    }
+
     componentDidMount() {
         var currentUrl = window.location.pathname;
-
-        this.state.mainmenu.filter(items => {
-            if (!items.children) {
-                if (items.path === currentUrl)
-                    this.setNavActive(items)
-                return false
-            }
-            items.children.filter(subItems => {
-                if (subItems.path === currentUrl)
-                    this.setNavActive(subItems)
-                if (!subItems.children) return false
-                subItems.children.filter(subSubItems => {
-                    if (subSubItems.path === currentUrl)
-                        this.setNavActive(subSubItems)
-                })
-            })
+        const recursivelyBuiltMenu = this.state.mainmenu.map((item, index) =>
+            this.recursiveActiveMenuBuild(item, currentUrl));
+        this.setState({
+            mainMenu: recursivelyBuiltMenu
         })
     }
 
     setNavActive(item) {
-        const currentMenu = this.state.mainmenu.filter(menuItem => {
-            if (menuItem !== item)
+        console.log('item');
+        console.log(item);
+        this.filteredMenu.filter(menuItem => {
+            if (menuItem != item)
                 menuItem.active = false
             if (menuItem.children && menuItem.children.includes(item))
                 menuItem.active = true
             if (menuItem.children) {
-                menuItem.children = menuItem.children.filter(submenuItems => {
-                    if (submenuItems !== item) {
+                menuItem.children.filter(submenuItems => {
+                    if (submenuItems != item) {
                         submenuItems.active = false
                     }
                     if (submenuItems.children) {
@@ -77,10 +103,10 @@ export class sidebar extends Component {
                 })
             }
         })
-
-        item.active = !item.active;
+        item.active = !item.active
+        console.log(this.filteredMenu);
         this.setState({
-            mainmenu: currentMenu
+            mainmenu: this.filteredMenu
         })
     }
 
@@ -89,18 +115,7 @@ export class sidebar extends Component {
             selectionColor: "#C51162"
         };
 
-        const filteredMenu = this.state.mainmenu.filter(menuItem => {
-            if (menuItem.children) {
-                menuItem.children = menuItem.children.filter(submenuItems => {
-                    if (this.hasSomeMenuWithPermissions(submenuItems.permissions, this.permissions))
-                        return true;
-                })
-            }
-            if (this.hasSomeMenuWithPermissions(menuItem.permissions, this.permissions))
-                return true;
-        });
-
-        const mainmenu = filteredMenu.map((menuItem, i) =>
+        const mainmenu = this.state.mainmenu.map((menuItem, i) =>
             <li className={`${menuItem.active ? 'active' : ''}`} key={i}>
                 {(menuItem.sidebartitle) ?
                     <div className="sidebar-title">{menuItem.sidebartitle}</div>
@@ -166,6 +181,7 @@ export class sidebar extends Component {
                     : ''}
             </li>
         )
+
         return (
             <Fragment>
                 <div className="page-sidebar">
