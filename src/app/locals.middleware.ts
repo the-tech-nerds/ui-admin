@@ -59,6 +59,7 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
 
     if (req.signedCookies && req.signedCookies.r_code) {
         req.headers.access_token = req.signedCookies.r_code;
+        req.headers.user_id = req.signedCookies.id;
 
         if (url === '/auth/login') {
             res.redirect('/');
@@ -66,7 +67,7 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
         }
     }
 
-    if (url.includes("/api")) {
+    if (url.includes("/api") || url.includes("/logout")) {
         next();
     } else {
         if ((!req.signedCookies || !req.signedCookies.r_code) && req.url !== '/auth/login'){
