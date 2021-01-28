@@ -89,6 +89,17 @@ export class Datatable extends Component {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
+    filterCaseInsensitive(filter, row) {
+        const id = filter.pivotId || filter.id;
+        return (
+            row[id] !== undefined ?
+                String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase())
+            :
+                true
+        );
+    }
+
+
     render() {
         const { pageSize, myClass, multiSelectOption, pagination, extraColumns = [], excludeColumns = [] } = this.props;
         const { myData = [], loading = false, error = null } = this.state
@@ -168,24 +179,25 @@ export class Datatable extends Component {
                 )
             }
             if (extraColumns.length > 0) {
-               columns = [ ...columns, ...extraColumns ];
+                columns = [ ...columns, ...extraColumns ];
             }
         }
 
-            return (
-                <Fragment>
-                    <ReactTable
-                        filterable={true}
-                        data={myData}
-                        columns={columns}
-                        defaultPageSize={pageSize}
-                        className={myClass}
-                        showPagination={pagination}
-                    />
-                    <ToastContainer />
-                </Fragment>
-            )
-        }
+        return (
+            <Fragment>
+                <ReactTable
+                    filterable={true}
+                    data={myData}
+                    columns={columns}
+                    defaultPageSize={pageSize}
+                    className={myClass}
+                    showPagination={pagination}
+                    defaultFilterMethod={(filter, row) => this.filterCaseInsensitive(filter, row) }
+                />
+                <ToastContainer />
+            </Fragment>
+        )
     }
+}
 
-    export default Datatable
+export default Datatable
