@@ -3,6 +3,7 @@ import UserService from "./user.service";
 import {UserLoginRequest} from "./requests/user.login.request";
 import {UserUpdateRequest} from "./requests/user-update.request";
 import {ResetPasswordRequest} from "./requests/reset-password.request";
+import {ResetPasswordAutoGenerateRequest} from "./requests/reset-password-auto-generate.request";
 
 @Controller('/api/users')
 export default class UserController {
@@ -56,9 +57,14 @@ export default class UserController {
     async resetPassword(
         @Body() resetPasswordRequest: ResetPasswordRequest
     ) {
-        resetPasswordRequest.user_id = 1;
         return this.userService.resetPassword(resetPasswordRequest);
     }
+
+    @Post('/reset-password-auto-generate')
+    async resetPasswordAutoGenerate(@Body() resetPasswordAutoGenerateRequest: ResetPasswordAutoGenerateRequest) {
+        return this.userService.resetPasswordAutoGenerate(resetPasswordAutoGenerateRequest);
+    }
+
     @Get('/')
     async get(@Query('type') type: any) {
         if (type === 'admin') {
