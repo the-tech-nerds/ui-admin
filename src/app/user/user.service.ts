@@ -33,7 +33,7 @@ export default class UserService {
         return this.gatewayService.execute("auth", {
             method: "POST",
             path: '/api/v1/authentication/login/admin',
-            body: request,
+            body: {...request, type: 1},
         });
     }
 
