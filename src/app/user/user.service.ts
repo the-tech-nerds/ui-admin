@@ -4,6 +4,7 @@ import {UserLoginRequest} from "./requests/user.login.request";
 import {ResetPasswordRequest} from "./requests/reset-password.request";
 import * as moment  from "moment";
 import {ApiResponseService} from "../common/response/api-response.service";
+import {ResetPasswordAutoGenerateRequest} from "./requests/reset-password-auto-generate.request";
 
 @Injectable()
 export default class UserService {
@@ -33,7 +34,7 @@ export default class UserService {
         return this.gatewayService.execute("auth", {
             method: "POST",
             path: '/api/v1/authentication/login/admin',
-            body: { ...request, type: 1},
+            body: { ...request, type: 1 },
         });
     }
 
@@ -41,6 +42,15 @@ export default class UserService {
         return this.gatewayService.execute("auth", {
             method: "POST",
             path: '/api/v1/password/reset',
+            body: request,
+        });
+    }
+
+
+    resetPasswordAutoGenerate(request: ResetPasswordAutoGenerateRequest) {
+        return this.gatewayService.execute("auth", {
+            method: "POST",
+            path: '/api/v1/password/reset-password-auto-generate',
             body: request,
         });
     }

@@ -30,7 +30,7 @@ export class Create_user extends Component {
                                         <AvField name="first_name" label="First Name" type="text" required />
                                         <AvField name="last_name" label="Last Name" type="text" required />
                                         <AvField name="email" label="Email" type="email" required />
-                                        <AvField name="password" label="Password" type="password" required />
+                                        {/*<AvField name="password" label="Password" type="password" required />*/}
                                         <AvField name="phone" label="Phone" type="phone" required />
                                         <Button color="primary">Register</Button>
                                     </Forms>
