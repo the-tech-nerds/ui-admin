@@ -90,4 +90,11 @@ export default class UserController {
     ) {
         return this.userService.assignRole(id, userAssignRolesRequest);
     }
+
+    @Post('/:id/unfreeze')
+    async unfreezeUser(
+        @Param('id') id: number
+    ) {
+        return this.userService.unfreezeUser(id);
+    }
 }
