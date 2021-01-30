@@ -8,6 +8,7 @@ import Forms from "../form/forms";
 import {AvField} from "availity-reactstrap-validation";
 import * as fetch from "isomorphic-fetch";
 import {Button} from "reactstrap";
+import {Alert} from "react-bootstrap";
 
 export default class    ListAdmin extends Component {
     constructor(props) {
@@ -17,6 +18,7 @@ export default class    ListAdmin extends Component {
             userId:'',
             userRoles:[],
             open: false,
+            openFreeze:false,
             error: false,
             errorMessage: null,
         };
@@ -58,11 +60,15 @@ export default class    ListAdmin extends Component {
         this.setState({ open: true });
     };
 
+    onOpenFreezeModal = () => {
+        this.setState({ openFreeze: true });
+    };
+
     onCloseModal = () => {
-        this.setState({ open: false });
+        this.setState({ open: false, openFreeze: false });
     };
     render() {
-        let { open, roleList, userRoles, userId } = this.state;
+        let { open, openFreeze, roleList, userRoles, userId } = this.state;
         return (
             <App>
                 <Breadcrumb title="Admin List" parent="Users" />
@@ -103,6 +109,28 @@ export default class    ListAdmin extends Component {
                                     <button type="button" className="btn btn-xs btn-warning" onClick={() => this.onCloseModal('VaryingMdo')}>Close</button>
                                 </div>
                             </Modal>
+
+                            <Modal open={openFreeze} onClose={this.onCloseModal} center>
+                                <div className="modal-header bg-warning">
+                                    <h5 className="modal-title f-w-600" id="exampleModalLabel2">Unfreeze User</h5>
+                                </div>
+                                <div className="modal-body">
+                                    <Forms
+                                        options={{
+                                            method: 'PUT',
+                                            url: `/api/users/${userId}/unfreeze`,
+                                            onSuccess: (response) => {
+                                                window.location.href = '/list-admins';
+                                            },
+                                        }}
+                                    >
+                                        <Alert variant='warning'>Are you sure to unfreeze this user?  </Alert>
+                                        <Button className="btn btn-xs btn-warning float-right">Unfreeze</Button>
+                                        <br/>
+                                    </Forms>
+                                </div>
+                            </Modal>
+
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
                                 <Datatable
                                     url="/api/users?type=admin"
@@ -122,6 +150,7 @@ export default class    ListAdmin extends Component {
                                                         <i className="fa fa-eye" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
                                                         ></i>
                                                     </span>
+
                                                     <span onClick={() => {
                                                         this.setState({
                                                             userRoles: row.original.roleIds,
@@ -132,6 +161,18 @@ export default class    ListAdmin extends Component {
                                                         <i className="fa fa-lock" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
                                                         ></i>
                                                     </span>
+
+                                                    { row.original.isFrozen ?
+                                                        <span onClick={() => {
+                                                            this.setState({
+                                                                userId: row.original.id
+                                                            })
+                                                            this.onOpenFreezeModal();
+                                                        }} title="Unfreeze User">
+                                                        <i className="fa fa-unlock-alt" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
+                                                        ></i>
+                                                    </span> : null
+                                                    }
                                                 </div>
                                             ),
                                             style: {
@@ -141,7 +182,7 @@ export default class    ListAdmin extends Component {
                                             sortable: false
                                         },
                                     ]}
-                                    excludeColumns={['id', 'roleIds']}
+                                    excludeColumns={['id', 'roleIds', 'isFrozen']}
                                 />
                             </div>
                         </div>

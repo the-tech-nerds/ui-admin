@@ -89,6 +89,7 @@ export default class UserService {
         const users = userList.map((user: any, index: any) => ({
             id: user.id,
             'SL No': ++index,
+            isFrozen: !!user.is_frozen,
             roleIds: user?.roles?.map((role: any) => role.id) || [],
             'First Name': user.first_name,
             'Last Name': user.last_name,
@@ -169,6 +170,13 @@ export default class UserService {
             method: "POST",
             path: `/api/v1/user/${userId}/assign-roles`,
             body: roles
+        });
+    }
+
+    async unfreezeUser(userId: number) {
+        return await this.gatewayService.execute("auth", {
+            method: "PUT",
+            path: `/api/v1/user/${userId}/unfreeze`,
         });
     }
 
