@@ -65,7 +65,7 @@ export default class    ListAdmin extends Component {
     };
 
     onCloseModal = () => {
-        this.setState({ open: false });
+        this.setState({ open: false, openFreeze: false });
     };
     render() {
         let { open, openFreeze, roleList, userRoles, userId } = this.state;
@@ -125,7 +125,7 @@ export default class    ListAdmin extends Component {
                                         }}
                                     >
                                         <Alert variant='warning'>Are you sure to unfreeze this user?  </Alert>
-                                        <Button className="btn btn-xs float-right" color="warning">Change Status</Button>
+                                        <Button className="btn btn-xs btn-warning float-right">Unfreeze</Button>
                                         <br/>
                                     </Forms>
                                 </div>

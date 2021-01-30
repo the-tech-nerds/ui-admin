@@ -175,7 +175,7 @@ export default class UserService {
 
     async unfreezeUser(userId: number) {
         return await this.gatewayService.execute("auth", {
-            method: "POST",
+            method: "PUT",
             path: `/api/v1/user/${userId}/unfreeze`,
         });
     }
