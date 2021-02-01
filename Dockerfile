@@ -12,7 +12,6 @@ RUN rm -f .npmrc
 
 COPY dist /app/
 COPY build /app/
-COPY .env /app/
 
 CMD [ "node dist/main.js" ]
 
