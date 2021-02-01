@@ -10,9 +10,9 @@ COPY .npmrc /app/
 RUN npm install --production
 RUN rm -f .npmrc
 
-COPY dist /app/dist
-COPY build /app/build
-COPY .env /app
+COPY dist /app/
+COPY build /app/
+COPY .env /app/
 
 CMD [ "node dist/main.js" ]
 
