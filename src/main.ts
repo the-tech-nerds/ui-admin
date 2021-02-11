@@ -10,7 +10,7 @@ import * as compression from 'compression';
 import { ErrorFilter } from './app/filters/error.filter';
 import {JwtService} from "@nestjs/jwt";
 import { PermissionTypes } from '@the-tech-nerds/common-services';
-
+const rateLimit = require("express-rate-limit");
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
       AppModule,
@@ -50,7 +50,12 @@ async function bootstrap() {
   })
 
   app.use(LocalsMiddleware);
-
+  app.use(
+      rateLimit({
+        windowMs: configService.get('api_rate_limit_time') * 60 * 1000, // 15 minutes
+        max: configService.get('api_rate_limit_max'), // limit each IP to 100 requests per windowMs
+      }),
+  );
   await app.listen(3001);
 }
 bootstrap();
