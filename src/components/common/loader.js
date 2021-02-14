@@ -4,9 +4,8 @@ const Loader = () => (
         margin: 'auto',
         padding: '2rem',
     }}>
-        <i className="fa fa-circle-o-notch fa-spin" style={
+        <i className="fa fa-refresh fa-spin" style={
             {
-                width: 35,
                 fontSize: 20,
                 color: '#e4566e',
             }}

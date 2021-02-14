@@ -4,6 +4,7 @@ import 'react-table/react-table.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as fetch from 'isomorphic-fetch';
+import Loader from "./loader";
 
 export class Datatable extends Component {
     constructor(props) {
@@ -105,7 +106,9 @@ export class Datatable extends Component {
         const { myData = [], loading = false, error = null } = this.state
 
         if (loading) {
-            return <div>Loading</div>;
+            return <div style={{ display: 'flex', justifyContent: 'center' }}>
+                 <Loader/>
+            </div>
         }
 
         if (error) {
