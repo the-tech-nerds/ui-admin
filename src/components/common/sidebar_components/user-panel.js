@@ -45,7 +45,10 @@ export class User_panel extends Component {
                     <h6 className="mt-3 f-14">{user.first_name+' '+user.last_name}</h6>
                     <p>{ user.roles }</p>
                 </div>}
-                {!user && <Loader />}
+                {!user && ( <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Loader />
+                    </div>
+                )}
             </div>
         )
     }
