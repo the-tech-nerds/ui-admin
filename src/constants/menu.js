@@ -10,6 +10,7 @@ import {
     Users,
     Chrome,
     CheckCircle,
+    ShoppingBag,
     BarChart, Settings, Archive, LogIn
 } from 'react-feather';
 import {getPermissionTypes} from "../utils/utils";
@@ -42,7 +43,14 @@ export const MENUITEMS = PermissionTypes ? [
             {path: '/create-role', title: 'Add Role', type: 'link', permissions: [PermissionTypes.ROLE.CREATE]},
         ]
     },
-
+    {
+        title: 'Shops', icon: ShoppingBag, type: 'sub', active: false,
+        permissions: [],
+        children: [
+            {path: '/shops/list', title: 'Shop List', type: 'link', permissions: []},
+            {path: '/shops/create/0', title: 'Add Shop', type: 'link', permissions: []},
+        ]
+    },
     /*{
         title: 'Menus', icon: AlignLeft, type: 'sub', active: false, children: [
             { path: '/menus/list-menu', title: 'List Menu', type: 'link' },
