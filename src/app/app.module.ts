@@ -9,6 +9,7 @@ import {RoleModule} from "./role/role.module";
 import {PermissionCategoryModule} from "./permissionCategory/permissionCategory.module";
 import {ApiResponseService} from "./common/response/api-response.service";
 import {ShopModule} from "./shop/shop.module";
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import {ShopModule} from "./shop/shop.module";
       load: [configuration,commonConfig],
     }),
     UserModule, RoleModule, PermissionCategoryModule, ApiResponseService,
-      ShopModule
+      ShopModule,
+      ProductModule
   ],
   controllers: [AppController],
   providers: [AppService]

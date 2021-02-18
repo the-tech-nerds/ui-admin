@@ -54,6 +54,8 @@ import NotFound from "./components/404/not-found";
 import CreateShop from "./components/shops/create-shop"
 import { getPermissionTypes, getUserPermissions, getUserRoles } from "./utils/utils";
 import ListShop from "./components/shops/list-shops";
+import { ListUnit } from './components/unit/list-unit';
+import { CreateUnit } from './components/unit/create-unit';
 
 class Root extends Component {
     permissions = [];
@@ -186,6 +188,20 @@ class Root extends Component {
                             <Route
                                 path={`${process.env.PUBLIC_URL}/shops/list`}
                                 component={ListShop}
+                                exact={true}
+                            />
+                        }
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/units/create/:id`}
+                                component={CreateUnit}
+                                exact={true}
+                            />
+                        }
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/units/list`}
+                                component={ListUnit}
                                 exact={true}
                             />
                         }
