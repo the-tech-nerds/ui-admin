@@ -10,6 +10,7 @@ import {PermissionCategoryModule} from "./permissionCategory/permissionCategory.
 import {ApiResponseService} from "./common/response/api-response.service";
 import {ShopModule} from "./shop/shop.module";
 import { ProductModule } from './product/product.module';
+import { SupplierModule } from './supplier/supplier.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { ProductModule } from './product/product.module';
     }),
     UserModule, RoleModule, PermissionCategoryModule, ApiResponseService,
       ShopModule,
-      ProductModule
+      ProductModule,
+      SupplierModule
   ],
   controllers: [AppController],
   providers: [AppService]

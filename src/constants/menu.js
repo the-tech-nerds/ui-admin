@@ -52,6 +52,14 @@ export const MENUITEMS = PermissionTypes ? [
         ]
     },
     {
+        title: 'Suppliers', icon: ShoppingBag, type: 'sub', active: false,
+        permissions: [],
+        children: [
+            {path: '/suppliers/list', title: 'Supplier List', type: 'link', permissions: []},
+            {path: '/suppliers/create/0', title: 'Add Supplier', type: 'link', permissions: []},
+        ]
+    },
+    {
         title: 'Products', icon: ShoppingBag, type: 'sub', active: false,
         permissions: [],
         children: [

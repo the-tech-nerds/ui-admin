@@ -56,6 +56,8 @@ import { getPermissionTypes, getUserPermissions, getUserRoles } from "./utils/ut
 import ListShop from "./components/shops/list-shops";
 import { ListUnit } from './components/unit/list-unit';
 import { CreateUnit } from './components/unit/create-unit';
+import CreateSupplier from './components/suppliers/create-supplier';
+import ListSupplier from './components/suppliers/list-supplier';
 
 class Root extends Component {
     permissions = [];
@@ -206,7 +208,20 @@ class Root extends Component {
                             />
                         }
 
-
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/suppliers/create/:id`}
+                                component={CreateSupplier}
+                                exact={true}
+                            />
+                        }
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/suppliers/list`}
+                                component={ListSupplier}
+                                exact={true}
+                            />
+                        }
                         {/*<Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors}/>*/}
                         {/*<Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`}*/}
                         {/*       component={Create_vendors}/>*/}
