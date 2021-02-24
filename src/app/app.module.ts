@@ -8,6 +8,9 @@ import configuration from "./config/configuration";
 import {RoleModule} from "./role/role.module";
 import {PermissionCategoryModule} from "./permissionCategory/permissionCategory.module";
 import {ApiResponseService} from "./common/response/api-response.service";
+import {ShopModule} from "./shop/shop.module";
+import { ProductModule } from './product/product.module';
+import { SupplierModule } from './supplier/supplier.module';
 
 @Module({
   imports: [
@@ -17,7 +20,10 @@ import {ApiResponseService} from "./common/response/api-response.service";
       isGlobal: true,
       load: [configuration,commonConfig],
     }),
-    UserModule, RoleModule, PermissionCategoryModule, ApiResponseService
+    UserModule, RoleModule, PermissionCategoryModule, ApiResponseService,
+      ShopModule,
+      ProductModule,
+      SupplierModule
   ],
   controllers: [AppController],
   providers: [AppService]
