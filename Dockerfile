@@ -12,8 +12,8 @@ RUN rm -f .npmrc
 
 COPY dist /app/dist
 COPY build /app/build
-COPY .env /app
+COPY src /app/src
+COPY public /app/public
 
-CMD [ "node dist/main.js" ]
-
+CMD [ "cp /data/env /app/.env && node dist/main.js" ]
 ENTRYPOINT [ "sh", "-c" ]
