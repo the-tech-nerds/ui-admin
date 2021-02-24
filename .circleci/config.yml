@@ -35,19 +35,9 @@ jobs:
     executor: node
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "d6:9d:d9:fa:f5:49:a6:e0:7f:b5:e9:bf:15:9d:40:cc"
-      - run:
-          name: GIT_COMMIT
-          command: |
-            echo $CIRCLE_SHA1 > GIT_COMMIT
       - run:
           name: Install Node.js dependencies with Npm
           command: |
-            # using npm i instead of npm ci because ci drops node_modules/ so
-            # builds are way slower. It's preferred to use npm ci long term
-            # though so this may change
             npm install
       - persist_to_workspace:
           root: ~/app
@@ -64,6 +54,10 @@ jobs:
           command: |
             npm run build
             CI=false node scripts/build
+      - persist_to_workspace:
+          root: ~/app
+          paths:
+            - .
   docker-build-image:
     resource_class: small
     executor: aws
@@ -97,6 +91,8 @@ jobs:
               docker tag $DEV_IMAGE_NAME $DEV_IMAGE_NAME_LATEST
               docker push $DEV_IMAGE_NAME_LATEST
               echo "Pushed ${DEV_IMAGE_NAME_LATEST}"
+              IMAGES_TO_DELETE=$( aws ecr list-images --repository-name ${CIRCLE_PROJECT_REPONAME} --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
+              aws ecr batch-delete-image --repository-name ${CIRCLE_PROJECT_REPONAME} --image-ids "$IMAGES_TO_DELETE" || true
             fi
 workflows:
   version: 2
