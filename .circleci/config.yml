@@ -85,7 +85,7 @@ jobs:
             if [[ ! "${status}" -eq 0 ]]; then
                 aws ecr create-repository --repository-name ${CIRCLE_PROJECT_REPONAME}
             fi
-            if [ "develop" == "$CIRCLE_BRANCH" ]
+            if [ "master" == "$CIRCLE_BRANCH" ]
             then
               docker build -t $DEV_IMAGE_NAME .
               docker tag $DEV_IMAGE_NAME $DEV_IMAGE_NAME_LATEST
@@ -102,18 +102,18 @@ workflows:
           context: khanfreshcorner
           filters:
             branches:
-              only: develop
+              only: master
       - npm-build:
           context: khanfreshcorner
           requires:
             - npm-install
           filters:
             branches:
-              only: develop
+              only: master
       - docker-build-image:
           context: khanfreshcorner
           requires:
             - npm-build
           filters:
             branches:
-              only: develop
+              only: master
