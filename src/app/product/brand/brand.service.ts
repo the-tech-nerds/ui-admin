@@ -36,7 +36,8 @@ export class BrandService {
             id: brand.id,
             'SL No': ++index,
             'Name': brand.name,
-            'Description': brand.description
+            'Description': brand.description,
+            'Supplier': brand.supplier.name
         }));
         return this.responseService.response(brands);
     }
@@ -49,5 +50,12 @@ export class BrandService {
             path: `/api/v1/brand/${brandId}`,
         });
         return this.responseService.response(brand);
+    }
+    async delete(brandId: number) {
+        const res= await this.gatewayService.execute(MicroService.Product, {
+            method: "DELETE",
+            path: `/api/v1/brand/${brandId}`,
+        });
+        return this.responseService.response(res);
     }
 }

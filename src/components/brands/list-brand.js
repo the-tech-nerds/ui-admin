@@ -3,7 +3,7 @@ import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable'
 import App from "../app";
 import { Link } from 'react-router-dom';
-
+import { confirmAlert } from 'react-confirm-alert';
 
 export class ListBrand extends Component {
     render() {
@@ -44,7 +44,44 @@ export class ListBrand extends Component {
                                                         }}
                                                         />
                                                     </span>
-
+                                                    <span onClick={async () => {
+                                                           confirmAlert({
+                                                            title: 'Confirm to delete',
+                                                            message: 'Are you sure to do this?',
+                                                            buttons: [
+                                                              {
+                                                                label: 'Yes',
+                                                                onClick:async () => {
+                                                                    await fetch(`/api/brands/${row.original.id}`, {
+                                                                        method: 'DELETE',
+                                                                        headers: {
+                                                                            'Content-Type': 'application/json',
+                                                                        },
+                      
+                                                                    }).then(async res => {
+                                                                        const response = await res.json();
+                                                                        if(response.code == 200){
+                                                                            window.location.href = `/brands/list`;
+                                                                        }
+                                                                    })
+                                                                }
+                                                              },
+                                                              {
+                                                                label: 'No',
+                                                              }
+                                                            ]
+                                                          });
+                                                       
+                                                       
+                                                    }} title="delete brand">
+                                                        <i className="fa fa-trash" style={{
+                                                            width: 35,
+                                                            fontSize: 20,
+                                                            padding: 11,
+                                                            color: '#e4566e'
+                                                        }}
+                                                        />
+                                                    </span>
                                                 </div>
                                             ),
                                             style: {

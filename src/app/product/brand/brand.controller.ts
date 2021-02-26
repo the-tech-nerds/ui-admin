@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { BrandService } from "./brand.service";
 import { BrandRequest } from "./requests/brand.request";
 
@@ -33,5 +33,9 @@ export default class BrandController {
     @Get('/list/all')
     async gets() {
         return this.brandService.gets();
+    }
+    @Delete('/:id')
+    async delete( @Param('id') id: number) {
+        return this.brandService.delete(id);
     }
 }

@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
-import Forms from "../form/forms";
-import { AvField } from "availity-reactstrap-validation";
 import { Button } from "reactstrap";
 import AsyncSelect from 'react-select/async';
 
