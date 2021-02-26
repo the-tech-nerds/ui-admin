@@ -58,6 +58,8 @@ import { ListUnit } from './components/unit/list-unit';
 import { CreateUnit } from './components/unit/create-unit';
 import CreateSupplier from './components/suppliers/create-supplier';
 import ListSupplier from './components/suppliers/list-supplier';
+import CreateBrand from './components/brands/create-brand';
+import ListBrand from './components/brands/list-brand';
 
 class Root extends Component {
     permissions = [];
@@ -207,7 +209,20 @@ class Root extends Component {
                                 exact={true}
                             />
                         }
-
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/brands/create/:id`}
+                                component={CreateBrand}
+                                exact={true}
+                            />
+                        }
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/brands/list`}
+                                component={ListBrand}
+                                exact={true}
+                            />
+                        }
                         {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/suppliers/create/:id`}
