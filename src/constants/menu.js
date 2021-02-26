@@ -45,10 +45,10 @@ export const MENUITEMS = PermissionTypes ? [
     },
     {
         title: 'Shops', icon: ShoppingBag, type: 'sub', active: false,
-        permissions: [],
+        permissions: [PermissionTypes.SHOP.GET, PermissionTypes.SHOP.CREATE],
         children: [
-            {path: '/shops/list', title: 'Shop List', type: 'link', permissions: []},
-            {path: '/shops/create/0', title: 'Add Shop', type: 'link', permissions: []},
+            {path: '/shops/list', title: 'Shop List', type: 'link', permissions: [PermissionTypes.SHOP.GET]},
+            {path: '/shops/create/0', title: 'Add Shop', type: 'link', permissions: [PermissionTypes.SHOP.CREATE]},
         ]
     },
     {

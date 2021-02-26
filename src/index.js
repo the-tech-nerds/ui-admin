@@ -181,14 +181,14 @@ class Root extends Component {
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.SHOP.GET) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/shops/create/:id`}
                                 component={CreateShop}
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.SHOP.GET) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/shops/list`}
                                 component={ListShop}
