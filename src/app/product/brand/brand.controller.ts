@@ -14,6 +14,7 @@ export default class BrandController {
     async create(
         @Body() brandRequest: BrandRequest
     ) {
+        brandRequest.supplier_id = Number(brandRequest.supplier_id);
         return this.brandService.create(brandRequest);
     }
 
