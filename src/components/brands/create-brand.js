@@ -4,19 +4,121 @@ import App from "../app";
 import Forms from "../form/forms";
 import { AvField } from "availity-reactstrap-validation";
 import { Button } from "reactstrap";
+import AsyncSelect from 'react-select/async';
+
 
 export class CreateBrand extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            brand: {},
+            brand: {
+                name: '',
+                description:'',
+                supplier_id: 0
+            },
+            inputValue: '',
             brand_id: 0,
             method: 'POST',
             url: '/api/brands/',
-            loading: true
+            loading: true,
+            suppliers: [],
+            supplier_id: 0,
         }
+        this.getAllSupplier();
     }
+    onChangeSelectedOption  = (e) => {
+        this.setState({
+            brand: { description:  this.state.brand.description,
+                name: this.state.brand.name,
+                supplier_id: e.value}
+        });
+    };
+    handleInputChange = (newValue) => {
+        const inputValue = newValue.replace(/\W/g, '');
+        this.setState({ inputValue : inputValue });
+        return inputValue;
+      };
+    changeInputHandler = (event) => {
+        if(event.target.name =="name") {
+            this.setState({
+                brand: {
+                    name:  event.target.value,
+                    description: this.state.brand.description,
+                    supplier_id: this.state.brand.supplier_id
+                }
+            });
+        }
+        if(event.target.name =="description") {
+            this.setState({
+                brand: {
+                    description:  event.target.value,
+                    name:   this.state.brand.name,
+                    supplier_id: this.state.brand.supplier_id
+                }
+            });
+        }
+      }
 
+     filterOptions = (inputValue) => {
+        return this.state.suppliers.filter(i =>
+            i.label.toLowerCase().includes(inputValue.toLowerCase())
+        );
+    };
+    
+     loadOptions = (inputValue, callback) => {
+        setTimeout(() => {
+            callback(this.filterOptions(inputValue));
+        }, 1000);
+    };
+
+    getAllSupplier = async () => {
+        await fetch(`/api/suppliers/list/all`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            cache: 'no-cache',
+            redirect: 'follow',
+        }).then(async res => {
+            const response = await res.json();
+            const options = response.data.map(x=> {
+                 return {   label : x.Name,
+                    value: x.id};
+            });
+            this.setState({
+                suppliers: options
+            })
+        })
+    }
+    mySubmitHandler = (event) => {
+        event.preventDefault();
+        const id = Number(this.props.match.params.id);
+        let url = '/api/brands/';
+        let method = 'POST'
+        if(id> 0){
+            url = `/api/brands/update/${id}`;
+            method = 'PUT';
+        }
+        const values = this.state.brand;
+        fetch(url, {
+            method: method,
+            body: JSON.stringify(values),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            cache: 'no-cache',
+            redirect: 'follow',
+        }).then(async res => {
+            const response = await res.json();
+            if(response.code ==200){
+                window.location.href = `/brands/list/`;
+            }
+           
+        })
+            .catch(error => {
+               
+            })
+      }
     async componentDidMount() {
         const id = Number(this.props.match.params.id);
         if (id > 0) {
@@ -39,10 +141,12 @@ export class CreateBrand extends Component {
                     this.setState({ loading: false });
                     const response = await res.json();
                     if (response.code === 200) {
+                        var value = this.state.suppliers.filter(x=>x.value == response.data.supplier_id)[0].label;
                         this.setState((state) => {
                             return {
                                 ...state,
-                                brand: response.data
+                                brand: response.data,
+                                inputValue: value
                             }
                         });
                     } else {
@@ -71,12 +175,8 @@ export class CreateBrand extends Component {
 
     }
     render() {
-        const { brand, brand_id, method, url } = this.state;
-        const options = [
-            { label: 'Option 1', value: 1 },
-            { label: 'Option 2', value: 2 },
-            { label: 'Option 3', value: 3 },
-          ];
+        const { brand={}, brand_id, inputValue } = this.state;
+   
         return (
             <App>
 
@@ -89,25 +189,24 @@ export class CreateBrand extends Component {
                                     <h5>{brand_id > 0 ? 'Update brand' : 'Add brand'}</h5>
                                 </div>
                                 <div className="card-body">
-                                    <Forms
-                                        options={{
-                                            method: method,
-                                            url: url,
-                                            onSuccess: (response) => {
-                                                window.location.href = '/brands/list';
-                                            }
-                                        }}
-                                    >
-                                        <AvField name="name" label="Name" value={brand.name} type="text" required />
-                                        <AvField name="description" value={brand.description} label="Description" type="text" required />
-                                        <AvField type="select" name="supplier_id" label="Supplier" helpMessage="please, select on item from dropdown">
-                                            <option value="1">Khan group</option>
-                                            <option value="2">Amin group</option>
-                                        </AvField>
-                                        {/* <AvSelect name="justTheInput" options={options} required /> */}
-                                        {brand_id == 0 && <Button color="primary">Create</Button>}
-                                        {brand_id > 0 && <Button color="primary">Update</Button>}
-                                    </Forms>
+                                    <form  onSubmit={this.mySubmitHandler}>
+                                        <label>Name</label>
+                                        <input className="form-control"  name="name" onChange={this.changeInputHandler} value={brand?.name} placeholder="name"  type="text" required />
+                                       <label className="mt-2">Description</label>
+                                        <input className="form-control" name="description" onChange={this.changeInputHandler} placeholder="description..."  value={brand?.description}  type="text" required />
+                                        <label className="mt-2 mb-2">Suppliers</label>
+                                        <AsyncSelect
+                                            loadOptions={this.loadOptions}
+                                            defaultOptions
+                                            inputValue={inputValue}
+                                            name="supplier_id"
+                                            onChange={this.onChangeSelectedOption }
+                                            onInputChange={this.handleInputChange}
+                                        />
+                                        
+                                        {brand_id == 0 && <Button className="mt-2" color="primary">Create</Button>}
+                                        {brand_id > 0 && <Button className="mt-2" color="primary">Update</Button>}
+                                    </form>
                                 </div>
                             </div>
                         </div>
