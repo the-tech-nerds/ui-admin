@@ -25,14 +25,14 @@ export default class RoleService {
 
         });
 
-        const roles = roleList.map((role: any, index: any) => ({
+        let roles = roleList.map((role: any, index: any) => (
+            {
             hasUser: role.users.length > 0,
             id: role.id,
             'isActive': role.is_active,
             'SL No': ++index,
             'Name': role.name,
         }));
-
         return this.responseService.response(roles);
     }
 

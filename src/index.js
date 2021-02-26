@@ -181,56 +181,56 @@ class Root extends Component {
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.SHOP.GET) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/shops/create/:id`}
                                 component={CreateShop}
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.SHOP.GET) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/shops/list`}
                                 component={ListShop}
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.UNIT.CREATE) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/units/create/:id`}
                                 component={CreateUnit}
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.UNIT.GET) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/units/list`}
                                 component={ListUnit}
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.BRAND.CREATE) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/brands/create/:id`}
                                 component={CreateBrand}
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.BRAND.GET) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/brands/list`}
                                 component={ListBrand}
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.SUPPLIER.CREATE) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/suppliers/create/:id`}
                                 component={CreateSupplier}
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        {this.hasPermission(this.PermissionTypes.SUPPLIER.GET) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/suppliers/list`}
                                 component={ListSupplier}
