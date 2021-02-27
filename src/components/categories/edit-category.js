@@ -129,12 +129,15 @@ export default class EditCategory extends Component {
                                         }}
                                     >
                                         <div className="row small" style={{marginTop: "10px"}}>
+                                            <div className="col-md-12">
                                             <AvField type="select" name="category_id">
-                                                <option value="">Select a Category</option>
+                                                <option value="">Select Parent Category</option>
                                                 { categoryList.map(category => (
                                                     <option value={category.id}>{ category.name }</option>
                                                 ))}
                                             </AvField>
+                                            </div>
+
                                             <div className="col-md-12">
                                                 <div className="form-group">
                                                     <AvField name="name" label="Name" type="text" required
