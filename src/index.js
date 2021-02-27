@@ -58,6 +58,9 @@ import { ListUnit } from './components/unit/list-unit';
 import { CreateUnit } from './components/unit/create-unit';
 import CreateSupplier from './components/suppliers/create-supplier';
 import ListSupplier from './components/suppliers/list-supplier';
+import ListCategory from "./components/categories/list-category";
+import CreateCategory from "./components/categories/create-category";
+import EditCategory from "./components/categories/edit-category";
 
 class Root extends Component {
     permissions = [];
@@ -221,6 +224,29 @@ class Root extends Component {
                                 component={ListSupplier}
                                 exact={true}
                             />
+                        }
+
+                        //Category
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/categories/list`}
+                            component={ListCategory}
+                            exact={true}
+                        />
+                        }
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/create-category`}
+                            component={CreateCategory}
+                            exact={true}
+                        />
+                        }
+                        {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/categories/:id/edit`}
+                            component={EditCategory}
+                            exact={true}
+                        />
                         }
                         {/*<Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors}/>*/}
                         {/*<Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`}*/}

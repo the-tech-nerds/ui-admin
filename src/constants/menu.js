@@ -11,6 +11,7 @@ import {
     Chrome,
     CheckCircle,
     ShoppingBag,
+    List,
     BarChart, Settings, Archive, LogIn
 } from 'react-feather';
 import {getPermissionTypes} from "../utils/utils";
@@ -57,6 +58,13 @@ export const MENUITEMS = PermissionTypes ? [
         children: [
             {path: '/suppliers/list', title: 'Supplier List', type: 'link', permissions: []},
             {path: '/suppliers/create/0', title: 'Add Supplier', type: 'link', permissions: []},
+        ]
+    },
+    {
+        title: 'Categories', icon: ShoppingBag, type: 'sub', active: false,
+        permissions: [],
+        children: [
+            {path: '/categories/list', title: 'Category List', type: 'link', permissions: []},
         ]
     },
     {

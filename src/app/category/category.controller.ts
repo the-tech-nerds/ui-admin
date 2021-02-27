@@ -1,7 +1,7 @@
 import {Body, Controller, Get, Param, Post, Put} from "@nestjs/common";
 import CategoryService from "./category.service";
 
-@Controller('/api/users')
+@Controller('/api/categories')
 export default class CategoryController {
     constructor(
         private readonly categoryService: CategoryService

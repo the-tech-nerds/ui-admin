@@ -23,7 +23,7 @@ export default class ListCategory extends Component {
     }
 
     componentDidMount() {
-        fetch(`/api/categories`, {
+        fetch(`/api/categories/`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -47,6 +47,7 @@ export default class ListCategory extends Component {
                 }
             })
             .catch(error => {
+                console.log('in error', error.message);
                 this.setState({
                     error: true,
                     errorMessage: error,
@@ -80,33 +81,6 @@ export default class ListCategory extends Component {
                                 <Link to="/create-category" className="btn btn-secondary">Create Category</Link>
                             </div>
                             <div className="clearfix"></div>
-                            <Modal open={open} onClose={this.onCloseModal} center>
-                                <div className="modal-header">
-                                    <h5 className="modal-title f-w-600" id="exampleModalLabel2">Assign Role to Category</h5>
-                                </div>
-                                <div className="modal-body">
-                                    <Forms
-                                        options={{
-                                            method: 'POST',
-                                            url: `/api/categories/${CategoryId}/assign-roles`,
-                                            onSuccess: (response) => {
-                                                window.location.href = '/list-admins';
-                                            },
-                                        }}
-                                    >
-                                        <AvField type="select" name="roles" id={"roles_"+CategoryId} value={CategoryRoles} label="Roles" helpMessage="Choose a Role to assign!" multiple>
-                                            {categoryList.map(role => (
-                                                <option value={role.id}>{ role.Name }</option>
-                                            ))}
-                                        </AvField>
-
-                                        <Button className="btn btn-xs btn-secondary">Assign</Button>
-                                    </Forms>
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-xs btn-warning" onClick={() => this.onCloseModal('VaryingMdo')}>Close</button>
-                                </div>
-                            </Modal>
 
                             <Modal open={openStatus} onClose={this.onCloseModal} center>
                                 <div className="modal-header bg-warning">
@@ -131,7 +105,7 @@ export default class ListCategory extends Component {
 
                             <div id="batchDelete" className="category-table category-list order-table coupon-list-delete">
                                 <Datatable
-                                    url="/api/categories"
+                                    url="/api/categories/"
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"
@@ -142,6 +116,18 @@ export default class ListCategory extends Component {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
+                                                    <span onClick={() => {
+                                                    window.location.href = `/categories/${row.original.id}/edit`;
+                                                    }} title="Edit role">
+                                                        <i className="fa fa-pencil" style={{
+                                                            width: 35,
+                                                            fontSize: 20,
+                                                            padding: 11,
+                                                            color: '#e4566e'
+                                                        }}
+                                                        />
+                                                    </span>
+
                                                     <span onClick={() => {
                                                         this.setState({
                                                             CategoryId: row.original.id
