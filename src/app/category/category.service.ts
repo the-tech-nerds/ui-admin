@@ -27,13 +27,10 @@ export default class CategoryService {
     }
 
     async listCategories() {
-        console.log('in category list service');
         const {data: categoryList} = await this.gatewayService.execute("product", {
             method: "GET",
             path: '/api/v1/category/all',
         });
-
-        console.log('category list : ', categoryList);
 
         const categories = categoryList.map((category: any, index: any) => ({
             id: category.id,
@@ -43,8 +40,6 @@ export default class CategoryService {
             'Slug': category.slug,
             'Active': category.is_active ? 'Yes' : 'No'
         }));
-
-        console.log('in categories fetch', categories);
 
         return this.responseService.response(categories);
     }

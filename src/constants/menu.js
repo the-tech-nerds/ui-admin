@@ -46,18 +46,18 @@ export const MENUITEMS = PermissionTypes ? [
     },
     {
         title: 'Shops', icon: ShoppingBag, type: 'sub', active: false,
-        permissions: [],
+        permissions: [PermissionTypes.SHOP.GET, PermissionTypes.SHOP.CREATE],
         children: [
-            {path: '/shops/list', title: 'Shop List', type: 'link', permissions: []},
-            {path: '/shops/create/0', title: 'Add Shop', type: 'link', permissions: []},
+            {path: '/shops/list', title: 'Shop List', type: 'link', permissions: [PermissionTypes.SHOP.GET]},
+            {path: '/shops/create/0', title: 'Add Shop', type: 'link', permissions: [PermissionTypes.SHOP.CREATE]},
         ]
     },
     {
         title: 'Suppliers', icon: ShoppingBag, type: 'sub', active: false,
-        permissions: [],
+        permissions: [PermissionTypes.SUPPLIER.GET, PermissionTypes.SUPPLIER.CREATE],
         children: [
-            {path: '/suppliers/list', title: 'Supplier List', type: 'link', permissions: []},
-            {path: '/suppliers/create/0', title: 'Add Supplier', type: 'link', permissions: []},
+            {path: '/suppliers/list', title: 'Supplier List', type: 'link', permissions: [PermissionTypes.SUPPLIER.GET]},
+            {path: '/suppliers/create/0', title: 'Add Supplier', type: 'link', permissions: [PermissionTypes.SUPPLIER.CREATE]},
         ]
     },
     {
@@ -69,9 +69,10 @@ export const MENUITEMS = PermissionTypes ? [
     },
     {
         title: 'Products', icon: ShoppingBag, type: 'sub', active: false,
-        permissions: [],
+        permissions: [PermissionTypes.UNIT.GET,PermissionTypes.BRAND.GET],
         children: [
-            {path: '/units/list', title: 'Unit', type: 'link', permissions: []},
+            {path: '/units/list', title: 'Unit', type: 'link', permissions: [PermissionTypes.UNIT.GET]},
+            {path: '/brands/list', title: 'Brand', type: 'link', permissions: [PermissionTypes.BRAND.GET]},
         ]
     },
     /*{
