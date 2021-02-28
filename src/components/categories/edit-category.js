@@ -124,7 +124,7 @@ export default class EditCategory extends Component {
                                             method: 'PUT',
                                             url: `/api/categories/${categoryId}`,
                                             onSuccess: (response) => {
-                                                window.location.href = '.categories/list';
+                                                window.location.href = '/categories/list';
                                             },
                                         }}
                                     >
