@@ -130,7 +130,7 @@ export default class EditCategory extends Component {
                                     >
                                         <div className="row small" style={{marginTop: "10px"}}>
                                             <div className="col-md-12">
-                                            <AvField type="select" name="category_id">
+                                            <AvField type="select" name="parent_id">
                                                 <option value="">Select Parent Category</option>
                                                 { categoryList.map(category => (
                                                     <option value={category.id}>{ category.Name }</option>
