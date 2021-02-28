@@ -21,7 +21,7 @@ export default class CategoryService {
     updateCategory(category: any) {
         return this.gatewayService.execute("product", {
             method: "PUT",
-            path: '/api/v1/category',
+            path: '/api/v1/category/' + category.id,
             body: { ...category},
         });
     }

@@ -19,6 +19,7 @@ export default class CategoryController {
     async update(
         @Body() categoryUpdateRequest: any
     ) {
+        console.log(categoryUpdateRequest)
         return this.categoryService.updateCategory(categoryUpdateRequest);
     }
 

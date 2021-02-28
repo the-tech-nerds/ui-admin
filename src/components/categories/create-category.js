@@ -65,14 +65,14 @@ export class CreateCategory extends Component {
                                             method: 'POST',
                                             url: '/api/categories',
                                             onSuccess: (response) => {
-                                                window.location.href ='/list-category';
+                                                window.location.href ='/categories/list';
                                             }
                                         }}
                                     >
                                         <AvField type="select" name="category_id">
                                             <option value="">Select Parent Category</option>
                                             { categoryList.map(category => (
-                                                <option value={category.id}>{ category.name }</option>
+                                                <option value={category.id}>{ category.Name }</option>
                                             ))}
                                         </AvField>
 

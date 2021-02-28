@@ -77,7 +77,7 @@ export default class EditCategory extends Component {
                     this.setState((state) => {
                         return {
                             ...state,
-                            categoryList: this.state.categoryList.filter(category => category.id !== categoryId)
+                            categoryList: this.state.categoryList.filter(category => category.id !== Number(categoryId))
                         }
                     });
                 } else {
@@ -124,7 +124,7 @@ export default class EditCategory extends Component {
                                             method: 'PUT',
                                             url: `/api/categories/${categoryId}`,
                                             onSuccess: (response) => {
-                                                window.location.href = '/list-categories';
+                                                window.location.href = '.categories/list';
                                             },
                                         }}
                                     >
@@ -133,7 +133,7 @@ export default class EditCategory extends Component {
                                             <AvField type="select" name="category_id">
                                                 <option value="">Select Parent Category</option>
                                                 { categoryList.map(category => (
-                                                    <option value={category.id}>{ category.name }</option>
+                                                    <option value={category.id}>{ category.Name }</option>
                                                 ))}
                                             </AvField>
                                             </div>
