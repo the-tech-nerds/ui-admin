@@ -15,12 +15,12 @@ export default class CategoryController {
         return this.categoryService.createCategory(categoryCreateRequest);
     }
 
-    @Put('/')
+    @Put('/:id')
     async update(
-        @Body() categoryUpdateRequest: any
+        @Body() categoryUpdateRequest: any, @Param('id') id: number
     ) {
         console.log(categoryUpdateRequest)
-        return this.categoryService.updateCategory(categoryUpdateRequest);
+        return this.categoryService.updateCategory(id, categoryUpdateRequest);
     }
 
     @Get('/')

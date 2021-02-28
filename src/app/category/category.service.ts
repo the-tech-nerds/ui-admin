@@ -18,10 +18,10 @@ export default class CategoryService {
         });
     }
 
-    updateCategory(category: any) {
+    updateCategory(id: number, category: any) {
         return this.gatewayService.execute("product", {
             method: "PUT",
-            path: '/api/v1/category/' + category.id,
+            path: `/api/v1/category/${id}`,
             body: { ...category},
         });
     }
