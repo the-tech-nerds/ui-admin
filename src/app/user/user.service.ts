@@ -56,7 +56,9 @@ export default class UserService {
     }
 
     async listUsers() {
-        const {data: userList} = await this.gatewayService.execute("auth", {
+        const {
+               data: userList
+            } = await this.gatewayService.execute("auth", {
             method: "GET",
             qs: {
                 userType: '2',
@@ -64,17 +66,7 @@ export default class UserService {
             path: '/api/v1/user/all',
         });
 
-        const users = userList.map((user: any, index: any) => ({
-            id: user.id,
-            'SL No': ++index,
-            'First Name': user.first_name,
-            'Last Name': user.last_name,
-            'Email': user.email,
-            'Phone': user.phone,
-            'Active': user.is_active ? 'Yes' : 'No'
-        }));
-
-        return this.responseService.response(users);
+        return this.responseService.response(userList);
     }
 
     async listAdmins() {

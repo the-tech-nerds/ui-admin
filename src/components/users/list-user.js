@@ -23,7 +23,11 @@ export class List_user extends Component {
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"
-                                    excludeColumns={['id']}
+                                    renameColumns={{
+                                        'is_active': 'Active'
+                                    }}
+                                    takeColumns={['id', 'first_name', 'last_name', 'email', 'phone', 'is_active']}
+                                    // excludeColumns={['id']}
                                 />
                             </div>
                         </div>

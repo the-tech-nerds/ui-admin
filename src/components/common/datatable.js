@@ -6,6 +6,44 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as fetch from 'isomorphic-fetch';
 import Loader from "./loader";
 
+function PaginationComponent({ 
+    nextUrl = "",
+    prevUrl = "",
+    currentPage = 0,
+    totalPages = 0,
+    onPageChange = () => {},
+    onNext = () => {},
+    onPrevious = () => {}
+  }) {
+    const isEmpty = (url) => url === null || url === undefined || url === "" || typeof url === "boolean";
+    return (
+        <div>
+            <nav aria-label="Page navigation">
+                <ul className="pagination justify-content-between p-2">
+                    <li
+                        className={`page-item ${isEmpty(prevUrl) ? 'disabled' : ''}`}
+                        onClick={() => onPrevious(prevUrl)}
+                    >
+                        <a className="btn btn-lg" href="javascrip:void(0)">Previous</a>
+                    </li>
+                    <li>
+                        Page <input type="text" onChange={(e)=> onPageChange(e.target.value)} value={currentPage} /> of {totalPages}
+                    </li>
+                    {/* <li className="page-item"><a className="page-link" href="#">1</a></li>
+                        <li className="page-item"><a className="page-link" href="#">2</a></li>
+                        <li className="page-item"><a className="page-link" href="#">3</a></li> */}
+                    <li
+                        className={`page-item ${isEmpty(nextUrl) ? 'disabled' : ''}`}
+                        onClick={() => onNext(nextUrl)}
+                    >
+                        <a className="btn btn-lg" href="javascript:void(0)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    )
+};
+
 export class Datatable extends Component {
     constructor(props) {
         super(props)
@@ -14,27 +52,77 @@ export class Datatable extends Component {
             myData: this.props.myData,
             loading: false,
             error: null,
+            limit: 10,
+            next: null,
+            previous: null,
+            search: "",
+            page: 1,
+            total: 0,
         }
     }
 
     componentDidMount() {
-        const { url = undefined } = this.props;
+        let { url = undefined } = this.props;
         if (url) {
+            url += `?page=${this.state.page}&limit=${this.state.limit}&sortBy=id:ASC`;
             this.setState({
                 loading: true
             });
             fetch(url).then(async res => {
                 const response = await res.json();
+                if (response.code === 200) {
+                    const {
+                        data: {
+                            results = [],
+                            links: {
+                                next = "",
+                                previous = ""
+                            },
+                            meta: {
+                                totalPages: pages = 0,
+                                totalResults: total = 0,
+                                currentPage: page = 1,
+                            } = {}
+                        } = {}
+                    } = response;
 
-                if (response.code === 200 ) {
                     this.setState({
-                        myData: response.data,
+                        myData: results,
                         loading: false,
+                        next: next,
+                        previous: previous,
+                        page,
+                        pages, 
+                        total,
                     });
                     return;
                 }
                 this.setError("Failed Loading Data");
-            }).catch(e => {})
+            }).catch(e => { })
+        }
+    }
+
+
+    fetchNextOrPrevious = (params = '') => {
+        let { url = undefined } = this.props;
+        if (url) {
+            url = `${url}${params}&search=${this.state.search}`;
+            this.setState({
+                loading: true
+            });
+            fetch(url).then(async res => {
+                const response = await res.json();
+                if (response.code === 200) {
+                    this.setState({
+                        myData: response.data.results,
+                        loading: false,
+                        next: response.data.links && response.data.links.next !== undefined && response.data.links.next,
+                        previous: response.data.links && response.data.links.previous !== undefined && response.data.links.previous,
+                    });
+                    return;
+                }
+                this.setError("Failed Loading Data");
+            }).catch(e => { })
         }
     }
 
@@ -95,19 +183,42 @@ export class Datatable extends Component {
         return (
             row[id] !== undefined ?
                 String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase())
-            :
+                :
                 true
         );
     }
 
+    onPageChange = (value) => {
+        console.log(value);
+    }
+
+    getPaginationComponent = () => {
+        return (
+            <PaginationComponent
+                prevUrl={this.state.previous}
+                currentPage={this.state.page}
+                totalPages={this.state.total}
+                onPageChange={v => this.onPageChange(v)}
+                onPrevious={(url) => this.fetchNextOrPrevious(url)}
+                nextUrl={this.state.next}
+                onNext={(url) => this.fetchNextOrPrevious(url)}
+            />
+        )
+    }
+
+    searchChanged = (value) => {
+        this.setState({
+            search: value
+        }, this.fetchNextOrPrevious);
+    }
 
     render() {
-        const { pageSize, myClass, multiSelectOption, pagination, extraColumns = [], excludeColumns = [] } = this.props;
-        const { myData = [], loading = false, error = null } = this.state
+        const { pageSize, myClass, multiSelectOption, pagination, extraColumns = [], takeColumns = [], excludeColumns = [], } = this.props;
+        const { myData = [], loading = false, error = null } = this.state;
 
         if (loading) {
             return <div style={{ display: 'flex', justifyContent: 'center' }}>
-                 <Loader/>
+                <Loader />
             </div>
         }
 
@@ -120,7 +231,11 @@ export class Datatable extends Component {
         let columns = [];
         if (myData) {
             for (var key in myData[0]) {
-                if(excludeColumns.includes(key)){
+                if (excludeColumns.includes(key)) {
+                    continue;
+                }
+
+                if (!takeColumns.includes(key)) {
                     continue;
                 }
                 let editable = this.renderEditable
@@ -136,7 +251,7 @@ export class Datatable extends Component {
                 if (key === "vendor") {
                     editable = null;
                 }
-                if(key === "order_status"){
+                if (key === "order_status") {
                     editable = null;
                 }
 
@@ -155,11 +270,11 @@ export class Datatable extends Component {
                 columns.push(
                     {
                         Header: <button className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
-                                        onClick={
-                                            (e) => {
-                                                if (window.confirm('Are you sure you wish to delete this item?'))
-                                                    this.handleRemoveRow()
-                                            }}>Delete</button>,
+                            onClick={
+                                (e) => {
+                                    if (window.confirm('Are you sure you wish to delete this item?'))
+                                        this.handleRemoveRow()
+                                }}>Delete</button>,
                         id: 'delete',
                         accessor: str => "delete",
                         sortable: false,
@@ -168,10 +283,10 @@ export class Datatable extends Component {
                         },
                         Cell: (row) => (
                             <div>
-                            <span >
-                                <input type="checkbox" name={row.original.id} defaultChecked={this.state.checkedValues.includes(row.original.id)}
-                                       onChange={e => this.selectRow(e, row.original.id)} />
-                            </span>
+                                <span >
+                                    <input type="checkbox" name={row.original.id} defaultChecked={this.state.checkedValues.includes(row.original.id)}
+                                        onChange={e => this.selectRow(e, row.original.id)} />
+                                </span>
                             </div>
                         ),
                         accessor: key,
@@ -182,20 +297,27 @@ export class Datatable extends Component {
                 )
             }
             if (extraColumns.length > 0) {
-                columns = [ ...columns, ...extraColumns ];
+                columns = [...columns, ...extraColumns];
             }
         }
 
         return (
             <Fragment>
+                <div class="justify-content-right">
+                    <input
+                        className="form-control"
+                        placeholder="Search...."
+                        value={this.state.search}
+                        onChange={(e) => this.searchChanged(e.target.value)}
+                    />
+                </div>
                 <ReactTable
-                    filterable={true}
+                    filterable={false}
                     data={myData}
                     columns={columns}
-                    defaultPageSize={pageSize}
+                    defaultPageSize={this.state.limit}
                     className={myClass}
-                    showPagination={pagination}
-                    defaultFilterMethod={(filter, row) => this.filterCaseInsensitive(filter, row) }
+                    PaginationComponent={this.getPaginationComponent}
                 />
                 <ToastContainer />
             </Fragment>
