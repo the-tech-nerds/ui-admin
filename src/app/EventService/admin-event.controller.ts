@@ -1,4 +1,5 @@
-import {Controller} from "@nestjs/common";
+import { Controller, Get} from "@nestjs/common";
+import {Client, ClientKafka, Transport} from "@nestjs/microservices";
 
 @Controller('/api/event')
 export default class AdminEventController {
@@ -23,18 +24,20 @@ export default class AdminEventController {
         await this.client.connect();
     }
 
-    @Post('/')
-    appPost(@Body() post: any) {
+    /*@Post('/')
+    // @ts-ignore
+    add(@Body() post: any) {
         try {
             console.log(post);
             return this.client.send('add.new.products', post);
         } catch (e) {
             console.log(e);
         }
-    }
+    }*/
 
     @Get('/')
     getList() {
-        return this.client.send('get.products.list', '');
+        return JSON.stringify({key: 'a'});
+        //return this.client.send('get.products.list', '');
     }
 }
