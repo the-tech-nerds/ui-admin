@@ -1,27 +1,25 @@
-import { Controller, Get} from "@nestjs/common";
-import {Client, ClientKafka, Transport} from "@nestjs/microservices";
+import { Controller, Get,} from "@nestjs/common";
+import {Client, Transport, ClientRMQ,} from "@nestjs/microservices";
 
 @Controller('/api/event')
 export default class AdminEventController {
     @Client({
-        transport: Transport.KAFKA,
+        transport: Transport.RMQ,
         options: {
-            client: {
-                clientId: 'products',
-                brokers: ['localhost:9092'],
+            urls: ['amqp://user:pass@localhost:5672/grocery'],
+            queue: 'cats_queue',
+            queueOptions: {
+              durable: false
             },
-            consumer: {
-                groupId: 'kfc-stream',
-            },
-        },
+          },
     })
-    client: ClientKafka;
+    client: ClientRMQ;
 
     async onModuleInit() {
-        this.client.subscribeToResponseOf('add.new.products');
-        this.client.subscribeToResponseOf('get.products.list');
-
-        await this.client.connect();
+        // this.client.consumeChannel('')
+        // this.client.subscribeToResponseOf('get.products.list');
+        console.log('sdasdasd');
+        // await this.client.connect();
     }
 
     /*@Post('/')
@@ -37,7 +35,9 @@ export default class AdminEventController {
 
     @Get('/')
     getList() {
-        return JSON.stringify({key: 'a'});
-        //return this.client.send('get.products.list', '');
+        // return JSON.stringify({key: 'a'});
+        console.log('here ');
+        this.client.emit<any>('get.products.list', "New message");
+        return 'message published';
     }
 }

@@ -12,6 +12,7 @@ import {ShopModule} from "./shop/shop.module";
 import { ProductModule } from './product/product.module';
 import { SupplierModule } from './supplier/supplier.module';
 import {CategoryModule} from "./category/category.module";
+import { AdminEventModule } from './EventService/admin-event.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import {CategoryModule} from "./category/category.module";
       ShopModule,
       ProductModule,
       SupplierModule,
-      CategoryModule
+      CategoryModule,
+      AdminEventModule,
   ],
   controllers: [AppController],
   providers: [AppService]
