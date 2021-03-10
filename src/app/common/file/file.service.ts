@@ -11,7 +11,7 @@ export class FileService {
     ) {
     }
 
-   async create(file: any, content: any, microService: string): Promise<any>{
+   async create(file: any, content: any): Promise<any>{
         var FormData = require("form-data");
         const formData = new FormData();
         formData.append('image', file.buffer, { filename: file.originalname });
@@ -20,7 +20,7 @@ export class FileService {
             folder: content.folder,
             entity_id: content.entity_id
           }))
-        const res = await this.gatewayService.execute(microService, {
+        const res = await this.gatewayService.execute(content.serviceName, {
             method: "POST",
             path: '/api/v1/file/upload',
             headers: {
@@ -29,6 +29,16 @@ export class FileService {
             },
             body: formData,
             contentType: 'FILE'
+        });
+
+         return this.responseService.response(res);
+    }
+    async delete(id: number, content: any): Promise<any>{
+      
+        const res = await this.gatewayService.execute(content.serviceName, {
+            method: "DELETE",
+            path: `/api/v1/file/${id}`,
+            body: {... content}
         });
 
          return this.responseService.response(res);

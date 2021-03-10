@@ -29,7 +29,31 @@ const MyUploader = (props) => {
       var json = JSON.parse(xhr.response)
      }
      else if(status == "removed") {
-      var json = JSON.parse(xhr.response)    
+      var json = JSON.parse(xhr.response);
+      const data = json.data.data;
+      debugger
+      const info = JSON.stringify({
+        entity_id: data.id,
+        folder: content.folder,
+        url: data.url,
+        serviceName: content.serviceName,
+      } );  
+      await fetch(`/api/file/${data.id}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        cache: 'no-cache',
+        redirect: 'follow',
+        body: info
+    })
+        .then(async res => {
+            this.setState({ loading: false });
+            const response = await res.json();
+        })
+        .catch(error => {
+        
+        });
     }
    }
   

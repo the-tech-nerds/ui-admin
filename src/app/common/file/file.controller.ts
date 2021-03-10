@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
@@ -8,7 +8,7 @@ import { FileService } from './file.service';
 export class FileController {
   constructor(
     private readonly fileService: FileService,
-  ) {}
+  ) { }
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('image'))
@@ -16,9 +16,19 @@ export class FileController {
     @UploadedFile() file: any,
     @Body() content: any,
     @Res() res: Response,
-  ){
-     const model = JSON.parse(content.fileStoreInfo);
-     const result = await this.fileService.create(file, model, model.serviceName);
+  ) {
+    const model = JSON.parse(content.fileStoreInfo);
+    const result = await this.fileService.create(file, model);
+    return res.json(result);
+  }
+
+  @Delete('/:id')
+  async DeleteFile(
+    @Param('id') id: number,
+    @Body() content: any,
+    @Res() res: Response,
+  ) {
+    const result = await this.fileService.delete(id, content);
     return res.json(result);
   }
 }
