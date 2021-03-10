@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {Body, Controller, Delete, Param, Post, Put, Res, UploadedFile, UseInterceptors} from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
@@ -29,6 +29,14 @@ export class FileController {
     @Res() res: Response,
   ) {
     const result = await this.fileService.delete(id, content);
+    return res.json(result);
+  }
+  @Put('update')
+  async Update(
+      @Body() content: any,
+      @Res() res: Response,
+  ) {
+    const result = await this.fileService.update( content);
     return res.json(result);
   }
 }

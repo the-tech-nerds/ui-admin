@@ -2,9 +2,20 @@ import { json } from 'body-parser'
 import React from 'react'
 import Dropzone from 'react-dropzone-uploader'
 import 'react-dropzone-uploader/dist/styles.css'
+
 const MyUploader = (props) => {
   // specify upload params and url for your files
-  const {content= {}} = props;
+  const dropzoneStyle = {
+    width  : "100%",
+    height : "20%",
+    border : "1px solid black",
+    overflow : 'auto !important'
+};
+  const {content= {}, options: {
+      onUploadSuccess = () => {
+      },
+      images = []
+  }} = props;
   const getUploadParams = async ({ file, meta }) => {
     const formData = new FormData()
     formData.append('image', file)
@@ -19,25 +30,29 @@ const MyUploader = (props) => {
         'Content-Type': 'application/json',
       },
     };
-    
+
     return { url: '/api/file/upload',body: formData, config }
   }
-  
+
   // called every time a file's `status` changes
   const handleChangeStatus = async ({ meta, file, xhr  }, status) => {
-    if(status == "done") { 
-      var json = JSON.parse(xhr.response)
+    if(status == "done") {
+      const json = JSON.parse(xhr.response);
+      const model = {
+          status: status,
+          data: json.data.data
+      }
+        onUploadSuccess(model);
      }
      else if(status == "removed") {
       var json = JSON.parse(xhr.response);
       const data = json.data.data;
-      debugger
       const info = JSON.stringify({
         entity_id: data.id,
         folder: content.folder,
         url: data.url,
         serviceName: content.serviceName,
-      } );  
+      } );
       await fetch(`/api/file/${data.id}`, {
         method: "DELETE",
         headers: {
@@ -48,32 +63,39 @@ const MyUploader = (props) => {
         body: info
     })
         .then(async res => {
-            this.setState({ loading: false });
             const response = await res.json();
+            const model = {
+                status: status,
+                data: json.data.data
+            }
+            onUploadSuccess(model);
         })
         .catch(error => {
-        
+
         });
     }
    }
-  
+
   // receives array of files that are done uploading when submit button is clicked
   const handleSubmit = (files, allFiles) => {
     allFiles.forEach(f => f.remove())
   }
 
   return (
-    <div className="">
+    <div className="row">
+      <div className="col-6">
       <Dropzone
       getUploadParams={getUploadParams}
       onChangeStatus={handleChangeStatus}
-      // inputWithFilesContent={"Add more"}
-      // submitButtonContent={"Save"}
-      onSubmit={handleSubmit}
       accept="image/*,audio/*,video/*"
     />
+      </div>
+      <div className="col-6">
+      
+      </div>
+      
     </div>
-    
+
   )
 }
 

@@ -4120,3 +4120,12 @@ $i: 1;
 .blur {
   opacity: 0.4;
 }
+/*=====================
+ Dropzone
+==========================*/
+.dzu-dropzone {
+  overflow: auto !important;
+}
+.dzu-previewContainer {
+  padding: 10px 3% !important;
+}

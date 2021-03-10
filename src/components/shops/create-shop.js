@@ -5,6 +5,7 @@ import Forms from "../form/forms";
 import { AvField } from "availity-reactstrap-validation";
 import { Button } from "reactstrap";
 import MyDropzone from '../common/dropzone';
+import MyUploader from "../common/dropzone";
 export class CreateShop extends Component {
     constructor(props) {
         super(props)
@@ -16,11 +17,28 @@ export class CreateShop extends Component {
                 entity_id: 0,
                 serviceName: 'product'
             },
+            images: [],
+            uploadIds: [],
             shop_id: 0,
             method: 'POST',
             url: '/api/shops/',
             loading: true
         }
+    }
+     handleUploadResponse = (response) =>{
+         if(response.status == 'done'){
+             let ids = this.state.uploadIds;
+             let imgs = this.state.images;
+              ids.push(response.data.id)
+              imgs.push(response.data.url)
+             this.setState({ uploadIds: ids,
+                 images: imgs});
+         } else if(response.status =='removed'){
+             const urls  = this.state.images.filter(i => i !== response.data.url);
+             const ids = this.state.uploadIds.filter(u =>u !== response.data.id)
+             this.setState({ uploadIds: ids,
+                 images: urls});
+         }
     }
 
     async componentDidMount() {
@@ -77,7 +95,7 @@ export class CreateShop extends Component {
 
     }
     render() {
-        const { shop, shop_id, method, url, contentInfo } = this.state;
+        let { shop, shop_id, method, url, contentInfo, images, uploadIds } = this.state;
         return (
             <App>
 
@@ -95,7 +113,12 @@ export class CreateShop extends Component {
                                             <h5>Dropzone Media</h5>
                                         </div>
                                         <div className="card-body">
-                                            <MyDropzone content={contentInfo} />
+                                            <MyUploader options={{
+                                                images: images,
+                                                onUploadSuccess: (response) => {
+                                                   this.handleUploadResponse(response);
+                                                }
+                                            }} content={contentInfo} />
                                         </div>
                                     </div>
 
@@ -103,8 +126,37 @@ export class CreateShop extends Component {
                                         options={{
                                             method: method,
                                             url: url,
-                                            onSuccess: (response) => {
-                                                window.location.href = '/shops/list';
+                                            onSuccess: async (response) => {
+                                                let items = []
+                                               await uploadIds.forEach(x=>{
+                                                   items.push({
+                                                       id: Number(x),
+                                                       url: '',
+                                                       type:'shop',
+                                                       type_id: response.data.id,
+                                                       microService: 'product'
+                                                   });
+                                                });
+                                                if(items.length ==0){
+                                                    window.location.href = '/shops/list';
+                                                    return;
+                                                }
+                                                await fetch(`/api/file/update`, {
+                                                    method: "PUT",
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                    },
+                                                    body: JSON.stringify(items),
+                                                    cache: 'no-cache',
+                                                    redirect: 'follow',
+                                                })
+                                                    .then(async res => {
+                                                        const respons = await res.json();
+                                                        if(respons.code ==200){
+                                                            window.location.href = '/shops/list';
+                                                        }
+                                                     
+                                                    })
                                             }
                                         }}
                                     >

@@ -34,7 +34,7 @@ export class FileService {
          return this.responseService.response(res);
     }
     async delete(id: number, content: any): Promise<any>{
-      
+
         const res = await this.gatewayService.execute(content.serviceName, {
             method: "DELETE",
             path: `/api/v1/file/${id}`,
@@ -42,5 +42,15 @@ export class FileService {
         });
 
          return this.responseService.response(res);
+    }
+    async update(content: any): Promise<any>{
+
+        const res = await this.gatewayService.execute(content[0].microService, {
+            method: "PUT",
+            path: `/api/v1/file`,
+            body: {... content}
+        });
+
+        return this.responseService.response(res);
     }
 }
