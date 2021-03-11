@@ -2,6 +2,7 @@ import { json } from 'body-parser'
 import React from 'react'
 import Dropzone from 'react-dropzone-uploader'
 import 'react-dropzone-uploader/dist/styles.css'
+import ImageGalary from "./imagegalary";
 
 const MyUploader = (props) => {
   // specify upload params and url for your files
@@ -83,17 +84,46 @@ const MyUploader = (props) => {
 
   return (
     <div className="row">
-      <div className="col-6">
+      <div className="col-4">
       <Dropzone
       getUploadParams={getUploadParams}
       onChangeStatus={handleChangeStatus}
       accept="image/*,audio/*,video/*"
     />
       </div>
-      <div className="col-6">
-      
+      <div className="col-8">
+       <ImageGalary options={{
+           images: images,
+           onDeleteSuccess: async (response) => {
+               const info = JSON.stringify({
+                   entity_id: response.id,
+                   folder: response.type,
+                   url: response.url,
+                   serviceName: content.serviceName,
+               } );
+               await fetch(`/api/file/${response.id}`, {
+                   method: "DELETE",
+                   headers: {
+                       'Content-Type': 'application/json',
+                   },
+                   cache: 'no-cache',
+                   redirect: 'follow',
+                   body: info
+               })
+                   .then( res => {
+                       const model = {
+                           status: 'delete',
+                           data: response
+                       }
+                       onUploadSuccess(model);
+                   })
+                   .catch(error => {
+
+                   });
+           }
+       }}/>
       </div>
-      
+
     </div>
 
   )

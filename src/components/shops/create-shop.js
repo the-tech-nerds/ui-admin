@@ -14,7 +14,7 @@ export class CreateShop extends Component {
             contentInfo: {
                 entity: 'shop',
                 folder: 'shop',
-                entity_id: 0,
+                entity_id: Number(this.props.match.params.id),
                 serviceName: 'product'
             },
             images: [],
@@ -22,7 +22,8 @@ export class CreateShop extends Component {
             shop_id: 0,
             method: 'POST',
             url: '/api/shops/',
-            loading: true
+            loading: true,
+            files:[]
         }
     }
      handleUploadResponse = (response) =>{
@@ -38,6 +39,15 @@ export class CreateShop extends Component {
              const ids = this.state.uploadIds.filter(u =>u !== response.data.id)
              this.setState({ uploadIds: ids,
                  images: urls});
+         }
+         else if(response.status =='delete'){
+             const file  = this.state.files.filter(i => i.id !== response.data.id);
+             this.setState((state) => {
+                 return {
+                     ...state,
+                     files: file,
+                 }
+             });
          }
     }
 
@@ -66,7 +76,8 @@ export class CreateShop extends Component {
                         this.setState((state) => {
                             return {
                                 ...state,
-                                shop: response.data
+                                shop: response.data.shop,
+                                files: response.data.images
                             }
                         });
                     } else {
@@ -95,7 +106,7 @@ export class CreateShop extends Component {
 
     }
     render() {
-        let { shop, shop_id, method, url, contentInfo, images, uploadIds } = this.state;
+        let { shop, shop_id, method, url, contentInfo, files, uploadIds } = this.state;
         return (
             <App>
 
@@ -114,7 +125,7 @@ export class CreateShop extends Component {
                                         </div>
                                         <div className="card-body">
                                             <MyUploader options={{
-                                                images: images,
+                                                images: files,
                                                 onUploadSuccess: (response) => {
                                                    this.handleUploadResponse(response);
                                                 }
@@ -155,7 +166,7 @@ export class CreateShop extends Component {
                                                         if(respons.code ==200){
                                                             window.location.href = '/shops/list';
                                                         }
-                                                     
+
                                                     })
                                             }
                                         }}
