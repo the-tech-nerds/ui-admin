@@ -1,16 +1,16 @@
 import { json } from 'body-parser'
-import React, {useState } from 'react'
+import React, { useState } from 'react'
 import Lightbox from "react-image-lightbox";
 import LightboxExample from "./lightbox";
 
 const ImageGalary = (props) => {
     const [isOpen, setOpen] = useState(0);
     const [photoIndex, setPhotoIndex] = useState(0);
-    const {options: {
+    const { options: {
         onDeleteSuccess = () => {
         },
         images = []
-    }} = props;
+    } } = props;
     const deleteImage = (cell) => {
         onDeleteSuccess(cell);
     }
@@ -20,18 +20,22 @@ const ImageGalary = (props) => {
     }
 
     return (<div>
-            <div className="row img-gallery">
+        <div className="row img-gallery">
 
-                {images.map((cell, index) => {
-                    return  <div className="img-wrap" >
-                        <span className="close" onClick={() =>deleteImage(cell)}>&times;</span>
+            {images.map((cell, index) => {
+                return <div className="single-image">
+                    <div className="img-wrap" >
+                        <span className="close" onClick={() => deleteImage(cell)}>&times;</span>
                         <img onClick={() => openImage(index)} className="item-image img-rounded" src={cell.url}></img>
-                    </div>;
-                })}
-            </div>
-        { isOpen == 1 && <LightboxExample images ={images} isOpen = {isOpen} index = {photoIndex} response = { () =>{
+                    </div>
+                </div>;
+
+
+            })}
+        </div>
+        { isOpen == 1 && <LightboxExample images={images} isOpen={isOpen} index={photoIndex} response={() => {
             setOpen(0);
-        }}/>}
+        }} />}
     </div>
 
     )

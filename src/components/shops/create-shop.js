@@ -4,7 +4,7 @@ import App from "../app";
 import Forms from "../form/forms";
 import { AvField } from "availity-reactstrap-validation";
 import { Button } from "reactstrap";
-import MyDropzone from '../common/dropzone';
+import {DropzoneStatus} from "../../constants/dropzoneStatus"
 import MyUploader from "../common/dropzone";
 export class CreateShop extends Component {
     constructor(props) {
@@ -27,20 +27,21 @@ export class CreateShop extends Component {
         }
     }
      handleUploadResponse = (response) =>{
-         if(response.status == 'done'){
+         debugger
+         if(response.status == DropzoneStatus.UPLOAD_SUCCESS){
              let ids = this.state.uploadIds;
              let imgs = this.state.images;
               ids.push(response.data.id)
               imgs.push(response.data.url)
              this.setState({ uploadIds: ids,
                  images: imgs});
-         } else if(response.status =='removed'){
+         } else if(response.status ==DropzoneStatus.REMOVE_UPLOADED_ITEM){
              const urls  = this.state.images.filter(i => i !== response.data.url);
              const ids = this.state.uploadIds.filter(u =>u !== response.data.id)
              this.setState({ uploadIds: ids,
                  images: urls});
          }
-         else if(response.status =='delete'){
+         else if(response.status == DropzoneStatus.REMOVE_EXISTING_ITEM){
              const file  = this.state.files.filter(i => i.id !== response.data.id);
              this.setState((state) => {
                  return {
@@ -121,7 +122,7 @@ export class CreateShop extends Component {
                                 <div className="card-body">
                                     <div className="card ">
                                         <div className="card-header">
-                                            <h5>Dropzone Media</h5>
+                                            <h5>Media</h5>
                                         </div>
                                         <div className="card-body">
                                             <MyUploader options={{

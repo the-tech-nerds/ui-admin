@@ -3,6 +3,7 @@ import React from 'react'
 import Dropzone from 'react-dropzone-uploader'
 import 'react-dropzone-uploader/dist/styles.css'
 import ImageGalary from "./imagegalary";
+import {DropzoneStatus} from "../../constants/dropzoneStatus"
 
 const MyUploader = (props) => {
   // specify upload params and url for your files
@@ -40,7 +41,7 @@ const MyUploader = (props) => {
     if(status == "done") {
       const json = JSON.parse(xhr.response);
       const model = {
-          status: status,
+          status: DropzoneStatus.UPLOAD_SUCCESS,
           data: json.data.data
       }
         onUploadSuccess(model);
@@ -66,7 +67,7 @@ const MyUploader = (props) => {
         .then(async res => {
             const response = await res.json();
             const model = {
-                status: status,
+                status: DropzoneStatus.REMOVE_UPLOADED_ITEM,
                 data: json.data.data
             }
             onUploadSuccess(model);
@@ -88,6 +89,7 @@ const MyUploader = (props) => {
       <Dropzone
       getUploadParams={getUploadParams}
       onChangeStatus={handleChangeStatus}
+      inputContent = 'upload or drop'
       accept="image/*,audio/*,video/*"
     />
       </div>
@@ -112,7 +114,7 @@ const MyUploader = (props) => {
                })
                    .then( res => {
                        const model = {
-                           status: 'delete',
+                           status: DropzoneStatus.REMOVE_EXISTING_ITEM,
                            data: response
                        }
                        onUploadSuccess(model);
