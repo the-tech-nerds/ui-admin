@@ -36,7 +36,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
-    "zxcvbn": "^4.4.2"
+    "zxcvbn": "^4.4.2",
+    "typeorm": "^0.2.29"
   },
   "scripts": {
     "prebuild": "rimraf dist",
