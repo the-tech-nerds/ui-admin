@@ -1,0 +1,22 @@
+.img-wrap {
+    position: relative;
+}
+.item-image{
+    width: 100px;
+    height: 100px;
+}
+.img-wrap .close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 100;
+}
+.img-gallery {
+    border-radius: 25px;
+    border: 2px solid $primary-color;
+    padding: 10px;
+    width: 100%;
+}
+.single-image {
+    margin-right: 5px;
+}
