@@ -6,42 +6,47 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as fetch from 'isomorphic-fetch';
 import Loader from "./loader";
 
-function PaginationComponent({ 
-    nextUrl = "",
-    prevUrl = "",
-    currentPage = 0,
-    totalPages = 0,
-    onPageChange = () => {},
-    onNext = () => {},
-    onPrevious = () => {}
-  }) {
+function PaginationComponent({
+                                 nextUrl = "",
+                                 prevUrl = "",
+                                 currentPage = 0,
+                                 totalPages = 0,
+                                 onPageChange = () => {},
+                                 onNext = () => {},
+                                 onPrevious = () => {}
+                             }) {
     const isEmpty = (url) => url === null || url === undefined || url === "" || typeof url === "boolean";
     return (
         <div>
-            <nav aria-label="Page navigation">
-                <ul className="pagination justify-content-between p-2">
-                    <li
-                        className={`page-item ${isEmpty(prevUrl) ? 'disabled' : ''}`}
-                        onClick={() => onPrevious(prevUrl)}
-                    >
-                        <a className="btn btn-lg" href="javascrip:void(0)">Previous</a>
-                    </li>
-                    <li>
-                        Page <input type="text" onChange={(e)=> onPageChange(e.target.value)} value={currentPage} /> of {totalPages}
-                    </li>
-                    {/* <li className="page-item"><a className="page-link" href="#">1</a></li>
-                        <li className="page-item"><a className="page-link" href="#">2</a></li>
-                        <li className="page-item"><a className="page-link" href="#">3</a></li> */}
-                    <li
-                        className={`page-item ${isEmpty(nextUrl) ? 'disabled' : ''}`}
-                        onClick={() => onNext(nextUrl)}
-                    >
-                        <a className="btn btn-lg" href="javascript:void(0)">Next</a>
-                    </li>
-                </ul>
-            </nav>
+            <div>
+                <div class="pagination-bottom">
+                    <div class="-pagination">
+                        <div class="-previous">
+                            <button type="button" class="-btn" onCLick={() => onPrevious(prevUrl)}>Previous</button>
+                        </div>
+                        <div class="-center">
+                            <span class="-pageInfo">Page {` `}
+                                <div class="-pageJump">
+                                    <input aria-label="jump to page" type="number" value={currentPage} class="" />
+                                </div>
+                                {` `}of
+                                <span class="-totalPages">{` `} {totalPages}</span>
+                            </span>
+                            {/*<span class="select-wrap -pageSizeOptions">*/}
+                            {/*    <select*/}
+                            {/*        aria-label="rows per page"><option value="5">5 rows</option><option value="10">10 rows</option><option*/}
+                            {/*        value="20">20 rows</option><option value="25">25 rows</option><option value="50">50 rows</option><option*/}
+                            {/*        value="100">100 rows</option></select>*/}
+                            {/*</span>*/}
+                        </div>
+                        <div class="-next">
+                            <button type="button" class="-btn"  onClick={() => onNext(nextUrl)}>Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    )
+    );
 };
 
 export class Datatable extends Component {
@@ -58,6 +63,7 @@ export class Datatable extends Component {
             search: "",
             page: 1,
             total: 0,
+            pages: 0,
         }
     }
 
@@ -92,7 +98,7 @@ export class Datatable extends Component {
                         next: next,
                         previous: previous,
                         page,
-                        pages, 
+                        pages,
                         total,
                     });
                     return;
@@ -197,7 +203,7 @@ export class Datatable extends Component {
             <PaginationComponent
                 prevUrl={this.state.previous}
                 currentPage={this.state.page}
-                totalPages={this.state.total}
+                totalPages={this.state.pages}
                 onPageChange={v => this.onPageChange(v)}
                 onPrevious={(url) => this.fetchNextOrPrevious(url)}
                 nextUrl={this.state.next}
@@ -270,11 +276,11 @@ export class Datatable extends Component {
                 columns.push(
                     {
                         Header: <button className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
-                            onClick={
-                                (e) => {
-                                    if (window.confirm('Are you sure you wish to delete this item?'))
-                                        this.handleRemoveRow()
-                                }}>Delete</button>,
+                                        onClick={
+                                            (e) => {
+                                                if (window.confirm('Are you sure you wish to delete this item?'))
+                                                    this.handleRemoveRow()
+                                            }}>Delete</button>,
                         id: 'delete',
                         accessor: str => "delete",
                         sortable: false,
@@ -285,7 +291,7 @@ export class Datatable extends Component {
                             <div>
                                 <span >
                                     <input type="checkbox" name={row.original.id} defaultChecked={this.state.checkedValues.includes(row.original.id)}
-                                        onChange={e => this.selectRow(e, row.original.id)} />
+                                           onChange={e => this.selectRow(e, row.original.id)} />
                                 </span>
                             </div>
                         ),
