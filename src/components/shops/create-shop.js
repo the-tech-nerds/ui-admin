@@ -4,8 +4,18 @@ import App from "../app";
 import Forms from "../form/forms";
 import { AvField } from "availity-reactstrap-validation";
 import { Button } from "reactstrap";
-import {DropzoneStatus} from "../../constants/dropzoneStatus"
+import { DropzoneStatus } from "../../constants/dropzoneStatus"
 import MyUploader from "../common/dropzone";
+import AvSelect, {
+    AvSelectField,
+} from '@availity/reactstrap-validation-select';
+import '@availity/reactstrap-validation-select/styles.scss';
+const options = [
+    { label: 'Option 1', value: 1 },
+    { label: 'Option 2', value: 2 },
+    { label: 'Option 3', value: 3 },
+];
+
 export class CreateShop extends Component {
     constructor(props) {
         super(props)
@@ -23,33 +33,36 @@ export class CreateShop extends Component {
             method: 'POST',
             url: '/api/shops/',
             loading: true,
-            files:[]
+            files: []
         }
     }
-     handleUploadResponse = (response) =>{
-         debugger
-         if(response.status == DropzoneStatus.UPLOAD_SUCCESS){
-             let ids = this.state.uploadIds;
-             let imgs = this.state.images;
-              ids.push(response.data.id)
-              imgs.push(response.data.url)
-             this.setState({ uploadIds: ids,
-                 images: imgs});
-         } else if(response.status ==DropzoneStatus.REMOVE_UPLOADED_ITEM){
-             const urls  = this.state.images.filter(i => i !== response.data.url);
-             const ids = this.state.uploadIds.filter(u =>u !== response.data.id)
-             this.setState({ uploadIds: ids,
-                 images: urls});
-         }
-         else if(response.status == DropzoneStatus.REMOVE_EXISTING_ITEM){
-             const file  = this.state.files.filter(i => i.id !== response.data.id);
-             this.setState((state) => {
-                 return {
-                     ...state,
-                     files: file,
-                 }
-             });
-         }
+    handleUploadResponse = (response) => {
+        if (response.status == DropzoneStatus.UPLOAD_SUCCESS) {
+            let ids = this.state.uploadIds;
+            let imgs = this.state.images;
+            ids.push(response.data.id)
+            imgs.push(response.data.url)
+            this.setState({
+                uploadIds: ids,
+                images: imgs
+            });
+        } else if (response.status == DropzoneStatus.REMOVE_UPLOADED_ITEM) {
+            const urls = this.state.images.filter(i => i !== response.data.url);
+            const ids = this.state.uploadIds.filter(u => u !== response.data.id)
+            this.setState({
+                uploadIds: ids,
+                images: urls
+            });
+        }
+        else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
+            const file = this.state.files.filter(i => i.id !== response.data.id);
+            this.setState((state) => {
+                return {
+                    ...state,
+                    files: file,
+                }
+            });
+        }
     }
 
     async componentDidMount() {
@@ -128,7 +141,7 @@ export class CreateShop extends Component {
                                             <MyUploader options={{
                                                 images: files,
                                                 onUploadSuccess: (response) => {
-                                                   this.handleUploadResponse(response);
+                                                    this.handleUploadResponse(response);
                                                 }
                                             }} content={contentInfo} />
                                         </div>
@@ -140,16 +153,16 @@ export class CreateShop extends Component {
                                             url: url,
                                             onSuccess: async (response) => {
                                                 let items = []
-                                               await uploadIds.forEach(x=>{
-                                                   items.push({
-                                                       id: Number(x),
-                                                       url: '',
-                                                       type:'shop',
-                                                       type_id: response.data.id,
-                                                       microService: 'product'
-                                                   });
+                                                await uploadIds.forEach(x => {
+                                                    items.push({
+                                                        id: Number(x),
+                                                        url: '',
+                                                        type: 'shop',
+                                                        type_id: response.data.id,
+                                                        microService: 'product'
+                                                    });
                                                 });
-                                                if(items.length ==0){
+                                                if (items.length == 0) {
                                                     window.location.href = '/shops/list';
                                                     return;
                                                 }
@@ -164,7 +177,7 @@ export class CreateShop extends Component {
                                                 })
                                                     .then(async res => {
                                                         const respons = await res.json();
-                                                        if(respons.code ==200){
+                                                        if (respons.code == 200) {
                                                             window.location.href = '/shops/list';
                                                         }
 
@@ -172,6 +185,12 @@ export class CreateShop extends Component {
                                             }
                                         }}
                                     >
+                                        <AvSelectField
+                                            name="fieldWithLabel"
+                                            label="Label Made For Me"
+                                            options={options}
+                                            required
+                                        />
                                         <AvField name="name" label="Name" value={shop.name} type="text" required />
                                         <AvField name="description" value={shop.description} label="Description" type="text" required />
                                         <AvField name="address" value={shop.address} label="Address" type="text" required />
