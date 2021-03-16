@@ -10,6 +10,8 @@ import AvSelect, {
     AvSelectField,
 } from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
+import updateFileStorage from "../common/file-storage";
+
 const options = [
     { label: 'Option 1', value: 1 },
     { label: 'Option 2', value: 2 },
@@ -162,35 +164,16 @@ export class CreateShop extends Component {
                                                         microService: 'product'
                                                     });
                                                 });
-                                                if (items.length == 0) {
+                                                if (items.length === 0) {
                                                     window.location.href = '/shops/list';
                                                     return;
                                                 }
-                                                await fetch(`/api/file/update`, {
-                                                    method: "PUT",
-                                                    headers: {
-                                                        'Content-Type': 'application/json',
-                                                    },
-                                                    body: JSON.stringify(items),
-                                                    cache: 'no-cache',
-                                                    redirect: 'follow',
-                                                })
-                                                    .then(async res => {
-                                                        const respons = await res.json();
-                                                        if (respons.code == 200) {
-                                                            window.location.href = '/shops/list';
-                                                        }
-
-                                                    })
+                                                await updateFileStorage(items).then(response =>{
+                                                    window.location.href = '/shops/list';
+                                                } );
                                             }
                                         }}
                                     >
-                                        <AvSelectField
-                                            name="fieldWithLabel"
-                                            label="Label Made For Me"
-                                            options={options}
-                                            required
-                                        />
                                         <AvField name="name" label="Name" value={shop.name} type="text" required />
                                         <AvField name="description" value={shop.description} label="Description" type="text" required />
                                         <AvField name="address" value={shop.address} label="Address" type="text" required />
