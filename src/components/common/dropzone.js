@@ -93,7 +93,7 @@ const MyUploader = (props) => {
       accept="image/*,audio/*,video/*"
     />
       </div>
-      <div className="col-8">
+      {images.length >0 && <div className="col-8">
        <ImageGalary options={{
            images: images,
            onDeleteSuccess: async (response) => {
@@ -124,7 +124,7 @@ const MyUploader = (props) => {
                    });
            }
        }}/>
-      </div>
+      </div>}
 
     </div>
 
