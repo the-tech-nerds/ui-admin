@@ -11,6 +11,8 @@ import MyDropzone from "../common/dropzone";
 import CKEditors from "react-ckeditor-component";
 import one from "../../assets/images/pro3/1.jpg";
 import * as fetch from "isomorphic-fetch";
+import MyUploader from "../common/dropzone";
+import {DropzoneStatus} from "../../constants/dropzoneStatus";
 
 export class CreateProduct extends Component {
     constructor(props) {
@@ -20,15 +22,54 @@ export class CreateProduct extends Component {
             categoryList: [],
             brands: [],
             shops: [],
+
+            contentInfo: {
+                entity: 'product',
+                folder: 'product',
+                entity_id: Number(this.props.match.params.id),
+                serviceName: 'product'
+            },
+            images: [],
+            uploadIds: [],
+            files: [],
+
             productId: 0,
             method: 'POST',
             url: '/api/products/',
-            loading: true
+            loading: true,
+        }
+    }
+
+    handleUploadResponse = (response) => {
+        if (response.status == DropzoneStatus.UPLOAD_SUCCESS) {
+            let ids = this.state.uploadIds;
+            let imgs = this.state.images;
+            ids.push(response.data.id)
+            imgs.push(response.data.url)
+            this.setState({
+                uploadIds: ids,
+                images: imgs
+            });
+        } else if (response.status == DropzoneStatus.REMOVE_UPLOADED_ITEM) {
+            const urls = this.state.images.filter(i => i !== response.data.url);
+            const ids = this.state.uploadIds.filter(u => u !== response.data.id)
+            this.setState({
+                uploadIds: ids,
+                images: urls
+            });
+        }
+        else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
+            const file = this.state.files.filter(i => i.id !== response.data.id);
+            this.setState((state) => {
+                return {
+                    ...state,
+                    files: file,
+                }
+            });
         }
     }
 
     async componentDidMount() {
-        const id = Number(this.props.match.params.id);
         // fetch brands
         FetchData({
             url: '/api/brands/list/all', callback: (response, isSucess) => {
@@ -98,56 +139,10 @@ export class CreateProduct extends Component {
                 }
             }
         })
-
-        this.setState({
-            productId: id,
-            method: 'PUT',
-            url: `/api/products/update/${id}`,
-            loading: true
-        });
-        await fetch(`/api/products/${id}`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            cache: 'no-cache',
-            redirect: 'follow',
-        })
-            .then(async res => {
-                this.setState({loading: false});
-                const response = await res.json();
-                if (response.code === 200) {
-                    this.setState((state) => {
-                        return {
-                            ...state,
-                            product: response.data
-                        }
-                    });
-                } else {
-                    this.setState((state) => {
-                        return {
-                            ...state,
-                            error: true,
-                            errorMessage: response.message,
-                            loading: false,
-                        }
-                    });
-                }
-            })
-            .catch(error => {
-                this.setState((state) => {
-                    return {
-                        ...state,
-                        error: true,
-                        errorMessage: error,
-                        loading: false,
-                    }
-                });
-            });
     }
 
     render() {
-        const {product, brands, categoryList, shops, productId} = this.state;
+        const {product, brands, categoryList, shops, productId, files, contentInfo} = this.state;
         return (
             <App>
 
@@ -163,28 +158,18 @@ export class CreateProduct extends Component {
                                     <div className="row product-adding">
                                         <div className="col-xl-5">
                                             <div className="add-product">
-                                                <div className="row">
-                                                    <div className="col-xl-9 xl-50 col-sm-6 col-9">
-                                                        <img src={one} alt=""
-                                                             className="img-fluid image_zoom_1 blur-up lazyloaded"/>
+                                                <div className="card ">
+                                                    <div className="card-header">
+                                                        <h5>Product Media</h5>
                                                     </div>
-                                                    {/*<div className="col-xl-3 xl-50 col-sm-6 col-3">
-                                                        <ul className="file-upload-product">
-                                                            {
-                                                                this.state.dummyimgs.map((res, i) => {
-                                                                    return (
-                                                                        <li key={i}>
-                                                                            <div className="box-input-file">
-                                                                                <input className="upload" type="file" onChange={(e) => this._handleImgChange(e, i)} />
-                                                                                <img src={res.img} style={{ width: 50, height: 50 }} />
-                                                                                <a id="result1" onClick={(e) => this._handleSubmit(e.target.id)}></a>
-                                                                            </div>
-                                                                        </li>
-                                                                    )
-                                                                })
+                                                    <div className="card-body">
+                                                        <MyUploader options={{
+                                                            images: files,
+                                                            onUploadSuccess: (response) => {
+                                                                this.handleUploadResponse(response);
                                                             }
-                                                        </ul>
-                                                    </div>*/}
+                                                        }} content={contentInfo} />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
