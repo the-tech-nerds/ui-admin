@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import './index.scss';
 // import {ScrollContext} from 'react-router-scroll-4';
 // Components
@@ -52,10 +52,10 @@ import EditRole from "./components/roles/edit-role";
 import RoleDetails from "./components/roles/role-details";
 import NotFound from "./components/404/not-found";
 import CreateShop from "./components/shops/create-shop"
-import { getPermissionTypes, getUserPermissions, getUserRoles } from "./utils/utils";
+import {getPermissionTypes, getUserPermissions, getUserRoles} from "./utils/utils";
 import ListShop from "./components/shops/list-shops";
-import { ListUnit } from './components/unit/list-unit';
-import { CreateUnit } from './components/unit/create-unit';
+import {ListUnit} from './components/unit/list-unit';
+import {CreateUnit} from './components/unit/create-unit';
 import CreateSupplier from './components/suppliers/create-supplier';
 import ListSupplier from './components/suppliers/list-supplier';
 import ListCategory from "./components/categories/list-category";
@@ -70,6 +70,7 @@ class Root extends Component {
     permissions = [];
     roles = [];
     PermissionTypes = {};
+
     constructor(props) {
         super(props);
         this.permissions = getUserPermissions();
@@ -89,10 +90,11 @@ class Root extends Component {
             <BrowserRouter basename={'/'}>
                 <div>
                     <Switch>
-                        <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} component={Login} />
-                        <Route exact path={`${process.env.PUBLIC_URL}/dashboard`} component={Dashboard} />
+                        <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} component={Login}/>
+                        <Route exact path={`${process.env.PUBLIC_URL}/dashboard`} component={Dashboard}/>
 
-                        <Route exact path={`${process.env.PUBLIC_URL}/products/physical/category`} component={Category}/>
+                        <Route exact path={`${process.env.PUBLIC_URL}/products/physical/category`}
+                               component={Category}/>
                         <Route path={`${process.env.PUBLIC_URL}/products/physical/sub-category`}
                                component={Sub_category}/>
                         <Route path={`${process.env.PUBLIC_URL}/products/physical/product-list`}
@@ -299,16 +301,16 @@ class Root extends Component {
 
                         {/*<Route path={`${process.env.PUBLIC_URL}/reports/report`} component={Reports}/>*/}
 
-                        <Route path={`${process.env.PUBLIC_URL}/settings/profile`} component={Profile} />
+                        <Route path={`${process.env.PUBLIC_URL}/settings/profile`} component={Profile}/>
 
                         {/*<Route path={`${process.env.PUBLIC_URL}/invoice`} component={Invoice}/>*/}
 
                         {/*<Route path={`${process.env.PUBLIC_URL}/data-table`} component={Datatable}/>*/}
 
-                        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Dashboard} />
+                        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Dashboard}/>
                         {/*<Redirect to="/" />*/}
                         {/*</Switch>*/}
-                        <Route component={NotFound} />
+                        <Route component={NotFound}/>
                     </Switch>
                 </div>
             </BrowserRouter>
@@ -316,6 +318,6 @@ class Root extends Component {
     }
 }
 
-ReactDOM.render(<Root />, document.getElementById('root'));
+ReactDOM.render(<Root/>, document.getElementById('root'));
 
 
