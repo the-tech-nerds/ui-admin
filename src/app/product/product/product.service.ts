@@ -36,7 +36,7 @@ export class ProductService {
         const products = productList.map((product: any, index: any) => ({
             id: product.id,
             'SL No': ++index,
-            'Brand': product.brand.name,
+            'Brand': product.brand?.name,
             'Name': product.name,
             'Status': product.status ? 'Active' : 'Inactive'
         }));
