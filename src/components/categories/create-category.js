@@ -70,7 +70,7 @@ export class CreateCategory extends Component {
                                         }}
                                     >
                                         <AvField type="select" name="parent_id">
-                                            <option value="">Select Parent Category</option>
+                                            <option value="0">Select Parent Category</option>
                                             { categoryList.map(category => (
                                                 <option value={category.id}>{ category.Name }</option>
                                             ))}
