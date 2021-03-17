@@ -15,6 +15,7 @@ export default class ListProduct extends Component {
         super(props);
         this.state = {
             productList: [],
+            productId: '',
             open: false,
             openStatus:false,
             error: false,
@@ -67,7 +68,7 @@ export default class ListProduct extends Component {
         this.setState({ open: false, openStatus: false });
     };
     render() {
-        let { open, openStatus, productList, ProductRoles, ProductId } = this.state;
+        let { open, openStatus, productList, ProductRoles, productId } = this.state;
         return (
             <App>
                 <Breadcrumb title="Product List" parent="Users" />
@@ -90,9 +91,9 @@ export default class ListProduct extends Component {
                                     <Forms
                                         options={{
                                             method: 'PUT',
-                                            url: `/api/products/${ProductId}/status`,
+                                            url: `/api/products/${productId}/status`,
                                             onSuccess: (response) => {
-                                                window.location.href = '/list-products';
+                                                window.location.href = '/products/list';
                                             },
                                         }}
                                     >
@@ -130,7 +131,7 @@ export default class ListProduct extends Component {
 
                                                     <span onClick={() => {
                                                         this.setState({
-                                                            ProductId: row.original.id
+                                                            productId: row.original.id
                                                         })
                                                         this.onOpenStatusModal();
                                                     }} title="Change Status">

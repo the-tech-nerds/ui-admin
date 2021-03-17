@@ -36,14 +36,24 @@ export class ProductService {
         const products = productList.map((product: any, index: any) => ({
             id: product.id,
             'SL No': ++index,
-            'Brand': product.brand?.name,
+            'Category': 'n/a',
+            'Shop': product.shop ? product.shop.name : 'n/a',
+            'Brand': product.brand ? product.brand.name : 'n/a',
             'Name': product.name,
             'Status': product.status ? 'Active' : 'Inactive'
         }));
         return this.responseService.response(products);
     }
 
+    async changeStatus(id: number) {
+        console.log(id);
+        const data = await this.gatewayService.execute("product", {
+            method: "PUT",
+            path: `/api/v1/product/${id}/status`,
+        });
 
+        return this.responseService.response(data);
+    }
 
     async get(productId: number) {
         const {data: product} = await this.gatewayService.execute(MicroService.Product, {

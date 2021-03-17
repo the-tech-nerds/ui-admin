@@ -32,35 +32,6 @@ export class CreateCategory extends Component {
                 }
             }
         })
-        /*fetch(`/api/categories`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            cache: 'no-cache',
-            redirect: 'follow',
-        })
-            .then(async res => {
-                const response = await res.json();
-                if (response.code === 200) {
-                    this.setState({
-                        categoryList: response.data,
-                    });
-                    return;
-                } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    });
-                    return;
-                }
-            })
-            .catch(error => {
-                this.setState({
-                    error: true,
-                    errorMessage: error,
-                })
-            })*/
     }
     render() {
         let { categoryList } = this.state
