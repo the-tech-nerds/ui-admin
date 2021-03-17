@@ -5,6 +5,7 @@ import Forms from "../form/forms";
 import {AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
 import * as fetch from "isomorphic-fetch";
+import FetchData from "../common/get-data";
 
 export class CreateCategory extends Component {
     constructor(props) {
@@ -17,7 +18,21 @@ export class CreateCategory extends Component {
     }
 
     componentDidMount() {
-        fetch(`/api/categories`, {
+        FetchData({
+            url: '/api/categories', callback: (response, isSucess) => {
+                if (isSucess) {
+                    this.setState({
+                        categoryList: response.data,
+                    });
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        })
+        /*fetch(`/api/categories`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -45,7 +60,7 @@ export class CreateCategory extends Component {
                     error: true,
                     errorMessage: error,
                 })
-            })
+            })*/
     }
     render() {
         let { categoryList } = this.state

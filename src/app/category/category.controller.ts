@@ -39,4 +39,10 @@ export default class CategoryController {
     ) {
         return this.categoryService.changeStatus(id);
     }
+
+    @Get('/menu/all')
+    async getCetagoryMenu() {
+        return this.categoryService.getMenuCategory();
+    }
+
 }

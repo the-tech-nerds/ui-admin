@@ -92,7 +92,7 @@ export default class ListCategory extends Component {
                                             method: 'PUT',
                                             url: `/api/categories/${CategoryId}/status`,
                                             onSuccess: (response) => {
-                                                window.location.href = '/list-categories';
+                                                window.location.href = '/categories/list';
                                             },
                                         }}
                                     >

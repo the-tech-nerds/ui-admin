@@ -19,6 +19,7 @@ export default class CategoryService {
     }
 
     updateCategory(id: number, category: any) {
+        category.parent_id = category.parent_id? category.parent_id: 0;
         return this.gatewayService.execute("product", {
             method: "PUT",
             path: `/api/v1/category/${id}`,
@@ -31,12 +32,11 @@ export default class CategoryService {
             method: "GET",
             path: '/api/v1/category/all',
         });
-
         const categories = categoryList.map((category: any, index: any) => ({
             id: category.id,
             'SL No': ++index,
             'Name': category.name,
-            'Parent Category': category.parent_id,
+            'Parent Category': this.findParent(categoryList,category.parent_id),
             'Slug': category.slug,
             'Active': category.is_active ? 'Yes' : 'No'
         }));
@@ -70,5 +70,16 @@ export default class CategoryService {
             method: "PUT",
             path: `/api/v1/category/${categoryId}/status`,
         });
+    }
+    async getMenuCategory() {
+        return await this.gatewayService.execute("product", {
+            method: "GET",
+            path: `/api/v1/category/menu/all`,
+        });
+    }
+    private findParent(data: any, parent_id: number){
+        if(parent_id === 0) return 'N/A'
+        const parent = data.find( (x:any) =>x.id === parent_id);
+        return parent.name;
     }
 }
