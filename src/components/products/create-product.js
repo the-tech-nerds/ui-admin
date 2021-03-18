@@ -13,6 +13,7 @@ import one from "../../assets/images/pro3/1.jpg";
 import * as fetch from "isomorphic-fetch";
 import MyUploader from "../common/dropzone";
 import {DropzoneStatus} from "../../constants/dropzoneStatus";
+import updateFileStorage from "../common/file-storage";
 
 export class CreateProduct extends Component {
     constructor(props) {
@@ -26,7 +27,7 @@ export class CreateProduct extends Component {
             contentInfo: {
                 entity: 'product',
                 folder: 'product',
-                entity_id: Number(this.props.match.params.id),
+                entity_id: Number(this.props.match.params.id) || 0,
                 serviceName: 'product'
             },
             images: [],
@@ -142,7 +143,7 @@ export class CreateProduct extends Component {
     }
 
     render() {
-        const {product, brands, categoryList, shops, productId, files, contentInfo} = this.state;
+        const {product, brands, categoryList, shops, productId, files, uploadIds, contentInfo} = this.state;
         return (
             <App>
 
@@ -178,8 +179,25 @@ export class CreateProduct extends Component {
                                                 options={{
                                                     method: 'POST',
                                                     url: '/api/products',
-                                                    onSuccess: (response) => {
-                                                        window.location.href = '/products/list';
+                                                    onSuccess: async (response) => {
+                                                        let items = []
+                                                        await uploadIds.forEach(x => {
+                                                            items.push({
+                                                                id: Number(x),
+                                                                url: '',
+                                                                type: 'product',
+                                                                type_id: response.data.id,
+                                                                microService: 'product'
+                                                            });
+                                                        });
+                                                        console.log(uploadIds)
+                                                        if (items.length === 0) {
+                                                            window.location.href = '/products/list';
+                                                            return;
+                                                        }
+                                                        await updateFileStorage(items).then(response =>{
+                                                            window.location.href = '/products/list';
+                                                        } );
                                                     }
                                                 }}
                                             >
