@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
@@ -7,10 +7,6 @@ import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
 import {Label} from "reactstrap";
-import MyDropzone from "../common/dropzone";
-import CKEditors from "react-ckeditor-component";
-import one from "../../assets/images/pro3/1.jpg";
-import * as fetch from "isomorphic-fetch";
 import MyUploader from "../common/dropzone";
 import {DropzoneStatus} from "../../constants/dropzoneStatus";
 import updateFileStorage from "../common/file-storage";

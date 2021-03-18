@@ -1,7 +1,7 @@
 import {GatewayService} from "@the-tech-nerds/common-services";
 import {Injectable} from "@nestjs/common";
 import MicroService from "../../constants/app-constants"
-import { ApiResponseService } from "src/app/common/response/api-response.service";
+import {ApiResponseService} from "src/app/common/response/api-response.service";
 
 @Injectable()
 export class ProductService {
@@ -36,7 +36,7 @@ export class ProductService {
         const products = productList.map((product: any, index: any) => ({
             id: product.id,
             'SL No': ++index,
-            'Category': 'n/a',
+            'Category': product?.categories?.reduce((categories: any, category: any) => (categories + category.name + ', '), '').slice(0, -2) || 'n/a',
             'Shop': product.shop ? product.shop.name : 'n/a',
             'Brand': product.brand ? product.brand.name : 'n/a',
             'Name': product.name,
@@ -46,7 +46,6 @@ export class ProductService {
     }
 
     async changeStatus(id: number) {
-        console.log(id);
         const data = await this.gatewayService.execute("product", {
             method: "PUT",
             path: `/api/v1/product/${id}/status`,
@@ -64,7 +63,7 @@ export class ProductService {
     }
 
     async delete(productId: number) {
-        const res= await this.gatewayService.execute(MicroService.Product, {
+        const res = await this.gatewayService.execute(MicroService.Product, {
             method: "DELETE",
             path: `/api/v1/product/${productId}`,
         });
