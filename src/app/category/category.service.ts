@@ -11,6 +11,7 @@ export default class CategoryService {
     }
 
     createCategory(category : any) {
+        category.parent_id = category.parent_id? category.parent_id: 0;
         return this.gatewayService.execute("product", {
             method: "POST",
             path: '/api/v1/category',
