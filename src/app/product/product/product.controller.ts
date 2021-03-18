@@ -29,6 +29,11 @@ export default class ProductController {
         return this.productService.update(id, productRequest);
     }
 
+    @Put('/:id/status')
+    async changeStatus(@Param('id') id: number) {
+        return this.productService.changeStatus(id);
+    }
+
     @Get('/:id')
     async get(@Param('id') id: number) {
         return this.productService.get(id);
