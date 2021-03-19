@@ -46,7 +46,7 @@ export default class CategoryService {
     }
 
     async getCategory(categoryId: number) {
-        return await this.gatewayService.execute("product", {
+        return this.gatewayService.execute("product", {
             method: "GET",
             path: `/api/v1/category/${categoryId}`,
         });
@@ -54,13 +54,13 @@ export default class CategoryService {
 
 
     async changeStatus(categoryId: number) {
-        return await this.gatewayService.execute("product", {
+        return this.gatewayService.execute("product", {
             method: "PUT",
             path: `/api/v1/category/${categoryId}/status`,
         });
     }
     async getMenuCategory() {
-        return await this.gatewayService.execute("product", {
+        return this.gatewayService.execute("product", {
             method: "GET",
             path: `/api/v1/category/menu/all`,
         });
