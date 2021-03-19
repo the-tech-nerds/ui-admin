@@ -46,22 +46,9 @@ export default class CategoryService {
     }
 
     async getCategory(categoryId: number) {
-        const {data: category} = await this.gatewayService.execute("product", {
+        return await this.gatewayService.execute("product", {
             method: "GET",
             path: `/api/v1/category/${categoryId}`,
-        });
-        const {
-            id,
-            parent_id,
-            name,
-            is_active
-        } = category;
-
-        return this.responseService.response({
-            id,
-            parent_id,
-            name,
-            is_active
         });
     }
 

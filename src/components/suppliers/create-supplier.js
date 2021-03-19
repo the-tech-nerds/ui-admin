@@ -4,19 +4,58 @@ import App from "../app";
 import Forms from "../form/forms";
 import {AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
+import { DropzoneStatus } from "../../constants/dropzoneStatus"
+import MyUploader from "../common/dropzone";
+import updateFileStorage from "../common/file-storage";
 
 export class CreateSupplier extends Component {
     constructor(props) {
         super(props)
         this.state = {
             supplier: {},
+            contentInfo: {
+                entity: 'supplier',
+                folder: 'supplier',
+                entity_id: Number(this.props.match.params.id),
+                serviceName: 'product'
+            },
+            images: [],
+            uploadIds: [],
             supplier_id:0,
             method: 'POST',
             url: '/api/suppliers/',
-            loading: true
+            loading: true,
+            files: []
         }
     }
-
+    handleUploadResponse = (response) => {
+        if (response.status == DropzoneStatus.UPLOAD_SUCCESS) {
+            let ids = this.state.uploadIds;
+            let imgs = this.state.images;
+            ids.push(response.data.id)
+            imgs.push(response.data.url)
+            this.setState({
+                uploadIds: ids,
+                images: imgs
+            });
+        } else if (response.status == DropzoneStatus.REMOVE_UPLOADED_ITEM) {
+            const urls = this.state.images.filter(i => i !== response.data.url);
+            const ids = this.state.uploadIds.filter(u => u !== response.data.id)
+            this.setState({
+                uploadIds: ids,
+                images: urls
+            });
+        }
+        else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
+            const file = this.state.files.filter(i => i.id !== response.data.id);
+            this.setState((state) => {
+                return {
+                    ...state,
+                    files: file,
+                }
+            });
+        }
+    }
     async componentDidMount() {
         const id = Number(this.props.match.params.id);
        if(id > 0) {
@@ -42,7 +81,8 @@ export class CreateSupplier extends Component {
                     this.setState((state) => {
                         return {
                             ...state,
-                            supplier: response.data
+                            supplier: response.data.supplier,
+                            files: response.data.images
                         }
                     });
                 } else {
@@ -71,7 +111,7 @@ export class CreateSupplier extends Component {
 
     }
     render() {
-        const {supplier, supplier_id, method, url} = this.state;
+        const {supplier, supplier_id, method, url, contentInfo, files, uploadIds} = this.state;
         return (
             <App>
                 
@@ -84,12 +124,42 @@ export class CreateSupplier extends Component {
                                     <h5>{ supplier_id>0? 'Update supplier' : 'Add Supplier'}</h5>
                                 </div>
                                 <div className="card-body">
+                                <div className="card ">
+                                        <div className="card-header">
+                                            <h5>Media</h5>
+                                        </div>
+                                        <div className="card-body">
+                                            <MyUploader options={{
+                                                images: files,
+                                                onUploadSuccess: (response) => {
+                                                    this.handleUploadResponse(response);
+                                                }
+                                            }} content={contentInfo} />
+                                        </div>
+                                    </div>
                                     <Forms
                                         options={{
                                             method: method,
                                             url: url,
-                                            onSuccess: (response) => {
-                                                window.location.href ='/suppliers/list';
+                                            onSuccess: async(response) => {
+                                                let items = []
+                                                await uploadIds.forEach(x => {
+                                                    items.push({
+                                                        id: Number(x),
+                                                        url: '',
+                                                        type: 'supplier',
+                                                        type_id: response.data.id,
+                                                        microService: 'product'
+                                                    });
+                                                });
+                                                if (items.length === 0) {
+                                                    window.location.href ='/suppliers/list';
+                                                    return;
+                                                }
+                                                await updateFileStorage(items).then(response =>{
+                                                    window.location.href ='/suppliers/list';
+                                                } );
+                                               
                                             }
                                         }}
                                     >

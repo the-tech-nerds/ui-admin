@@ -85,7 +85,7 @@ const MyUploader = (props) => {
 
   return (
     <div className="row">
-      <div className="col-4">
+      <div className="col-5">
       <Dropzone
       getUploadParams={getUploadParams}
       onChangeStatus={handleChangeStatus}
@@ -93,7 +93,7 @@ const MyUploader = (props) => {
       accept="image/*,audio/*,video/*"
     />
       </div>
-      {images.length >0 && <div className="col-8">
+      {images.length >0 && <div className="col-7">
        <ImageGalary options={{
            images: images,
            onDeleteSuccess: async (response) => {

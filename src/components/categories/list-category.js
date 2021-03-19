@@ -67,10 +67,10 @@ export default class ListCategory extends Component {
         this.setState({ open: false, openStatus: false });
     };
     render() {
-        let { open, openStatus, categoryList, CategoryRoles, CategoryId } = this.state;
+        let {  openStatus, CategoryId } = this.state;
         return (
             <App>
-                <Breadcrumb title="Admin List" parent="Users" />
+                <Breadcrumb title="Category List" parent="Home" />
                 <div className="container-fluid">
                     <div className="card">
                         <div className="card-header">
@@ -118,7 +118,7 @@ export default class ListCategory extends Component {
                                                 <div>
                                                     <span onClick={() => {
                                                     window.location.href = `/categories/${row.original.id}/edit`;
-                                                    }} title="Edit role">
+                                                    }} title="Edit category">
                                                         <i className="fa fa-pencil" style={{
                                                             width: 35,
                                                             fontSize: 20,
