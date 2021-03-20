@@ -6,7 +6,7 @@ import {AvField, AvGroup, AvInput} from "availity-reactstrap-validation";
 import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
-import {Label} from "reactstrap";
+import {Button, Label} from "reactstrap";
 import MyUploader from "../common/dropzone";
 import {DropzoneStatus} from "../../constants/dropzoneStatus";
 import updateFileStorage from "../common/file-storage";
@@ -67,6 +67,57 @@ export class CreateProduct extends Component {
     }
 
     async componentDidMount() {
+        const id = Number(this.props.match.params.id);
+
+        if (id > 0) {
+
+            this.setState({
+                productId: id,
+                method: 'PUT',
+                url: `/api/products/update/${id}`,
+                loading: true
+            });
+            await fetch(`/api/products/${id}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                cache: 'no-cache',
+                redirect: 'follow',
+            })
+                .then(async res => {
+                    this.setState({ loading: false });
+                    const response = await res.json();
+                    if (response.code === 200) {
+                        this.setState((state) => {
+                            return {
+                                ...state,
+                                product: response.data.product,
+                                files: response.data.images
+                            }
+                        });
+                    } else {
+                        this.setState((state) => {
+                            return {
+                                ...state,
+                                error: true,
+                                errorMessage: response.message,
+                                loading: false,
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            error: true,
+                            errorMessage: error,
+                            loading: false,
+                        }
+                    });
+                });
+        }
         // fetch brands
         FetchData({
             url: '/api/brands/list/all', callback: (response, isSucess) => {
@@ -149,73 +200,70 @@ export class CreateProduct extends Component {
                         <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header">
-                                    <h5>Add Product</h5>
+                                    <h5>{productId > 0 ? 'Update Product' : 'Add Product'}</h5>
                                 </div>
                                 <div className="card-body">
-                                    <div className="row product-adding">
-                                        <div className="col-xl-5">
-                                            <div className="add-product">
-                                                <div className="card ">
-                                                    <div className="card-header">
-                                                        <h5>Product Media</h5>
-                                                    </div>
-                                                    <div className="card-body">
-                                                        <MyUploader options={{
-                                                            images: files,
-                                                            onUploadSuccess: (response) => {
-                                                                this.handleUploadResponse(response);
-                                                            }
-                                                        }} content={contentInfo} />
-                                                    </div>
-                                                </div>
+                                    <div className="add-product">
+                                        <div className="card ">
+                                            <div className="card-header">
+                                                <h5>Product Media</h5>
+                                            </div>
+                                            <div className="card-body">
+                                                <MyUploader options={{
+                                                    images: files,
+                                                    onUploadSuccess: (response) => {
+                                                        this.handleUploadResponse(response);
+                                                    }
+                                                }} content={contentInfo} />
                                             </div>
                                         </div>
-                                        <div className="col-xl-7">
-                                            <Forms
-                                                options={{
-                                                    method: 'POST',
-                                                    url: '/api/products',
-                                                    onSuccess: async (response) => {
-                                                        let items = []
-                                                        await uploadIds.forEach(x => {
-                                                            items.push({
-                                                                id: Number(x),
-                                                                url: '',
-                                                                type: 'product',
-                                                                type_id: response.data.id,
-                                                                microService: 'product'
-                                                            });
+                                    </div>
+                                    <div className="col-xl-12">
+                                        <Forms
+                                            options={{
+                                                method: 'POST',
+                                                url: '/api/products',
+                                                onSuccess: async (response) => {
+                                                    let items = []
+                                                    await uploadIds.forEach(x => {
+                                                        items.push({
+                                                            id: Number(x),
+                                                            url: '',
+                                                            type: 'product',
+                                                            type_id: response.data.id,
+                                                            microService: 'product'
                                                         });
-                                                        console.log(uploadIds)
-                                                        if (items.length === 0) {
-                                                            window.location.href = '/products/list';
-                                                            return;
-                                                        }
-                                                        await updateFileStorage(items).then(response =>{
-                                                            window.location.href = '/products/list';
-                                                        } );
+                                                    });
+                                                    console.log(uploadIds)
+                                                    if (items.length === 0) {
+                                                        window.location.href = '/products/list';
+                                                        return;
                                                     }
-                                                }}
-                                            >
-                                                <AvGroup>
-                                                    <Label for="shop_id">Select Shop</Label>
-                                                    <AvSelect name="shop_id" options={shops} required/>
-                                                </AvGroup>
-                                                <AvGroup>
-                                                    <Label for="category_id">Select category</Label>
-                                                    <AvSelect name="category_id" options={categoryList} required/>
-                                                </AvGroup>
-                                                <AvGroup>
-                                                    <Label for="brand_id">Select Brand</Label>
-                                                    <AvSelect name="brand_id" options={brands} required/>
-                                                </AvGroup>
+                                                    await updateFileStorage(items).then(response =>{
+                                                        window.location.href = '/products/list';
+                                                    } );
+                                                }
+                                            }}
+                                        >
+                                            <AvGroup>
+                                                <Label for="shop_id">Select Shop</Label>
+                                                <AvSelect value='1' name="shop_id" options={shops} required/>
+                                            </AvGroup>
+                                            <AvGroup>
+                                                <Label for="category_id">Select category</Label>
+                                                <AvSelect name="category_id" options={categoryList} required/>
+                                            </AvGroup>
+                                            <AvGroup>
+                                                <Label for="brand_id">Select Brand</Label>
+                                                <AvSelect name="brand_id" options={brands} required/>
+                                            </AvGroup>
 
-                                                <AvGroup>
-                                                    <Label for="name">Product Name</Label>
-                                                    <AvField className="form-control" name="name" type="text" required/>
-                                                </AvGroup>
+                                            <AvGroup>
+                                                <Label for="name">Product Name</Label>
+                                                <AvField className="form-control" name="name" type="text" required/>
+                                            </AvGroup>
 
-                                                {/*<div className="digital-add needs-validation">
+                                            {/*<div className="digital-add needs-validation">
                                                     <div className="form-group mb-0">
                                                         <div className="description-sm">
                                                             <CKEditors
@@ -231,11 +279,11 @@ export class CreateProduct extends Component {
                                                     </div>
                                                 </div>*/}
 
-                                                <AvInput type="textarea" name="description" placeholder="Product Description" />
+                                            <AvInput type="textarea" name="description" placeholder="Product Description" />
 
-                                                <button type="submit" className="btn btn-primary mt-3">Add</button>
-                                            </Forms>
-                                        </div>
+                                            {productId == 0 && <Button color="primary">Create</Button>}
+                                            {productId > 0 && <Button color="primary">Update</Button>}
+                                        </Forms>
                                     </div>
                                 </div>
                             </div>
