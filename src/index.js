@@ -93,7 +93,7 @@ class Root extends Component {
                         <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} component={Login}/>
                         <Route exact path={`${process.env.PUBLIC_URL}/dashboard`} component={Dashboard}/>
 
-                        <Route exact path={`${process.env.PUBLIC_URL}/products/physical/category`}
+                        {/*<Route exact path={`${process.env.PUBLIC_URL}/products/physical/category`}
                                component={Category}/>
                         <Route path={`${process.env.PUBLIC_URL}/products/physical/sub-category`}
                                component={Sub_category}/>
@@ -111,7 +111,7 @@ class Root extends Component {
                         <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-product-list`}
                                component={Digital_pro_list}/>
                         <Route path={`${process.env.PUBLIC_URL}/products/digital/digital-add-product`}
-                               component={Digital_add_pro}/>
+                               component={Digital_add_pro}/>*/}
 
                         {/*    <Route path={`${process.env.PUBLIC_URL}/sales/orders`} component={Orders}/>*/}
                         {/*    <Route path={`${process.env.PUBLIC_URL}/sales/transactions`}*/}

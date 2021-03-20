@@ -76,7 +76,7 @@ export const MENUITEMS = PermissionTypes ? [
             {path: '/brands/list', title: 'Brand', type: 'link', permissions: [PermissionTypes.BRAND.GET]},
         ]
     },
-    {
+    /*{
         title: 'Products', icon: Box, type: 'sub', active: false, children: [
             {
                 title: 'Physical', type: 'sub', active: false, children: [
@@ -96,7 +96,7 @@ export const MENUITEMS = PermissionTypes ? [
                 ]
             },
         ]
-    },
+    },*/
     /*{
         title: 'Menus', icon: AlignLeft, type: 'sub', active: false, children: [
             { path: '/menus/list-menu', title: 'List Menu', type: 'link' },
