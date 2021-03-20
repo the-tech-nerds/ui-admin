@@ -62,7 +62,7 @@ export const MENUITEMS = PermissionTypes ? [
     },
     {
         title: 'Categories', icon: ShoppingBag, type: 'sub', active: false,
-        permissions: [],
+        permissions: [PermissionTypes.PRODUCT_CATEGORY.GET],
         children: [
             {path: '/categories/list', title: 'Category List', type: 'link', permissions: []},
         ]
@@ -71,17 +71,12 @@ export const MENUITEMS = PermissionTypes ? [
         title: 'Products', icon: ShoppingBag, type: 'sub', active: false,
         permissions: [PermissionTypes.UNIT.GET,PermissionTypes.BRAND.GET],
         children: [
+            {path: '/products/list', title: 'Product', type: 'link', permissions: [PermissionTypes.PRODUCT.GET]},
             {path: '/units/list', title: 'Unit', type: 'link', permissions: [PermissionTypes.UNIT.GET]},
             {path: '/brands/list', title: 'Brand', type: 'link', permissions: [PermissionTypes.BRAND.GET]},
         ]
     },
     /*{
-        title: 'Menus', icon: AlignLeft, type: 'sub', active: false, children: [
-            { path: '/menus/list-menu', title: 'List Menu', type: 'link' },
-            { path: '/menus/create-menu', title: 'Create Menu', type: 'link' },
-        ]
-    },
-    {
         title: 'Products', icon: Box, type: 'sub', active: false, children: [
             {
                 title: 'Physical', type: 'sub', active: false, children: [
@@ -100,6 +95,12 @@ export const MENUITEMS = PermissionTypes ? [
                     { path: '/products/digital/digital-add-product', title: 'Add Product', type: 'link' },
                 ]
             },
+        ]
+    },*/
+    /*{
+        title: 'Menus', icon: AlignLeft, type: 'sub', active: false, children: [
+            { path: '/menus/list-menu', title: 'List Menu', type: 'link' },
+            { path: '/menus/create-menu', title: 'Create Menu', type: 'link' },
         ]
     },
     {

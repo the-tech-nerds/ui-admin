@@ -5,6 +5,7 @@ import Forms from "../form/forms";
 import {AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
 import * as fetch from "isomorphic-fetch";
+import FetchData from "../common/get-data";
 import { DropzoneStatus } from "../../constants/dropzoneStatus"
 import MyUploader from "../common/dropzone";
 import updateFileStorage from "../common/file-storage";
@@ -57,35 +58,20 @@ export class CreateCategory extends Component {
     }
 
     componentDidMount() {
-        fetch(`/api/categories`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            cache: 'no-cache',
-            redirect: 'follow',
-        })
-            .then(async res => {
-                const response = await res.json();
-                if (response.code === 200) {
+        FetchData({
+            url: '/api/categories', callback: (response, isSucess) => {
+                if (isSucess) {
                     this.setState({
                         categoryList: response.data,
                     });
-                    return;
                 } else {
                     this.setState({
                         error: true,
                         errorMessage: response.message,
-                    });
-                    return;
+                    })
                 }
-            })
-            .catch(error => {
-                this.setState({
-                    error: true,
-                    errorMessage: error,
-                })
-            })
+            }
+        })
     }
     render() {
         let { categoryList,  contentInfo, files, uploadIds } = this.state
@@ -139,7 +125,7 @@ export class CreateCategory extends Component {
                                         }}
                                     >
                                         <AvField type="select" name="parent_id">
-                                            <option value="">Select Parent Category</option>
+                                            <option value="0">Select Parent Category</option>
                                             { categoryList.map(category => (
                                                 <option value={category.id}>{ category.Name }</option>
                                             ))}
