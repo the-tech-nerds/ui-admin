@@ -46,34 +46,21 @@ export default class CategoryService {
     }
 
     async getCategory(categoryId: number) {
-        const {data: category} = await this.gatewayService.execute("product", {
+        return this.gatewayService.execute("product", {
             method: "GET",
             path: `/api/v1/category/${categoryId}`,
-        });
-        const {
-            id,
-            parent_id,
-            name,
-            is_active
-        } = category;
-
-        return this.responseService.response({
-            id,
-            parent_id,
-            name,
-            is_active
         });
     }
 
 
     async changeStatus(categoryId: number) {
-        return await this.gatewayService.execute("product", {
+        return this.gatewayService.execute("product", {
             method: "PUT",
             path: `/api/v1/category/${categoryId}/status`,
         });
     }
     async getMenuCategory() {
-        return await this.gatewayService.execute("product", {
+        return this.gatewayService.execute("product", {
             method: "GET",
             path: `/api/v1/category/menu/all`,
         });
