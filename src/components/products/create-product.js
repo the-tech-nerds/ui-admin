@@ -250,7 +250,7 @@ export class CreateProduct extends Component {
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="category_id">Select category</Label>
-                                                <AvSelect name="category_id" options={categoryList} required/>
+                                                <AvSelect value={shops.filter(option => option.value === 1)} isMulti name="category_id" options={categoryList} required/>
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="brand_id">Select Brand</Label>
