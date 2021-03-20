@@ -17,6 +17,7 @@ export class CreateProduct extends Component {
         this.state = {
             product: {},
             categoryList: [],
+            categoryIds: [],
             brands: [],
             shops: [],
 
@@ -88,7 +89,12 @@ export class CreateProduct extends Component {
                 .then(async res => {
                     this.setState({ loading: false });
                     const response = await res.json();
+
+                    console.log('product data :::', response.data.product);
                     if (response.code === 200) {
+                        response.data.product.categories = response.data.product.categories.map(category => category.id);
+
+                        console.log('product data after manipulation :::', response.data.product);
                         this.setState((state) => {
                             return {
                                 ...state,
@@ -246,20 +252,23 @@ export class CreateProduct extends Component {
                                         >
                                             <AvGroup>
                                                 <Label for="shop_id">Select Shop</Label>
-                                                <AvSelect value='1' name="shop_id" options={shops} required/>
+                                                {productId == 0 && <AvSelect name="shop_id" options={shops} required/>}
+                                                {productId > 0 && <AvSelect name="shop_id" value={shops.filter(option => option.value === product.shop_id)} options={shops} required/>}
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="category_id">Select category</Label>
-                                                <AvSelect value={shops.filter(option => option.value === 1)} isMulti name="category_id" options={categoryList} required/>
+                                                {productId == 0 && <AvSelect isMulti name="category_id" options={categoryList} required/>}
+                                                {productId > 0 && <AvSelect value={categoryList.filter(option => product.categories.includes(option.value))} isMulti name="category_id" options={categoryList} required/>}
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="brand_id">Select Brand</Label>
-                                                <AvSelect name="brand_id" options={brands} required/>
+                                                {productId == 0 && <AvSelect name="brand_id" options={brands} required/>}
+                                                {productId > 0 && <AvSelect name="brand_id" value={brands.filter(option => option.value === product.brand_id)} options={brands} required/>}
                                             </AvGroup>
 
                                             <AvGroup>
                                                 <Label for="name">Product Name</Label>
-                                                <AvField className="form-control" name="name" type="text" required/>
+                                                <AvField className="form-control" name="name" value={product.name} type="text" required/>
                                             </AvGroup>
 
                                             {/*<div className="digital-add needs-validation">
@@ -278,7 +287,7 @@ export class CreateProduct extends Component {
                                                     </div>
                                                 </div>*/}
 
-                                            <AvInput type="textarea" name="description" placeholder="Product Description" />
+                                            <AvInput type="textarea" name="description" value={product.description} placeholder="Product Description" />
 
                                             {productId == 0 && <Button color="primary">Create</Button>}
                                             {productId > 0 && <Button color="primary">Update</Button>}
