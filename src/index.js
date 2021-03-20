@@ -290,6 +290,13 @@ class Root extends Component {
                             exact={true}
                         />
                         }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/products/create/:id`}
+                            component={CreateShop}
+                            exact={true}
+                        />
+                        }
                         {/*<Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors}/>*/}
                         {/*<Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`}*/}
                         {/*       component={Create_vendors}/>*/}

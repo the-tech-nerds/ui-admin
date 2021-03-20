@@ -79,7 +79,7 @@ export default class ListProduct extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/create-product" className="btn btn-secondary">Create Product</Link>
+                                <Link to="/products/create/0" className="btn btn-secondary">Create Product</Link>
                             </div>
                             <div className="clearfix"></div>
 
@@ -118,7 +118,7 @@ export default class ListProduct extends Component {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                    window.location.href = `/products/${row.original.id}/edit`;
+                                                    window.location.href = `/products/create/${row.original.id}`;
                                                     }} title="Edit role">
                                                         <i className="fa fa-pencil" style={{
                                                             width: 35,
