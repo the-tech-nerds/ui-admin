@@ -278,22 +278,8 @@ class Root extends Component {
                         }
                         {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
                         <Route
-                            path={`${process.env.PUBLIC_URL}/create-product`}
-                            component={CreateProduct}
-                            exact={true}
-                        />
-                        }
-                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/products/:id/edit`}
-                            component={CreateProduct}
-                            exact={true}
-                        />
-                        }
-                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
-                        <Route
                             path={`${process.env.PUBLIC_URL}/products/create/:id`}
-                            component={CreateShop}
+                            component={CreateProduct}
                             exact={true}
                         />
                         }

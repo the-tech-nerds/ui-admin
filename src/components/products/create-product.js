@@ -234,7 +234,6 @@ export class CreateProduct extends Component {
                                                             microService: 'product'
                                                         });
                                                     });
-                                                    console.log(uploadIds)
                                                     if (items.length === 0) {
                                                         window.location.href = '/products/list';
                                                         return;
