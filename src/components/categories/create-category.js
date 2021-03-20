@@ -6,15 +6,55 @@ import {AvField} from "availity-reactstrap-validation";
 import {Button} from "reactstrap";
 import * as fetch from "isomorphic-fetch";
 import FetchData from "../common/get-data";
+import { DropzoneStatus } from "../../constants/dropzoneStatus"
+import MyUploader from "../common/dropzone";
+import updateFileStorage from "../common/file-storage";
 
 export class CreateCategory extends Component {
     constructor(props) {
         super(props);
         this.state = {
             categoryList: [],
+            contentInfo: {
+                entity: 'category',
+                folder: 'category',
+                entity_id: Number(this.props.match.params.id) || 0,
+                serviceName: 'product'
+            },
+            images: [],
+            uploadIds: [],
             error: false,
             errorMessage: null,
+            files: []
         };
+    }
+    handleUploadResponse = (response) => {
+        if (response.status == DropzoneStatus.UPLOAD_SUCCESS) {
+            let ids = this.state.uploadIds;
+            let imgs = this.state.images;
+            ids.push(response.data.id)
+            imgs.push(response.data.url)
+            this.setState({
+                uploadIds: ids,
+                images: imgs
+            });
+        } else if (response.status == DropzoneStatus.REMOVE_UPLOADED_ITEM) {
+            const urls = this.state.images.filter(i => i !== response.data.url);
+            const ids = this.state.uploadIds.filter(u => u !== response.data.id)
+            this.setState({
+                uploadIds: ids,
+                images: urls
+            });
+        }
+        else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
+            const file = this.state.files.filter(i => i.id !== response.data.id);
+            this.setState((state) => {
+                return {
+                    ...state,
+                    files: file,
+                }
+            });
+        }
     }
 
     componentDidMount() {
@@ -34,10 +74,10 @@ export class CreateCategory extends Component {
         })
     }
     render() {
-        let { categoryList } = this.state
+        let { categoryList,  contentInfo, files, uploadIds } = this.state
         return (
             <App>
-                <Breadcrumb title="Create Category" parent="Users" />
+                <Breadcrumb title="Create Category" parent="List" />
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
@@ -46,12 +86,41 @@ export class CreateCategory extends Component {
                                     <h5> Add Category</h5>
                                 </div>
                                 <div className="card-body">
+                                <div className="card ">
+                                        <div className="card-header">
+                                            <h5>Media</h5>
+                                        </div>
+                                        <div className="card-body">
+                                            <MyUploader options={{
+                                                images: files,
+                                                onUploadSuccess: (response) => {
+                                                    this.handleUploadResponse(response);
+                                                }
+                                            }} content={contentInfo} />
+                                        </div>
+                                    </div>
                                     <Forms
                                         options={{
                                             method: 'POST',
                                             url: '/api/categories',
-                                            onSuccess: (response) => {
-                                                window.location.href ='/categories/list';
+                                            onSuccess: async(response) => {
+                                                let items = []
+                                                await uploadIds.forEach(x => {
+                                                    items.push({
+                                                        id: Number(x),
+                                                        url: '',
+                                                        type: 'category',
+                                                        type_id: response.data.id,
+                                                        microService: 'product'
+                                                    });
+                                                });
+                                                if (items.length === 0) {
+                                                    window.location.href ='/categories/list';
+                                                    return;
+                                                }
+                                                await updateFileStorage(items).then(response =>{
+                                                    window.location.href ='/categories/list';
+                                                } );
                                             }
                                         }}
                                     >

@@ -3,7 +3,9 @@ import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import { Button } from "reactstrap";
 import AsyncSelect from 'react-select/async';
-
+import { DropzoneStatus } from '../../constants/dropzoneStatus';
+import MyUploader from '../common/dropzone';
+import updateFileStorage from "../common/file-storage";
 
 export class CreateBrand extends Component {
     constructor(props) {
@@ -14,6 +16,14 @@ export class CreateBrand extends Component {
                 description:'',
                 supplier_id: 0
             },
+            contentInfo: {
+                entity: 'brand',
+                folder: 'brand',
+                entity_id: Number(this.props.match.params.id),
+                serviceName: 'product'
+            },
+            images: [],
+            uploadIds: [],
             inputValue: '',
             brand_id: 0,
             method: 'POST',
@@ -21,6 +31,7 @@ export class CreateBrand extends Component {
             loading: true,
             suppliers: [],
             supplier_id: 0,
+            files: []
         }
         this.getAllSupplier();
     }
@@ -109,7 +120,24 @@ export class CreateBrand extends Component {
         }).then(async res => {
             const response = await res.json();
             if(response.code ==200){
-                window.location.href = `/brands/list/`;
+                let items = []
+                await this.state.uploadIds.forEach(x => {
+                    items.push({
+                        id: Number(x),
+                        url: '',
+                        type: 'shop',
+                        type_id: response.data.id,
+                        microService: 'product'
+                    });
+                });
+                if (items.length === 0) {
+                    window.location.href = `/brands/list/`;
+                    return;
+                }
+                await updateFileStorage(items).then(response =>{
+                    window.location.href = `/brands/list/`;
+                } );
+                
             }
            
         })
@@ -117,6 +145,38 @@ export class CreateBrand extends Component {
                
             })
       }
+      handleUploadResponse = (response) => {
+        if (response.status == DropzoneStatus.UPLOAD_SUCCESS) {
+            let ids = this.state.uploadIds;
+            let imgs = this.state.images;
+            ids.push(response.data.id)
+            imgs.push(response.data.url)
+            this.setState({
+                uploadIds: ids,
+                images: imgs
+            });
+        } else if (response.status == DropzoneStatus.REMOVE_UPLOADED_ITEM) {
+            const urls = this.state.images.filter(i => i !== response.data.url);
+            const ids = this.state.uploadIds.filter(u => u !== response.data.id)
+            this.setState((state) =>{
+                return {
+                    ...state,
+                    uploadIds: ids,
+                    images: urls
+                }
+               
+            });
+        }
+        else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
+            const file = this.state.files.filter(i => i.id !== response.data.id);
+            this.setState((state) => {
+                return {
+                    ...state,
+                    files: file,
+                }
+            });
+        }
+    }
     async componentDidMount() {
         const id = Number(this.props.match.params.id);
         if (id > 0) {
@@ -139,11 +199,12 @@ export class CreateBrand extends Component {
                     this.setState({ loading: false });
                     const response = await res.json();
                     if (response.code === 200) {
-                        var value = this.state.suppliers.filter(x=>x.value == response.data.supplier_id)[0].label;
+                        var value = this.state.suppliers.filter(x=>x.value == response.data.brand.supplier_id)[0].label;
                         this.setState((state) => {
                             return {
                                 ...state,
-                                brand: response.data,
+                                brand: response.data.brand,
+                                files: response.data.images,
                                 inputValue: value
                             }
                         });
@@ -173,7 +234,7 @@ export class CreateBrand extends Component {
 
     }
     render() {
-        const { brand={}, brand_id, inputValue } = this.state;
+        const { brand={}, brand_id, inputValue, contentInfo, files, uploadIds } = this.state;
    
         return (
             <App>
@@ -187,6 +248,19 @@ export class CreateBrand extends Component {
                                     <h5>{brand_id > 0 ? 'Update brand' : 'Add brand'}</h5>
                                 </div>
                                 <div className="card-body">
+                                <div className="card ">
+                                        <div className="card-header">
+                                            <h5>Media</h5>
+                                        </div>
+                                        <div className="card-body">
+                                            <MyUploader options={{
+                                                images: files,
+                                                onUploadSuccess: (response) => {
+                                                    this.handleUploadResponse(response);
+                                                }
+                                            }} content={contentInfo} />
+                                        </div>
+                                    </div>
                                     <form  onSubmit={this.mySubmitHandler}>
                                         <label>Name</label>
                                         <input className="form-control"  name="name" onChange={this.changeInputHandler} value={brand?.name} placeholder="name"  type="text" required />

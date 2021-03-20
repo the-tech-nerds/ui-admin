@@ -6,17 +6,63 @@ import {AvCheckbox, AvCheckboxGroup, AvField} from "availity-reactstrap-validati
 import {Button} from "reactstrap";
 import * as fetch from "isomorphic-fetch";
 import Loader from "../common/loader";
+import { DropzoneStatus } from "../../constants/dropzoneStatus"
+import MyUploader from "../common/dropzone";
 
 export default class EditCategory extends Component {
     constructor(props) {
         super(props)
         this.state = {
             categoryList: [],
+            contentInfo: {
+                entity: 'category',
+                folder: 'category',
+                entity_id: Number(this.props.match.params.id) || 0,
+                serviceName: 'product'
+            },
+            images: [],
+            uploadIds: [],
             error: false,
             errorMessage: null,
             category: {},
-            role: '',
-            role_id:'',
+            files: []
+
+        }
+    }
+    handleUploadResponse = (response) => {
+        if (response.status == DropzoneStatus.UPLOAD_SUCCESS) {
+            let ids = this.state.uploadIds;
+            let imgs = this.state.images;
+            ids.push(response.data.id)
+            imgs.push(response.data.url)
+            this.setState((state) =>{
+                return {
+                    ...state,
+                    uploadIds: ids,
+                    images: imgs
+                }
+            
+            });
+        } else if (response.status == DropzoneStatus.REMOVE_UPLOADED_ITEM) {
+            const urls = this.state.images.filter(i => i !== response.data.url);
+            const ids = this.state.uploadIds.filter(u => u !== response.data.id)
+            this.setState((state) =>{
+                return {
+                    ...state,
+                    uploadIds: ids,
+                    images: urls
+                }
+            
+            });
+        }
+        else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
+            const file = this.state.files.filter(i => i.id !== response.data.id);
+            this.setState((state) => {
+                return {
+                    ...state,
+                    files: file,
+                }
+            });
         }
     }
 
@@ -70,13 +116,8 @@ export default class EditCategory extends Component {
                     this.setState((state) => {
                         return {
                             ...state,
-                            category: response.data
-                        }
-                    });
-
-                    this.setState((state) => {
-                        return {
-                            ...state,
+                            category: response.data.category,
+                            files: response.data.images,
                             categoryList: this.state.categoryList.filter(category => category.id !== Number(categoryId))
                         }
                     });
@@ -104,12 +145,12 @@ export default class EditCategory extends Component {
     }
 
     render() {
-        let {categoryList, loading, category} = this.state;
+        let {categoryList, loading, category, contentInfo, files, uploadIds } = this.state;
         const url = window.location.href.split('/');
         const categoryId = url[4];
         return (
             <App>
-                <Breadcrumb title="Edit Role" parent="Roles"/>
+                <Breadcrumb title="Edit category" parent="Category List"/>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
@@ -119,6 +160,19 @@ export default class EditCategory extends Component {
                                     <h5> Edit Category</h5>
                                 </div>
                                 <div className="card-body">
+                                <div className="card ">
+                                        <div className="card-header">
+                                            <h5>Media</h5>
+                                        </div>
+                                        <div className="card-body">
+                                            <MyUploader options={{
+                                                images: files,
+                                                onUploadSuccess: (response) => {
+                                                    this.handleUploadResponse(response);
+                                                }
+                                            }} content={contentInfo} />
+                                        </div>
+                                    </div>
                                     <Forms
                                         options={{
                                             method: 'PUT',
