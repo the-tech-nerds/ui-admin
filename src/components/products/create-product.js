@@ -257,7 +257,7 @@ export class CreateProduct extends Component {
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="category_id">Select category</Label>
-                                                {productId == 0 && <AvSelect isMulti name="category_id" options={categoryList} required/>}
+                                                {productId == 0 && <AvSelect isMulti name="category_ids" options={categoryList} required/>}
                                                 {productId > 0 && <AvSelect value={categoryList.filter(option => product.categories.includes(option.value))} isMulti name="category_id" options={categoryList} required/>}
                                             </AvGroup>
                                             <AvGroup>
