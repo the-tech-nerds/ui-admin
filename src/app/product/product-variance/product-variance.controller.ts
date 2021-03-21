@@ -11,7 +11,7 @@ export default class ProductVarianceController {
 
     @Get('/:productId')
     async gets(@Param('productId') productId: number) {
-        return this.productVarianceService.listProductVariances();
+        return this.productVarianceService.listProductVariances(productId);
     }
 
     @Post('/:productId')

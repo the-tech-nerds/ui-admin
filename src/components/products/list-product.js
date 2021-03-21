@@ -114,9 +114,9 @@ export default class ListProduct extends Component {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                        window.location.href = `/product-variances/${row.original.id}`;
+                                                        window.location.href = `/product/${row.original.id}/variance/list`;
                                                     }} title="Show Product Variances">
-                                                        <i className="fa fa-pencil" style={{
+                                                        <i className="fa fa-eye" style={{
                                                             width: 35,
                                                             fontSize: 20,
                                                             padding: 11,

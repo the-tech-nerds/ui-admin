@@ -22,8 +22,8 @@ export class CreateProductVariance extends Component {
             shops: [],
 
             contentInfo: {
-                entity: 'product',
-                folder: 'product',
+                entity: 'product-variance',
+                folder: 'product-variance',
                 entity_id: Number(this.props.match.params.id) || 0,
                 serviceName: 'product'
             },
@@ -31,7 +31,8 @@ export class CreateProductVariance extends Component {
             uploadIds: [],
             files: [],
 
-            productId: 0,
+            productId: Number(this.props.match.params.productId) || 0,
+            productVarianceId: 0,
             method: 'POST',
             url: '/api/products/',
             loading: true,
