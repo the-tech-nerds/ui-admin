@@ -15,11 +15,8 @@ export class CreateProductVariance extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            product: {},
-            categoryList: [],
-            categoryIds: [],
-            brands: [],
-            shops: [],
+            productVariance: {},
+            units:[],
 
             contentInfo: {
                 entity: 'product-variance',
@@ -34,7 +31,7 @@ export class CreateProductVariance extends Component {
             productId: Number(this.props.match.params.productId) || 0,
             productVarianceId: 0,
             method: 'POST',
-            url: '/api/products/',
+            url: '/api/product-variances/',
             loading: true,
         }
     }
@@ -74,62 +71,38 @@ export class CreateProductVariance extends Component {
         if (id > 0) {
 
             this.setState({
-                productId: id,
+                productVarianceId: id,
                 method: 'PUT',
-                url: `/api/products/update/${id}`,
+                url: `/api/product-variances/update/${id}`,
                 loading: true
             });
-            await fetch(`/api/products/${id}`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                cache: 'no-cache',
-                redirect: 'follow',
-            })
-                .then(async res => {
+
+            FetchData({
+                url: `/api/product-variances/${id}`, callback: (response, isSucess) => {
                     this.setState({ loading: false });
-                    const response = await res.json();
-
-                    console.log('product data :::', response.data.product);
-                    if (response.code === 200) {
-                        response.data.product.categories = response.data.product.categories.map(category => category.id);
-
-                        console.log('product data after manipulation :::', response.data.product);
+                    if (isSucess) {
+                        console.log('product variance data :::', response.data.productVariance);
                         this.setState((state) => {
                             return {
                                 ...state,
-                                product: response.data.product,
+                                productVariance: response.data.productVariance,
                                 files: response.data.images
                             }
                         });
                     } else {
-                        this.setState((state) => {
-                            return {
-                                ...state,
-                                error: true,
-                                errorMessage: response.message,
-                                loading: false,
-                            }
-                        });
-                    }
-                })
-                .catch(error => {
-                    this.setState((state) => {
-                        return {
-                            ...state,
+                        this.setState({
                             error: true,
-                            errorMessage: error,
-                            loading: false,
-                        }
-                    });
-                });
+                            errorMessage: response.message,
+                        })
+                    }
+                }
+            })
         }
-        // fetch brands
+        // fetch units
         FetchData({
-            url: '/api/brands/list/all', callback: (response, isSucess) => {
+            url: '/api/units/', callback: (response, isSucess) => {
                 if (isSucess) {
-                    console.log('brands : ',response.data);
+                    console.log('units : ',response.data);
                     const options = response.data.map(x => {
                         return {
                             label: x.Name,
@@ -138,54 +111,8 @@ export class CreateProductVariance extends Component {
                     });
                     console.log('in pr. get brands: ', options);
                     this.setState({
-                        brands: options
+                        units: options
                     })
-                } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    })
-                }
-            }
-        })
-
-        // fetch shops
-        FetchData({
-            url: '/api/shops/list/all', callback: (response, isSucess) => {
-                if (isSucess) {
-                    console.log('shops : ',response.data);
-                    const options = response.data.map(x => {
-                        return {
-                            label: x.Name,
-                            value: x.id
-                        };
-                    });
-                    this.setState({
-                        shops: options
-                    })
-                } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    })
-                }
-            }
-        })
-
-        //fetch categories
-        FetchData({
-            url: '/api/categories', callback: (response, isSucess) => {
-                console.log('categories : ',response.data);
-                if (isSucess) {
-                    const options = response.data.map(x => {
-                        return {
-                            label: x.Name,
-                            value: x.id
-                        };
-                    });
-                    this.setState({
-                        categoryList: options,
-                    });
                 } else {
                     this.setState({
                         error: true,
@@ -197,23 +124,23 @@ export class CreateProductVariance extends Component {
     }
 
     render() {
-        const {product, brands, categoryList, shops, productId, files, uploadIds, contentInfo} = this.state;
+        const {productVariance, productVarianceId, productId, units, files, uploadIds, contentInfo} = this.state;
         return (
             <App>
 
-                <Breadcrumb title={productId > 0 ? 'update' : 'create'} parent="product"/>
+                <Breadcrumb title={productVarianceId > 0 ? 'update' : 'create'} parent="productVariance"/>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header">
-                                    <h5>{productId > 0 ? 'Update Product' : 'Add Product'}</h5>
+                                    <h5>{productVarianceId > 0 ? 'Update Product Variance' : 'Add Product Variance'}</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="add-product">
                                         <div className="card ">
                                             <div className="card-header">
-                                                <h5>Product Media</h5>
+                                                <h5>Product Variance Media</h5>
                                             </div>
                                             <div className="card-body">
                                                 <MyUploader options={{
@@ -229,69 +156,56 @@ export class CreateProductVariance extends Component {
                                         <Forms
                                             options={{
                                                 method: 'POST',
-                                                url: '/api/products',
+                                                url: `/api/product-variances/${productId}`,
                                                 onSuccess: async (response) => {
                                                     let items = []
                                                     await uploadIds.forEach(x => {
                                                         items.push({
                                                             id: Number(x),
                                                             url: '',
-                                                            type: 'product',
+                                                            type: 'product-variance',
                                                             type_id: response.data.id,
                                                             microService: 'product'
                                                         });
                                                     });
                                                     if (items.length === 0) {
-                                                        window.location.href = '/products/list';
+                                                        window.location.href = `/product/${productId}/variance/list`;
                                                         return;
                                                     }
                                                     await updateFileStorage(items).then(response =>{
-                                                        window.location.href = '/products/list';
+                                                        window.location.href = `/product/${productId}/variance/list`;
                                                     } );
                                                 }
                                             }}
                                         >
                                             <AvGroup>
-                                                <Label for="shop_id">Select Shop</Label>
-                                                {productId == 0 && <AvSelect name="shop_id" options={shops} required/>}
-                                                {productId > 0 && <AvSelect name="shop_id" value={shops.filter(option => option.value === product.shop_id)} options={shops} required/>}
-                                            </AvGroup>
-                                            <AvGroup>
-                                                <Label for="category_id">Select category</Label>
-                                                {productId == 0 && <AvSelect isMulti name="category_ids" options={categoryList} required/>}
-                                                {productId > 0 && <AvSelect value={categoryList.filter(option => product.categories.includes(option.value))} isMulti name="category_id" options={categoryList} required/>}
-                                            </AvGroup>
-                                            <AvGroup>
-                                                <Label for="brand_id">Select Brand</Label>
-                                                {productId == 0 && <AvSelect name="brand_id" options={brands} required/>}
-                                                {productId > 0 && <AvSelect name="brand_id" value={brands.filter(option => option.value === product.brand_id)} options={brands} required/>}
+                                                <Label for="title">Variance Title</Label>
+                                                <AvField className="form-control" name="title" value={productVariance.title} type="text" required/>
                                             </AvGroup>
 
                                             <AvGroup>
-                                                <Label for="name">Product Name</Label>
-                                                <AvField className="form-control" name="name" value={product.name} type="text" required/>
+                                                <Label for="price">Variance Price</Label>
+                                                <AvField className="form-control" name="price" value={productVariance.price} type="text" required/>
                                             </AvGroup>
 
-                                            {/*<div className="digital-add needs-validation">
-                                                    <div className="form-group mb-0">
-                                                        <div className="description-sm">
-                                                            <CKEditors
-                                                                activeclassName="p10"
-                                                                content={this.state.content}
-                                                                events={{
-                                                                    "blur": this.onBlur,
-                                                                    "afterPaste": this.afterPaste,
-                                                                    "change": this.onChange
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>*/}
+                                            <AvGroup>
+                                                <Label for="color">Variance Color</Label>
+                                                <AvField className="form-control" name="color" value={productVariance.color} type="text"/>
+                                            </AvGroup>
 
-                                            <AvInput type="textarea" name="description" value={product.description} placeholder="Product Description" />
+                                            <AvGroup>
+                                                <Label for="unit_id">Select Unit</Label>
+                                                {productVarianceId == 0 && <AvSelect name="unit_id" options={units} required/>}
+                                                {productVarianceId > 0 && <AvSelect name="unit_id" value={units.filter(option => option.value === productVariance.unit_id)} options={units}/>}
+                                            </AvGroup>
 
-                                            {productId == 0 && <Button color="primary">Create</Button>}
-                                            {productId > 0 && <Button color="primary">Update</Button>}
+                                            <AvGroup>
+                                                <Label for="unit_value">Unit Value</Label>
+                                                <AvField className="form-control" name="unit_value" value={productVariance.unit_value} type="text" required/>
+                                            </AvGroup>
+
+                                            {productVarianceId == 0 && <Button color="primary">Create</Button>}
+                                            {productVarianceId > 0 && <Button color="primary">Update</Button>}
                                         </Forms>
                                     </div>
                                 </div>
