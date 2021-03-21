@@ -10,12 +10,12 @@ import * as fetch from "isomorphic-fetch";
 import {Button} from "reactstrap";
 import {Alert} from "react-bootstrap";
 
-export default class ListProduct extends Component {
+export default class ListProductVariance extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            productList: [],
-            productId: '',
+            productVarianceList: [],
+            productVarianceId: '',
             open: false,
             openStatus:false,
             error: false,
@@ -24,7 +24,7 @@ export default class ListProduct extends Component {
     }
 
     componentDidMount() {
-        fetch(`/api/products/`, {
+        fetch(`/api/product-variances/`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export default class ListProduct extends Component {
                 const response = await res.json();
                 if (response.code === 200) {
                     this.setState({
-                        productList: response.data,
+                        productVarianceList: response.data,
                     });
                     return;
                 } else {
@@ -64,18 +64,18 @@ export default class ListProduct extends Component {
         this.setState({ open: false, openStatus: false });
     };
     render() {
-        let {openStatus, productId } = this.state;
+        let { openStatus, productVarianceId } = this.state;
         return (
             <App>
-                <Breadcrumb title="Product List" parent="Users" />
+                <Breadcrumb title="Product Variance List" parent="Users" />
                 <div className="container-fluid">
                     <div className="card">
                         <div className="card-header">
-                            <h5>Product List</h5>
+                            <h5>Product Variance List</h5>
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/products/create/0" className="btn btn-secondary">Create Product</Link>
+                                <Link to="/product-variances/create/0" className="btn btn-secondary">Create Product Variance</Link>
                             </div>
                             <div className="clearfix"></div>
 
@@ -87,9 +87,9 @@ export default class ListProduct extends Component {
                                     <Forms
                                         options={{
                                             method: 'PUT',
-                                            url: `/api/products/${productId}/status`,
+                                            url: `/api/product-variances/${productVarianceId}/status`,
                                             onSuccess: (response) => {
-                                                window.location.href = '/products/list';
+                                                window.location.href = '/product-variances/list';
                                             },
                                         }}
                                     >
@@ -102,7 +102,7 @@ export default class ListProduct extends Component {
 
                             <div id="batchDelete" className="product-table product-list order-table coupon-list-delete">
                                 <Datatable
-                                    url="/api/products/"
+                                    url="/api/product-variances/"
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"
@@ -114,20 +114,8 @@ export default class ListProduct extends Component {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                        window.location.href = `/product-variances/${row.original.id}`;
-                                                    }} title="Show Product Variances">
-                                                        <i className="fa fa-pencil" style={{
-                                                            width: 35,
-                                                            fontSize: 20,
-                                                            padding: 11,
-                                                            color: '#e4566e'
-                                                        }}
-                                                        />
-                                                    </span>
-
-                                                    <span onClick={() => {
-                                                    window.location.href = `/products/create/${row.original.id}`;
-                                                    }} title="Edit Product">
+                                                    window.location.href = `/product-variances/create/${row.original.id}`;
+                                                    }} title="Edit role">
                                                         <i className="fa fa-pencil" style={{
                                                             width: 35,
                                                             fontSize: 20,
@@ -139,7 +127,7 @@ export default class ListProduct extends Component {
 
                                                     <span onClick={() => {
                                                         this.setState({
-                                                            productId: row.original.id
+                                                            productVarianceId: row.original.id
                                                         })
                                                         this.onOpenStatusModal();
                                                     }} title="Change Status">
