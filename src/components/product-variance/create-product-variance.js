@@ -31,7 +31,7 @@ export class CreateProductVariance extends Component {
             productId: Number(this.props.match.params.productId) || 0,
             productVarianceId: 0,
             method: 'POST',
-            url: '/api/product-variances/',
+            url: '/api/product-variances/'+Number(this.props.match.params.productId),
             loading: true,
         }
     }
@@ -68,20 +68,41 @@ export class CreateProductVariance extends Component {
     async componentDidMount() {
         const id = Number(this.props.match.params.id);
 
+        // fetch units
+        FetchData({
+            url: '/api/units/list/all/', callback: (response, isSucess) => {
+                if (isSucess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    this.setState({
+                        units: options
+                    })
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        })
+
         if (id > 0) {
 
             this.setState({
                 productVarianceId: id,
                 method: 'PUT',
-                url: `/api/product-variances/update/${id}`,
+                url: `/api/product-variances/${this.state.productId}/update/${id}`,
                 loading: true
             });
 
             FetchData({
-                url: `/api/product-variances/${id}`, callback: (response, isSucess) => {
+                url: `/api/product-variances/single/${id}`, callback: (response, isSucess) => {
                     this.setState({ loading: false });
                     if (isSucess) {
-                        console.log('product variance data :::', response.data.productVariance);
                         this.setState((state) => {
                             return {
                                 ...state,
@@ -98,33 +119,10 @@ export class CreateProductVariance extends Component {
                 }
             })
         }
-        // fetch units
-        FetchData({
-            url: '/api/units/', callback: (response, isSucess) => {
-                if (isSucess) {
-                    console.log('units : ',response.data);
-                    const options = response.data.map(x => {
-                        return {
-                            label: x.Name,
-                            value: x.id
-                        };
-                    });
-                    console.log('in pr. get brands: ', options);
-                    this.setState({
-                        units: options
-                    })
-                } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    })
-                }
-            }
-        })
     }
 
     render() {
-        const {productVariance, productVarianceId, productId, units, files, uploadIds, contentInfo} = this.state;
+        const {productVariance, productVarianceId, productId, units, files, uploadIds, contentInfo, method, url} = this.state;
         return (
             <App>
 
@@ -155,8 +153,8 @@ export class CreateProductVariance extends Component {
                                     <div className="col-xl-12">
                                         <Forms
                                             options={{
-                                                method: 'POST',
-                                                url: `/api/product-variances/${productId}`,
+                                                method: method,
+                                                url: url,
                                                 onSuccess: async (response) => {
                                                     let items = []
                                                     await uploadIds.forEach(x => {
@@ -195,13 +193,13 @@ export class CreateProductVariance extends Component {
 
                                             <AvGroup>
                                                 <Label for="unit_id">Select Unit</Label>
-                                                {productVarianceId == 0 && <AvSelect name="unit_id" options={units} required/>}
+                                                {productVarianceId == 0 && <AvSelect name="unit_id" options={units} />}
                                                 {productVarianceId > 0 && <AvSelect name="unit_id" value={units.filter(option => option.value === productVariance.unit_id)} options={units}/>}
                                             </AvGroup>
 
                                             <AvGroup>
                                                 <Label for="unit_value">Unit Value</Label>
-                                                <AvField className="form-control" name="unit_value" value={productVariance.unit_value} type="text" required/>
+                                                <AvField className="form-control" name="unit_value" value={productVariance.unit_value} type="text"/>
                                             </AvGroup>
 
                                             {productVarianceId == 0 && <Button color="primary">Create</Button>}

@@ -89,7 +89,7 @@ export default class ListProductVariance extends Component {
 
                             <div id="batchDelete" className="product-table product-list order-table coupon-list-delete">
                                 <Datatable
-                                    url="/api/product-variances/"
+                                    url={`/api/product-variances/${productId}`}
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"

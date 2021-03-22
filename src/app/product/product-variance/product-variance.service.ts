@@ -31,7 +31,7 @@ export class ProductVarianceService {
     async listProductVariances(productId: number) {
         const {data: productVarianceList} = await this.gatewayService.execute(MicroService.Product, {
             method: "GET",
-            path: `/api/v1/product/variance/${productId}`,
+            path: `/api/v1/product/${productId}/variance/`,
         });
         const productVariances = productVarianceList.map((productVariance: any, index: any) => ({
             id: productVariance.id,

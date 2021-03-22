@@ -23,11 +23,13 @@ export default class ProductVarianceController {
         return this.productVarianceService.create(productVarianceRequest);
     }
 
-    @Put('/update/:id')
+    @Put('/:productId/update/:id')
     async update(
         @Param('id') id: number,
+        @Param('productId') productId: number,
         @Body() productVarianceRequest: any
     ) {
+        productVarianceRequest.product_id = productId;
         return this.productVarianceService.update(id, productVarianceRequest);
     }
 
@@ -36,7 +38,7 @@ export default class ProductVarianceController {
         return this.productVarianceService.changeStatus(id);
     }
 
-    @Get('/:id')
+    @Get('single/:id')
     async get(@Param('id') id: number) {
         return this.productVarianceService.get(id);
     }

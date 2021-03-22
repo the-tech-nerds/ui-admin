@@ -196,7 +196,7 @@ export class CreateProduct extends Component {
     }
 
     render() {
-        const {product, brands, categoryList, shops, productId, files, uploadIds, contentInfo} = this.state;
+        const {product, brands, categoryList, shops, productId, files, uploadIds, contentInfo, method, url} = this.state;
         return (
             <App>
 
@@ -227,8 +227,8 @@ export class CreateProduct extends Component {
                                     <div className="col-xl-12">
                                         <Forms
                                             options={{
-                                                method: 'POST',
-                                                url: '/api/products',
+                                                method: method,
+                                                url: url,
                                                 onSuccess: async (response) => {
                                                     let items = []
                                                     await uploadIds.forEach(x => {
@@ -256,9 +256,9 @@ export class CreateProduct extends Component {
                                                 {productId > 0 && <AvSelect name="shop_id" value={shops.filter(option => option.value === product.shop_id)} options={shops} required/>}
                                             </AvGroup>
                                             <AvGroup>
-                                                <Label for="category_id">Select category</Label>
+                                                <Label for="category_ids">Select category</Label>
                                                 {productId == 0 && <AvSelect isMulti name="category_ids" options={categoryList} required/>}
-                                                {productId > 0 && <AvSelect value={categoryList.filter(option => product.categories.includes(option.value))} isMulti name="category_id" options={categoryList} required/>}
+                                                {productId > 0 && <AvSelect value={categoryList.filter(option => product.categories.includes(option.value))} isMulti name="category_ids" options={categoryList} required/>}
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="brand_id">Select Brand</Label>
