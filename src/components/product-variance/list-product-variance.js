@@ -9,13 +9,15 @@ import {AvField} from "availity-reactstrap-validation";
 import * as fetch from "isomorphic-fetch";
 import {Button} from "reactstrap";
 import {Alert} from "react-bootstrap";
+import FetchData from "../common/get-data";
 
-export default class ListProduct extends Component {
+export default class ListProductVariance extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            productList: [],
-            productId: '',
+            productId: Number(this.props.match.params.productId) || 0,
+            productVarianceList: [],
+            productVarianceId: '',
             open: false,
             openStatus:false,
             error: false,
@@ -24,36 +26,21 @@ export default class ListProduct extends Component {
     }
 
     componentDidMount() {
-        fetch(`/api/products/`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            cache: 'no-cache',
-            redirect: 'follow',
-        })
-            .then(async res => {
-                const response = await res.json();
-                if (response.code === 200) {
+        FetchData({
+            url: `/api/product-variances/${this.state.productId}`, callback: (response, isSucess) => {
+                if (isSucess) {
+                    console.log('product variances : ',response.data);
                     this.setState({
-                        productList: response.data,
+                        productVarianceList: response.data,
                     });
-                    return;
                 } else {
                     this.setState({
                         error: true,
                         errorMessage: response.message,
-                    });
-                    return;
+                    })
                 }
-            })
-            .catch(error => {
-                console.log('in error', error.message);
-                this.setState({
-                    error: true,
-                    errorMessage: error,
-                })
-            })
+            }
+        })
     }
 
     onOpenStatusModal = () => {
@@ -64,18 +51,18 @@ export default class ListProduct extends Component {
         this.setState({ open: false, openStatus: false });
     };
     render() {
-        let {openStatus, productId } = this.state;
+        let { openStatus, productVarianceId, productId } = this.state;
         return (
             <App>
-                <Breadcrumb title="Product List" parent="Users" />
+                <Breadcrumb title="Product Variance List" parent="Users" />
                 <div className="container-fluid">
                     <div className="card">
                         <div className="card-header">
-                            <h5>Product List</h5>
+                            <h5>Product Variance List</h5>
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/products/create/0" className="btn btn-secondary">Create Product</Link>
+                                <Link to={`/product/${productId}/variance/create/0`} className="btn btn-secondary">Create</Link>
                             </div>
                             <div className="clearfix"></div>
 
@@ -87,9 +74,9 @@ export default class ListProduct extends Component {
                                     <Forms
                                         options={{
                                             method: 'PUT',
-                                            url: `/api/products/${productId}/status`,
+                                            url: `/api/product-variances/${productVarianceId}/status`,
                                             onSuccess: (response) => {
-                                                window.location.href = '/products/list';
+                                                window.location.href = `/product/${productId}/variance/list`;
                                             },
                                         }}
                                     >
@@ -102,7 +89,7 @@ export default class ListProduct extends Component {
 
                             <div id="batchDelete" className="product-table product-list order-table coupon-list-delete">
                                 <Datatable
-                                    url="/api/products/"
+                                    url={`/api/product-variances/${productId}`}
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"
@@ -114,20 +101,8 @@ export default class ListProduct extends Component {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                        window.location.href = `/product/${row.original.id}/variance/list`;
-                                                    }} title="Show Product Variances">
-                                                        <i className="fa fa-eye" style={{
-                                                            width: 35,
-                                                            fontSize: 20,
-                                                            padding: 11,
-                                                            color: '#e4566e'
-                                                        }}
-                                                        />
-                                                    </span>
-
-                                                    <span onClick={() => {
-                                                    window.location.href = `/products/create/${row.original.id}`;
-                                                    }} title="Edit Product">
+                                                    window.location.href = `/product/${productId}/variance/create/${row.original.id}`;
+                                                    }} title="Edit Product Variance">
                                                         <i className="fa fa-pencil" style={{
                                                             width: 35,
                                                             fontSize: 20,
@@ -139,7 +114,7 @@ export default class ListProduct extends Component {
 
                                                     <span onClick={() => {
                                                         this.setState({
-                                                            productId: row.original.id
+                                                            productVarianceId: row.original.id
                                                         })
                                                         this.onOpenStatusModal();
                                                     }} title="Change Status">

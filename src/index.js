@@ -65,6 +65,8 @@ import CreateBrand from './components/brands/create-brand';
 import ListBrand from './components/brands/list-brand';
 import ListProduct from "./components/products/list-product";
 import CreateProduct from "./components/products/create-product";
+import ListProductVariance from "./components/product-variance/list-product-variance";
+import CreateProductVariance from "./components/product-variance/create-product-variance";
 
 class Root extends Component {
     permissions = [];
@@ -280,6 +282,22 @@ class Root extends Component {
                         <Route
                             path={`${process.env.PUBLIC_URL}/products/create/:id`}
                             component={CreateProduct}
+                            exact={true}
+                        />
+                        }
+
+                        //Product Variance
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.GET) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/product/:productId/variance/list`}
+                            component={ListProductVariance}
+                            exact={true}
+                        />
+                        }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/product/:productId/variance/create/:id`}
+                            component={CreateProductVariance}
                             exact={true}
                         />
                         }
