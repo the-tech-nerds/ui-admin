@@ -62,7 +62,7 @@ export default class ListProductVariance extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to={`/product/${productId}/variance/create/0`} className="btn btn-secondary">Create Product Variance</Link>
+                                <Link to={`/product/${productId}/variance/create/0`} className="btn btn-secondary">Create</Link>
                             </div>
                             <div className="clearfix"></div>
 
