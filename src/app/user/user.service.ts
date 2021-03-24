@@ -108,6 +108,7 @@ export default class UserService {
             method: "GET",
             path: `/api/v1/user/${userId}`,
         });
+      
         const {
             id,
             first_name,
@@ -117,9 +118,8 @@ export default class UserService {
             birthday,
             gender_type,
             roles,
-            user_shop
+            userShop
         } = user;
-
         return this.responseService.response({
             id,
             first_name,
@@ -130,7 +130,7 @@ export default class UserService {
             gender_type,
             gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other',
             roles,
-            user_shop
+            userShop
         });
     }
 
@@ -189,9 +189,12 @@ export default class UserService {
         }).catch(e => {});
     }
     
-    async updateUserShop(shopIds:number[]) {
+    async updateUserShop(userId: number,shopIds:number[]) {
        return this.gatewayService.execute("auth", {
             method: "PUT",
+            qs: {
+                id: String(userId),
+            },
             path: '/api/v1/user/update/shop',
             body: shopIds
         });

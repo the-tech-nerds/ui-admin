@@ -23,15 +23,15 @@ export class Create_user extends Component {
         FetchData({
             url: `/api/users/${this.state.userId}`, callback: (response, isSucess) => {
                 if (isSucess) {
-                    response.data.user_shop = response.data.user_shop.map(shop => shop.shop_id);
+                    const selectedShops = response.data.userShop.map(shop => shop.shop_id);
                     // let selectedShops = this.state.shops.filter(option =>  response.data.user_shop.includes(option.value)).map(el=>el.value);
                     this.setState((state) => {
                         return {
                             ...state,
                             user: response.data,
-                            // selectedShops:selectedShops,
+                            selectedShops:selectedShops,
                             method: 'PUT',
-                            url: '/api/users/update/shop'
+                            url: '/api/users/update/shop/' + this.state.userId
                         }
                     });
                 } 
@@ -47,12 +47,18 @@ export class Create_user extends Component {
 
                     }
                     this.getUser();
-                    const options = response.data.map(x => {
+                    let options = [];
+                    options.push({
+                        label: 'All shop',
+                        value: -1
+                    })
+                    const option = response.data.map(x => {
                         return {
                             label: x.Name,
                             value: x.id
                         };
                     });
+                    options = options.concat(option);
                     this.setState({
                         shops: options
                     })
@@ -60,6 +66,14 @@ export class Create_user extends Component {
             }
         })
     }
+    handleChange = (event) =>{
+        this.setState((state) => {
+            return {
+                ...state,
+                selectedShops: event
+            }
+        });
+    } 
 
     render() {
         const {shops, userId, user, selectedShops,  method, url} = this.state;
@@ -91,9 +105,14 @@ export class Create_user extends Component {
                                         <AvGroup>
                                                 <Label for="shopIds">Select Shop</Label>
                                                 {userId == 0 && <AvSelect  isMulti name="shopIds" options={shops} required/>}
-                                                {userId > 0 && <AvSelect  value={shops.filter(option =>  user?.user_shop?.includes(option.value)).map(el=>el.value)} isMulti name="shopIds" options={shops} required/>}
+                                                {userId > 0 && <AvSelect  
+                                                value={shops.filter(option =>  selectedShops?.includes(option.value)).map(el=>el.value)} isMulti name="shopIds"
+                                                 options={shops}
+                                                 onChange={this.handleChange}
+                                                 required/>}
                                         </AvGroup>
-                                        <Button color="primary">{userId?'Update' : 'Register'}</Button>
+                                        {userId>0 && <Button color="primary">Update</Button>}
+                                        {userId ==0 && <Button color="primary">Register</Button>}
                                     </Forms>
                                 </div>
                             </div>
