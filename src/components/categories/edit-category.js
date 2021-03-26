@@ -1,13 +1,16 @@
-import React, {Component, Fragment} from 'react'
+import React, { Component, Fragment } from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
-import {AvCheckbox, AvCheckboxGroup, AvField} from "availity-reactstrap-validation";
-import {Button} from "reactstrap";
+import { AvCheckbox, AvCheckboxGroup, AvField } from "availity-reactstrap-validation";
+import { Button,  Label } from "reactstrap";
 import * as fetch from "isomorphic-fetch";
 import Loader from "../common/loader";
 import { DropzoneStatus } from "../../constants/dropzoneStatus"
 import MyUploader from "../common/dropzone";
+import AvGroup from 'availity-reactstrap-validation/lib/AvGroup';
+import AvSelect from '@availity/reactstrap-validation-select';
+import FetchData from '../common/get-data';
 
 export default class EditCategory extends Component {
     constructor(props) {
@@ -25,7 +28,9 @@ export default class EditCategory extends Component {
             error: false,
             errorMessage: null,
             category: {},
-            files: []
+            files: [],
+            type_id: 1,
+            types: []
 
         }
     }
@@ -35,24 +40,24 @@ export default class EditCategory extends Component {
             let imgs = this.state.images;
             ids.push(response.data.id)
             imgs.push(response.data.url)
-            this.setState((state) =>{
+            this.setState((state) => {
                 return {
                     ...state,
                     uploadIds: ids,
                     images: imgs
                 }
-            
+
             });
         } else if (response.status == DropzoneStatus.REMOVE_UPLOADED_ITEM) {
             const urls = this.state.images.filter(i => i !== response.data.url);
             const ids = this.state.uploadIds.filter(u => u !== response.data.id)
-            this.setState((state) =>{
+            this.setState((state) => {
                 return {
                     ...state,
                     uploadIds: ids,
                     images: urls
                 }
-            
+
             });
         }
         else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
@@ -67,10 +72,23 @@ export default class EditCategory extends Component {
     }
 
     async componentDidMount() {
+
         const url = window.location.href.split('/');
         const categoryId = url[4];
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
+        FetchData({
+            url: '/api/categories/shop/type', callback: (response, isSucess) => {
+                if (isSucess) {
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            types: response.data,
+                        }
+                    });
+                }
+            }
+        })
         fetch(`/api/categories`, {
             method: "GET",
             headers: {
@@ -110,13 +128,14 @@ export default class EditCategory extends Component {
             redirect: 'follow',
         })
             .then(async res => {
-                this.setState({loading: false});
+                this.setState({ loading: false });
                 const response = await res.json();
                 if (response.code === 200) {
                     this.setState((state) => {
                         return {
                             ...state,
                             category: response.data.category,
+                            type_id: response.data.category.type_id,
                             files: response.data.images,
                             categoryList: this.state.categoryList.filter(category => category.id !== Number(categoryId))
                         }
@@ -143,24 +162,31 @@ export default class EditCategory extends Component {
                 });
             });
     }
-
+    handleChange = (event) =>{
+        this.setState((state) => {
+            return {
+                ...state,
+                type_id: event
+            }
+        });
+    } 
     render() {
-        let {categoryList, loading, category, contentInfo, files, uploadIds } = this.state;
+        let { categoryList, loading, category, contentInfo, files, types, type_id } = this.state;
         const url = window.location.href.split('/');
         const categoryId = url[4];
         return (
             <App>
-                <Breadcrumb title="Edit category" parent="Category List"/>
+                <Breadcrumb title="Edit category" parent="Category List" />
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
                             <div className="card">
-                                {loading && <Loader/>}
+                                {loading && <Loader />}
                                 <div className="card-header">
                                     <h5> Edit Category</h5>
                                 </div>
                                 <div className="card-body">
-                                <div className="card ">
+                                    <div className="card ">
                                         <div className="card-header">
                                             <h5>Media</h5>
                                         </div>
@@ -182,27 +208,36 @@ export default class EditCategory extends Component {
                                             },
                                         }}
                                     >
-                                        <div className="row small" style={{marginTop: "10px"}}>
-                                            <div className="col-md-12">
-                                            <AvField type="select" name="parent_id">
-                                                <option value="">Select Parent Category</option>
-                                                { categoryList.map(category => (
-                                                    <option value={category.id}>{ category.Name }</option>
-                                                ))}
-                                            </AvField>
+
+                                        <div className="row">
+                                            <div className="col-6">
+
+                                                <AvField label="Parent Category" value={category.parent_id} type="select" name="parent_id">
+                                                    <option >Select Parent Category</option>
+                                                    {categoryList.map(category => (
+                                                        <option value={category.id}>{category.Name}</option>
+                                                    ))}
+                                                </AvField>
+                                            </div>
+                                            <div className="col-6">
+                                                <AvGroup>
+                                                    <Label for="shopIds">Select Shop</Label>
+                                                    <AvSelect   onChange={this.handleChange} value={type_id}  name="type_id" options={types} required />
+                                                </AvGroup>
                                             </div>
 
-                                            <div className="col-md-12">
-                                                <div className="form-group">
-                                                    <AvField name="name" label="Name" type="text" required
-                                                             value={category.name}
-                                                    />
-                                                </div>
+                                        </div>
+                                        <div className="row">
+                                            <div class="col-6">
+                                                <AvField name="name" label="Name" type="text" required
+                                                    value={category.name}
+                                                />
                                             </div>
-                                            <div className="col-md-12">
-                                                <Button color="primary">Edit</Button>
+                                            <div className="col-6">
+                                                <AvField value={category.slug} name="slug" label="Slug Name" type="text" required />
                                             </div>
                                         </div>
+                                        <Button color="primary">Edit</Button>
                                     </Forms>
                                 </div>
                             </div>

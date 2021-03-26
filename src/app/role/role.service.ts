@@ -75,7 +75,6 @@ export default class RoleService {
     }
 
     async getPermissionsFromRole(roleId: number) {
-        console.log(roleId);
         const data = await this.gatewayService.execute("auth", {
             method: "GET",
             path: `/api/v1/authorization/permission/categories/role/${roleId}`,
