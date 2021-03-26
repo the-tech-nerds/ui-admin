@@ -190,6 +190,10 @@ export default class UserService {
     }
     
     async updateUserShop(userId: number,shopIds:number[]) {
+        if(shopIds.find(s => s === -1)){
+            shopIds= [];
+            shopIds.push(-1);
+        }
        return this.gatewayService.execute("auth", {
             method: "PUT",
             qs: {
