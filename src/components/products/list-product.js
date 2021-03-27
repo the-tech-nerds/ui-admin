@@ -1,11 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import App from "../app";
 import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable';
 import Modal from 'react-responsive-modal';
 import Forms from "../form/forms";
-import {AvField} from "availity-reactstrap-validation";
 import * as fetch from "isomorphic-fetch";
 import {Button} from "reactstrap";
 import {Alert} from "react-bootstrap";

@@ -19,7 +19,6 @@ export class CreateProduct extends Component {
             categoryList: [],
             categoryIds: [],
             brands: [],
-            shops: [],
 
             contentInfo: {
                 entity: 'product',
@@ -148,29 +147,6 @@ export class CreateProduct extends Component {
             }
         })
 
-        // fetch shops
-        FetchData({
-            url: '/api/shops/list/all', callback: (response, isSucess) => {
-                if (isSucess) {
-                    console.log('shops : ',response.data);
-                    const options = response.data.map(x => {
-                        return {
-                            label: x.Name,
-                            value: x.id
-                        };
-                    });
-                    this.setState({
-                        shops: options
-                    })
-                } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    })
-                }
-            }
-        })
-
         //fetch categories
         FetchData({
             url: '/api/categories', callback: (response, isSucess) => {
@@ -196,7 +172,7 @@ export class CreateProduct extends Component {
     }
 
     render() {
-        const {product, brands, categoryList, shops, productId, files, uploadIds, contentInfo, method, url} = this.state;
+        const {product, brands, categoryList, productId, files, uploadIds, contentInfo, method, url} = this.state;
         return (
             <App>
 
