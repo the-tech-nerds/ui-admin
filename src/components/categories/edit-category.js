@@ -221,7 +221,7 @@ export default class EditCategory extends Component {
                                             </div>
                                             <div className="col-6">
                                                 <AvGroup>
-                                                    <Label for="shopIds">Select Shop</Label>
+                                                    <Label for="shopIds">Shop type</Label>
                                                     <AvSelect   onChange={this.handleChange} value={type_id}  name="type_id" options={types} required />
                                                 </AvGroup>
                                             </div>
@@ -234,7 +234,7 @@ export default class EditCategory extends Component {
                                                 />
                                             </div>
                                             <div className="col-6">
-                                                <AvField value={category.slug} name="slug" label="Slug Name" type="text" required />
+                                                <AvField disabled ={true} value={category.slug} name="slug" label="Slug Name" type="text" required />
                                             </div>
                                         </div>
                                         <Button color="primary">Edit</Button>
