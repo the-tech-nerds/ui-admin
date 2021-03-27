@@ -251,11 +251,6 @@ export class CreateProduct extends Component {
                                             }}
                                         >
                                             <AvGroup>
-                                                <Label for="shop_id">Select Shop</Label>
-                                                {productId == 0 && <AvSelect name="shop_id" options={shops} required/>}
-                                                {productId > 0 && <AvSelect name="shop_id" value={shops.filter(option => option.value === product.shop_id).map(el => el.value)[0]} options={shops} required/>}
-                                            </AvGroup>
-                                            <AvGroup>
                                                 <Label for="category_ids">Select category</Label>
                                                 {productId == 0 && <AvSelect isMulti name="category_ids" options={categoryList} required/>}
                                                 {productId > 0 && <AvSelect value={categoryList.filter(option => product.categories.includes(option.value)).map(el=>el.value)} isMulti name="category_ids" options={categoryList} required/>}

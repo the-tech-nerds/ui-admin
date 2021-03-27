@@ -27,6 +27,7 @@ export class CreateProductVariance extends Component {
             images: [],
             uploadIds: [],
             files: [],
+            shops: [],
 
             productId: Number(this.props.match.params.productId) || 0,
             productVarianceId: 0,
@@ -66,7 +67,27 @@ export class CreateProductVariance extends Component {
 
     async componentDidMount() {
         const id = Number(this.props.match.params.id);
-
+        // fetch shops
+        FetchData({
+            url: '/api/shops/list/all', callback: (response, isSuccess) => {
+                if (isSuccess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    this.setState({
+                        shops: options
+                    })
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        })
         // fetch units
         FetchData({
             url: '/api/units/list/all/', callback: (response, isSucess) => {
@@ -99,9 +120,9 @@ export class CreateProductVariance extends Component {
             });
 
             FetchData({
-                url: `/api/product-variances/single/${id}`, callback: (response, isSucess) => {
+                url: `/api/product-variances/single/${id}`, callback: (response, isSuccess) => {
                     this.setState({loading: false});
-                    if (isSucess) {
+                    if (isSuccess) {
                         this.setState((state) => {
                             return {
                                 ...state,
@@ -130,7 +151,8 @@ export class CreateProductVariance extends Component {
             uploadIds,
             contentInfo,
             method,
-            url
+            url,
+            shops
         } = this.state;
         return (
             <App>
@@ -215,6 +237,18 @@ export class CreateProductVariance extends Component {
                                                 <Label for="unit_value">Unit Value</Label>
                                                 <AvField className="form-control" name="unit_value"
                                                          value={productVariance.unit_value} type="text"/>
+                                            </AvGroup>
+                                            <AvGroup>
+                                                <Label for="shop_ids">Select Shops</Label>
+                                                {productId === 0 &&
+                                                <AvSelect isMulti name="shop_ids" options={shops} required/>}
+                                                {productId > 0 &&
+                                                <AvSelect isMulti name="shop_ids"
+                                                          value={
+                                                              shops.filter(option => productVariance.shops && productVariance.shops.includes(option.value))
+                                                                  .map(el => el.value)
+                                                          }
+                                                          options={shops} required/>}
                                             </AvGroup>
                                             {productVarianceId === 0 && <Button color="primary">Create</Button>}
                                             {productVarianceId > 0 && <Button color="primary">Update</Button>}
