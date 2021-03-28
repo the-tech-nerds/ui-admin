@@ -2,23 +2,23 @@ import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import App from "../app";
 import Breadcrumb from '../common/breadcrumb';
-import Datatable from '../common/datatable';
+import PaginatedDatatable from '../common/paginated-datatable';
 import Modal from 'react-responsive-modal';
 import Forms from "../form/forms";
-import {AvField} from "availity-reactstrap-validation";
+import { AvField } from "availity-reactstrap-validation";
 import * as fetch from "isomorphic-fetch";
-import {Button} from "reactstrap";
-import {Alert} from "react-bootstrap";
+import { Button } from "reactstrap";
+import { Alert } from "react-bootstrap";
 
-export default class    ListAdmin extends Component {
+export default class ListAdmin extends Component {
     constructor(props) {
         super(props);
         this.state = {
             roleList: [],
-            userId:'',
-            userRoles:[],
+            userId: '',
+            userRoles: [],
             open: false,
-            openFreeze:false,
+            openFreeze: false,
             error: false,
             errorMessage: null,
         };
@@ -96,9 +96,9 @@ export default class    ListAdmin extends Component {
                                             },
                                         }}
                                     >
-                                        <AvField type="select" name="roles" id={"roles_"+userId} value={userRoles} label="Roles" helpMessage="Choose a Role to assign!" multiple>
+                                        <AvField type="select" name="roles" id={"roles_" + userId} value={userRoles} label="Roles" helpMessage="Choose a Role to assign!" multiple>
                                             {roleList.map(role => (
-                                                <option value={role.id}>{ role.Name }</option>
+                                                <option value={role.id}>{role.Name}</option>
                                             ))}
                                         </AvField>
 
@@ -126,17 +126,19 @@ export default class    ListAdmin extends Component {
                                     >
                                         <Alert variant='warning'>Are you sure to unfreeze this user?  </Alert>
                                         <Button className="btn btn-xs btn-warning float-right">Unfreeze</Button>
-                                        <br/>
+                                        <br />
                                     </Forms>
                                 </div>
                             </Modal>
 
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
-                                <Datatable
-                                    url="/api/users?type=admin"
+                                <PaginatedDatatable
+                                    url="/api/users"
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"
+                                    takeColumns={['id', 'first_name', 'last_name', 'email', 'phone', 'is_active']}
+                                    extraQuery="type=admin"
                                     extraColumns={[
                                         {
                                             Header: <b>Action</b>,
@@ -175,9 +177,9 @@ export default class    ListAdmin extends Component {
                                                             })
                                                             this.onOpenFreezeModal();
                                                         }} title="Unfreeze User">
-                                                        <i className="fa fa-unlock-alt" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
-                                                        ></i>
-                                                    </span> : null
+                                                            <i className="fa fa-unlock-alt" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
+                                                            ></i>
+                                                        </span> : null
                                                     }
                                                 </div>
                                             ),

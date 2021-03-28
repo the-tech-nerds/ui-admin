@@ -41,7 +41,7 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
     res.locals.css = (await resolveFiles(staticCssPath, 'css/', 'static') || []);
     res.locals.js = (await resolveFiles(staticJsPath, 'js/', 'static') || [])
         .filter((fileName: any) => !fileName.includes(".map"));
-    res.locals.permissionTypes =  encodeValue(res.permissionTypes);
+    res.locals.permissionTypes = encodeValue(res.permissionTypes);
 
     const { url } = req;
 
@@ -57,6 +57,10 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
         res.set('Content-Type', 'text/css');
     }
 
+    if (req.url.includes('sockjs') && !req.url.includes('?t=')) {
+        next();
+    }
+
     if (req.signedCookies && req.signedCookies.r_code) {
         req.headers.access_token = req.signedCookies.r_code;
         req.headers.user_id = req.signedCookies.id;
@@ -70,7 +74,7 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
     if (url.includes("/api") || url.includes("/logout")) {
         next();
     } else {
-        if ((!req.signedCookies || !req.signedCookies.r_code) && req.url !== '/auth/login'){
+        if ((!req.signedCookies || !req.signedCookies.r_code) && req.url !== '/auth/login') {
             res.redirect('/auth/login');
             return;
         }
@@ -78,7 +82,7 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
         res.render('pages/main', {
             roles: res.parsedJWT ? encodeValue(res.parsedJWT.roles.map((role: any) => role.name)) : null,
             permissions: res.parsedJWT ? encodeValue(res.parsedJWT.permissions.
-                                                map((permission: any) => permission.name)) : null,
+                map((permission: any) => permission.name)) : null,
         });
     }
 };
