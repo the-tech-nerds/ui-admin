@@ -5,12 +5,12 @@ import {ConfigService} from "@nestjs/config"
 import { AppModule } from './app/app.module';
 import {LocalsMiddleware} from "./app/locals.middleware";
 import * as hbs from 'hbs';
-const bodyParser = require('body-parser');
 import * as compression from 'compression';
 import { ErrorFilter } from './app/filters/error.filter';
 import {JwtService} from "@nestjs/jwt";
 import { PermissionTypes } from '@the-tech-nerds/common-services';
 const rateLimit = require("express-rate-limit");
+const bodyParser = require('body-parser');
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
       AppModule,

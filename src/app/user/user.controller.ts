@@ -97,4 +97,11 @@ export default class UserController {
     ) {
         return this.userService.unfreezeUser(id);
     }
+    @Put('/update/shop/:id')
+    async updateUserShop(
+        @Param('id') id: number,
+        @Body() shops: any,
+    ) {
+        return this.userService.updateUserShop(id, shops.shopIds);
+    }
 }

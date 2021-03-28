@@ -78,20 +78,6 @@ export default class UserService {
             path: '/api/v1/user/all',
         });
 
-        // const users = userList.map((user: any, index: any) => ({
-        //     id: user.id,
-        //     'SL No': ++index,
-        //     isFrozen: !!user.is_frozen,
-        //     roleIds: user?.roles?.map((role: any) => role.id) || [],
-        //     'First Name': user.first_name,
-        //     'Last Name': user.last_name,
-        //     'Email': user.email,
-        //     'Phone': user.phone,
-        //     // @ts-ignore
-        //     "Roles": user?.roles?.reduce((acc: any, role) => (acc + role.name + ', '), '').slice(0, -2) || 'n/a',
-        //     'Active': user.is_active ? 'Yes' : 'No',
-        // }));
-
         return this.responseService.response(userList);
     }
 
@@ -100,6 +86,7 @@ export default class UserService {
             method: "GET",
             path: `/api/v1/user/${userId}`,
         });
+
         const {
             id,
             first_name,
@@ -108,9 +95,9 @@ export default class UserService {
             phone,
             birthday,
             gender_type,
-            roles
+            roles,
+            userShop
         } = user;
-
         return this.responseService.response({
             id,
             first_name,
@@ -120,7 +107,8 @@ export default class UserService {
             birthday: birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
             gender_type,
             gender: gender_type == 1 ? 'Male' : gender_type == 2 ? 'female' : 'Other',
-            roles
+            roles,
+            userShop
         });
     }
 
@@ -158,7 +146,7 @@ export default class UserService {
     }
 
     async assignRole(userId: number, roles: []) {
-        return await this.gatewayService.execute("auth", {
+        return this.gatewayService.execute("auth", {
             method: "POST",
             path: `/api/v1/user/${userId}/assign-roles`,
             body: roles
@@ -166,7 +154,7 @@ export default class UserService {
     }
 
     async unfreezeUser(userId: number) {
-        return await this.gatewayService.execute("auth", {
+        return this.gatewayService.execute("auth", {
             method: "PUT",
             path: `/api/v1/user/${userId}/unfreeze`,
         });
@@ -177,5 +165,20 @@ export default class UserService {
             method: "GET",
             path: '/api/v1/authentication/logout',
         }).catch(e => { });
+    }
+
+    async updateUserShop(userId: number, shopIds: number[]) {
+        if (shopIds.find(s => s === -1)) {
+            shopIds = [];
+            shopIds.push(-1);
+        }
+        return this.gatewayService.execute("auth", {
+            method: "PUT",
+            qs: {
+                id: String(userId),
+            },
+            path: '/api/v1/user/update/shop',
+            body: shopIds
+        });
     }
 }

@@ -21,7 +21,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-const WriteFilePlugin  = require('write-file-webpack-plugin');
+const WriteFilePlugin = require('write-file-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -57,8 +57,8 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
     {
       loader: MiniCssExtractPlugin.loader,
       options: Object.assign(
-          {},
-          shouldUseRelativeAssetPaths ? { publicPath: '../../' } : undefined
+        {},
+        shouldUseRelativeAssetPaths ? { publicPath: '../../' } : undefined
       ),
     },
     {
@@ -122,9 +122,9 @@ module.exports = {
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
-        path
-            .relative(paths.appSrc, info.absoluteResourcePath)
-            .replace(/\\/g, '/'),
+      path
+        .relative(paths.appSrc, info.absoluteResourcePath)
+        .replace(/\\/g, '/'),
   },
   optimization: {
     minimizer: [
@@ -174,15 +174,15 @@ module.exports = {
         cssProcessorOptions: {
           parser: safePostCssParser,
           map: shouldUseSourceMap
-              ? {
-                // `inline: false` forces the sourcemap to be output into a
-                // separate file
-                inline: false,
-                // `annotation: true` appends the sourceMappingURL to the end of
-                // the css file, helping the browser find the sourcemap
-                annotation: true,
-              }
-              : false,
+            ? {
+              // `inline: false` forces the sourcemap to be output into a
+              // separate file
+              inline: false,
+              // `annotation: true` appends the sourceMappingURL to the end of
+              // the css file, helping the browser find the sourcemap
+              annotation: true,
+            }
+            : false,
         },
       }),
     ],
@@ -209,8 +209,8 @@ module.exports = {
     // if there are any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebook/create-react-app/issues/253
     modules: ['node_modules'].concat(
-        // It is guaranteed to exist because we tweak it in `env.js`
-        process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
+      // It is guaranteed to exist because we tweak it in `env.js`
+      process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
     ),
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
@@ -219,8 +219,8 @@ module.exports = {
     // `web` extension prefixes have been added for better support
     // for React Native Web.
     extensions: paths.moduleFileExtensions
-        .map(ext => `.${ext}`)
-        .filter(ext => useTypeScript || !ext.includes('ts')),
+      .map(ext => `.${ext}`)
+      .filter(ext => useTypeScript || !ext.includes('ts')),
     alias: {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -292,7 +292,7 @@ module.exports = {
             loader: require.resolve('babel-loader'),
             options: {
               customize: require.resolve(
-                  'babel-preset-react-app/webpack-overrides'
+                'babel-preset-react-app/webpack-overrides'
               ),
 
               plugins: [
@@ -328,6 +328,11 @@ module.exports = {
                   require.resolve('babel-preset-react-app/dependencies'),
                   { helpers: true },
                 ],
+                require.resolve('@babel/preset-env'),
+                require.resolve('@babel/preset-react'),
+                {
+                  'plugins': ['@babel/plugin-proposal-class-properties']
+                }
               ],
               cacheDirectory: true,
               // Save disk space when time isn't as important
@@ -378,11 +383,11 @@ module.exports = {
             test: sassRegex,
             exclude: sassModuleRegex,
             loader: getStyleLoaders(
-                {
-                  importLoaders: 2,
-                  sourceMap: shouldUseSourceMap,
-                },
-                'sass-loader'
+              {
+                importLoaders: 2,
+                sourceMap: shouldUseSourceMap,
+              },
+              'sass-loader'
             ),
             // Don't consider CSS imports dead code even if the
             // containing package claims to have no side effects.
@@ -395,13 +400,13 @@ module.exports = {
           {
             test: sassModuleRegex,
             loader: getStyleLoaders(
-                {
-                  importLoaders: 2,
-                  sourceMap: shouldUseSourceMap,
-                  modules: true,
-                  getLocalIdent: getCSSModuleLocalIdent,
-                },
-                'sass-loader'
+              {
+                importLoaders: 2,
+                sourceMap: shouldUseSourceMap,
+                modules: true,
+                getLocalIdent: getCSSModuleLocalIdent,
+              },
+              'sass-loader'
             ),
           },
           // "file" loader makes sure assets end up in the `build` folder.
