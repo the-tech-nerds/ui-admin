@@ -44,9 +44,8 @@ export class Create_user extends Component {
             url: '/api/shops/list/all', callback: (response, isSucess) => {
                 if (isSucess) {
                     if(this.state.userId > 0){
-
+                        this.getUser();
                     }
-                    this.getUser();
                     let options = [];
                     options.push({
                         label: 'All shop',

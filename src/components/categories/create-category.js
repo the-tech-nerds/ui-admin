@@ -1,14 +1,16 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
-import {AvField} from "availity-reactstrap-validation";
-import {Button} from "reactstrap";
+import { AvField } from "availity-reactstrap-validation";
+import { Button, Label } from "reactstrap";
 import * as fetch from "isomorphic-fetch";
 import FetchData from "../common/get-data";
 import { DropzoneStatus } from "../../constants/dropzoneStatus"
 import MyUploader from "../common/dropzone";
 import updateFileStorage from "../common/file-storage";
+import AvGroup from 'availity-reactstrap-validation/lib/AvGroup';
+import AvSelect from '@availity/reactstrap-validation-select';
 
 export class CreateCategory extends Component {
     constructor(props) {
@@ -25,7 +27,8 @@ export class CreateCategory extends Component {
             uploadIds: [],
             error: false,
             errorMessage: null,
-            files: []
+            files: [],
+            types: []
         };
     }
     handleUploadResponse = (response) => {
@@ -59,6 +62,18 @@ export class CreateCategory extends Component {
 
     componentDidMount() {
         FetchData({
+            url: '/api/categories/shop/type', callback: (response, isSucess) => {
+                if (isSucess) {
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            types: response.data,
+                        }
+                    });
+                }
+            }
+        })
+        FetchData({
             url: '/api/categories', callback: (response, isSucess) => {
                 if (isSucess) {
                     this.setState({
@@ -74,7 +89,7 @@ export class CreateCategory extends Component {
         })
     }
     render() {
-        let { categoryList,  contentInfo, files, uploadIds } = this.state
+        let { categoryList, contentInfo, files, uploadIds, types } = this.state
         return (
             <App>
                 <Breadcrumb title="Create Category" parent="List" />
@@ -86,7 +101,7 @@ export class CreateCategory extends Component {
                                     <h5> Add Category</h5>
                                 </div>
                                 <div className="card-body">
-                                <div className="card ">
+                                    <div className="card ">
                                         <div className="card-header">
                                             <h5>Media</h5>
                                         </div>
@@ -103,7 +118,7 @@ export class CreateCategory extends Component {
                                         options={{
                                             method: 'POST',
                                             url: '/api/categories',
-                                            onSuccess: async(response) => {
+                                            onSuccess: async (response) => {
                                                 let items = []
                                                 await uploadIds.forEach(x => {
                                                     items.push({
@@ -115,23 +130,42 @@ export class CreateCategory extends Component {
                                                     });
                                                 });
                                                 if (items.length === 0) {
-                                                    window.location.href ='/categories/list';
+                                                    window.location.href = '/categories/list';
                                                     return;
                                                 }
-                                                await updateFileStorage(items).then(response =>{
-                                                    window.location.href ='/categories/list';
-                                                } );
+                                                await updateFileStorage(items).then(response => {
+                                                    window.location.href = '/categories/list';
+                                                });
                                             }
                                         }}
                                     >
-                                        <AvField type="select" name="parent_id">
-                                            <option value="0">Select Parent Category</option>
-                                            { categoryList.map(category => (
-                                                <option value={category.id}>{ category.Name }</option>
-                                            ))}
-                                        </AvField>
 
-                                        <AvField name="name" label="Category Name" type="text" required />
+                                        <div className="row">
+                                            <div className="col-6">
+                                                <AvField label="Parent Category" type="select" name="parent_id">
+                                                    <option value="0">Select Parent Category</option>
+                                                    {categoryList.map(category => (
+                                                        <option value={category.id}>{category.Name}</option>
+                                                    ))}
+                                                </AvField>
+                                            </div>
+                                            <div className="col-6">
+                                                <AvGroup>
+                                                    <Label for="type_id">Select Shop</Label>
+                                                    <AvSelect name="type_id" options={types} required />
+                                                </AvGroup>
+                                            </div>
+
+                                        </div>
+                                        <div className="row">
+                                            <div class="col-6">
+                                                <AvField name="name" label="Category Name" type="text" required />
+                                            </div>
+                                            <div className="col-6">
+                                                <AvField name="slug" label="Slug Name" type="text" required />
+                                            </div>
+                                        </div>
+
                                         <Button color="primary">Create</Button>
                                     </Forms>
                                 </div>
