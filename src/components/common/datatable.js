@@ -6,49 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as fetch from 'isomorphic-fetch';
 import Loader from "./loader";
 
-function PaginationComponent({
-                                 nextUrl = "",
-                                 prevUrl = "",
-                                 currentPage = 0,
-                                 totalPages = 0,
-                                 onPageChange = () => {},
-                                 onNext = () => {},
-                                 onPrevious = () => {}
-                             }) {
-    const isEmpty = (url) => url === null || url === undefined || url === "" || typeof url === "boolean";
-    return (
-        <div>
-            <div>
-                <div class="pagination-bottom">
-                    <div class="-pagination">
-                        <div class="-previous">
-                            <button type="button" class="-btn" onCLick={() => onPrevious(prevUrl)}>Previous</button>
-                        </div>
-                        <div class="-center">
-                            <span class="-pageInfo">Page {` `}
-                                <div class="-pageJump">
-                                    <input aria-label="jump to page" type="number" value={currentPage} class="" />
-                                </div>
-                                {` `}of
-                                <span class="-totalPages">{` `} {totalPages}</span>
-                            </span>
-                            {/*<span class="select-wrap -pageSizeOptions">*/}
-                            {/*    <select*/}
-                            {/*        aria-label="rows per page"><option value="5">5 rows</option><option value="10">10 rows</option><option*/}
-                            {/*        value="20">20 rows</option><option value="25">25 rows</option><option value="50">50 rows</option><option*/}
-                            {/*        value="100">100 rows</option></select>*/}
-                            {/*</span>*/}
-                        </div>
-                        <div class="-next">
-                            <button type="button" class="-btn"  onClick={() => onNext(nextUrl)}>Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
 export class Datatable extends Component {
     constructor(props) {
         super(props)
@@ -57,73 +14,22 @@ export class Datatable extends Component {
             myData: this.props.myData,
             loading: false,
             error: null,
-            limit: 10,
-            next: null,
-            previous: null,
-            search: "",
-            page: 1,
-            total: 0,
-            pages: 0,
         }
     }
 
     componentDidMount() {
-        let { url = undefined } = this.props;
+        const { url = undefined } = this.props;
         if (url) {
-            url += `?page=${this.state.page}&limit=${this.state.limit}&sortBy=id:ASC`;
             this.setState({
                 loading: true
             });
             fetch(url).then(async res => {
                 const response = await res.json();
-                if (response.code === 200) {
-                    const {
-                        data: {
-                            results = [],
-                            links: {
-                                next = "",
-                                previous = ""
-                            },
-                            meta: {
-                                totalPages: pages = 0,
-                                totalResults: total = 0,
-                                currentPage: page = 1,
-                            } = {}
-                        } = {}
-                    } = response;
 
-                    this.setState({
-                        myData: results,
-                        loading: false,
-                        next: next,
-                        previous: previous,
-                        page,
-                        pages,
-                        total,
-                    });
-                    return;
-                }
-                this.setError("Failed Loading Data");
-            }).catch(e => { })
-        }
-    }
-
-
-    fetchNextOrPrevious = (params = '') => {
-        let { url = undefined } = this.props;
-        if (url) {
-            url = `${url}${params}&search=${this.state.search}`;
-            this.setState({
-                loading: true
-            });
-            fetch(url).then(async res => {
-                const response = await res.json();
                 if (response.code === 200) {
                     this.setState({
-                        myData: response.data.results,
+                        myData: response.data,
                         loading: false,
-                        next: response.data.links && response.data.links.next !== undefined && response.data.links.next,
-                        previous: response.data.links && response.data.links.previous !== undefined && response.data.links.previous,
                     });
                     return;
                 }
@@ -194,33 +100,10 @@ export class Datatable extends Component {
         );
     }
 
-    onPageChange = (value) => {
-        console.log(value);
-    }
-
-    getPaginationComponent = () => {
-        return (
-            <PaginationComponent
-                prevUrl={this.state.previous}
-                currentPage={this.state.page}
-                totalPages={this.state.pages}
-                onPageChange={v => this.onPageChange(v)}
-                onPrevious={(url) => this.fetchNextOrPrevious(url)}
-                nextUrl={this.state.next}
-                onNext={(url) => this.fetchNextOrPrevious(url)}
-            />
-        )
-    }
-
-    searchChanged = (value) => {
-        this.setState({
-            search: value
-        }, this.fetchNextOrPrevious);
-    }
 
     render() {
-        const { pageSize, myClass, multiSelectOption, pagination, extraColumns = [], takeColumns = [], excludeColumns = [], } = this.props;
-        const { myData = [], loading = false, error = null } = this.state;
+        const { pageSize, myClass, multiSelectOption, pagination, extraColumns = [], excludeColumns = [] } = this.props;
+        const { myData = [], loading = false, error = null } = this.state
 
         if (loading) {
             return <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -238,10 +121,6 @@ export class Datatable extends Component {
         if (myData) {
             for (var key in myData[0]) {
                 if (excludeColumns.includes(key)) {
-                    continue;
-                }
-
-                if (!takeColumns.includes(key)) {
                     continue;
                 }
                 let editable = this.renderEditable
@@ -276,11 +155,11 @@ export class Datatable extends Component {
                 columns.push(
                     {
                         Header: <button className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
-                                        onClick={
-                                            (e) => {
-                                                if (window.confirm('Are you sure you wish to delete this item?'))
-                                                    this.handleRemoveRow()
-                                            }}>Delete</button>,
+                            onClick={
+                                (e) => {
+                                    if (window.confirm('Are you sure you wish to delete this item?'))
+                                        this.handleRemoveRow()
+                                }}>Delete</button>,
                         id: 'delete',
                         accessor: str => "delete",
                         sortable: false,
@@ -291,7 +170,7 @@ export class Datatable extends Component {
                             <div>
                                 <span >
                                     <input type="checkbox" name={row.original.id} defaultChecked={this.state.checkedValues.includes(row.original.id)}
-                                           onChange={e => this.selectRow(e, row.original.id)} />
+                                        onChange={e => this.selectRow(e, row.original.id)} />
                                 </span>
                             </div>
                         ),
@@ -309,21 +188,14 @@ export class Datatable extends Component {
 
         return (
             <Fragment>
-                <div class="justify-content-right">
-                    <input
-                        className="form-control"
-                        placeholder="Search...."
-                        value={this.state.search}
-                        onChange={(e) => this.searchChanged(e.target.value)}
-                    />
-                </div>
                 <ReactTable
-                    filterable={false}
+                    filterable={true}
                     data={myData}
                     columns={columns}
-                    defaultPageSize={this.state.limit}
+                    defaultPageSize={pageSize}
                     className={myClass}
-                    PaginationComponent={this.getPaginationComponent}
+                    showPagination={pagination}
+                    defaultFilterMethod={(filter, row) => this.filterCaseInsensitive(filter, row)}
                 />
                 <ToastContainer />
             </Fragment>
