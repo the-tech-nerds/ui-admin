@@ -3,7 +3,7 @@ import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
 import { AvField } from "availity-reactstrap-validation";
-import { Button } from "reactstrap";
+import { Button, Label } from "reactstrap";
 import { DropzoneStatus } from "../../constants/dropzoneStatus"
 import MyUploader from "../common/dropzone";
 import AvSelect, {
@@ -11,6 +11,8 @@ import AvSelect, {
 } from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import updateFileStorage from "../common/file-storage";
+import AvGroup from 'availity-reactstrap-validation/lib/AvGroup';
+import FetchData from '../common/get-data';
 
 export class CreateShop extends Component {
     constructor(props) {
@@ -29,7 +31,9 @@ export class CreateShop extends Component {
             method: 'POST',
             url: '/api/shops/',
             loading: true,
-            files: []
+            files: [],
+            types: [],
+            type_id: 0
         }
     }
     handleUploadResponse = (response) => {
@@ -62,6 +66,18 @@ export class CreateShop extends Component {
     }
 
     async componentDidMount() {
+        FetchData({
+            url: '/api/categories/shop/type', callback: (response, isSucess) => {
+                if (isSucess) {
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            types: response.data,
+                        }
+                    });
+                }
+            }
+        })
         const id = Number(this.props.match.params.id);
         if (id > 0) {
 
@@ -87,6 +103,7 @@ export class CreateShop extends Component {
                             return {
                                 ...state,
                                 shop: response.data.shop,
+                                type_id: response.data.shop.type_id,
                                 files: response.data.images
                             }
                         });
@@ -114,9 +131,17 @@ export class CreateShop extends Component {
         }
 
 
-    }
+    }   
+     handleChange = (event) =>{
+        this.setState((state) => {
+            return {
+                ...state,
+                type_id: event
+            }
+        });
+    } 
     render() {
-        let { shop, shop_id, method, url, contentInfo, files, uploadIds } = this.state;
+        let { shop, shop_id, method, url, contentInfo, files, uploadIds, type_id, types } = this.state;
         return (
             <App>
 
@@ -168,9 +193,27 @@ export class CreateShop extends Component {
                                             }
                                         }}
                                     >
-                                        <AvField name="name" label="Name" value={shop.name} type="text" required />
-                                        <AvField name="description" value={shop.description} label="Description" type="text" required />
-                                        <AvField name="address" value={shop.address} label="Address" type="text" required />
+                                        <div className="row">
+                                             <div className="col-6">
+                                             <AvField name="name" label="Name" value={shop.name} type="text" required />
+                                             </div>
+                                             <div className="col-6">
+                                               <AvField name="description" value={shop.description} label="Description" type="text" required />
+                                             </div>
+                                        </div>
+                                        <div className="row">
+                                             <div className="col-6">
+                                             <AvField name="address" value={shop.address} label="Address" type="text" required />
+                                             </div>
+                                             <div className="col-6">
+                                             <AvGroup>
+                                                    <Label for="shopIds">Shop type</Label>
+                                                    <AvSelect   onChange={this.handleChange} value={type_id}  name="type_id" options={types} required />
+                                                </AvGroup>
+                                             </div>
+                                        </div>
+                                       
+                                     
                                         {shop_id == 0 && <Button color="primary">Create</Button>}
                                         {shop_id > 0 && <Button color="primary">Update</Button>}
                                     </Forms>

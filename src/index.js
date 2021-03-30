@@ -148,7 +148,7 @@ class Root extends Component {
                         {this.hasPermission(this.PermissionTypes.USER.CREATE) &&
                         <Route
                             exact
-                            path={`${process.env.PUBLIC_URL}/create-user`}
+                            path={`${process.env.PUBLIC_URL}/create-user/:id`}
                             component={Create_user}
                         />
                         }
