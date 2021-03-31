@@ -28,6 +28,8 @@ export class CreateProductVariance extends Component {
             uploadIds: [],
             files: [],
             shops: [],
+            shopIds:[],
+            unitId:0,
 
             productId: Number(this.props.match.params.productId) || 0,
             productVarianceId: 0,
@@ -67,48 +69,6 @@ export class CreateProductVariance extends Component {
 
     async componentDidMount() {
         const id = Number(this.props.match.params.id);
-        // fetch shops
-        FetchData({
-            url: '/api/shops/list/all', callback: (response, isSuccess) => {
-                if (isSuccess) {
-                    const options = response.data.map(x => {
-                        return {
-                            label: x.Name,
-                            value: x.id
-                        };
-                    });
-                    this.setState({
-                        shops: options
-                    })
-                } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    })
-                }
-            }
-        })
-        // fetch units
-        FetchData({
-            url: '/api/units/list/all/', callback: (response, isSucess) => {
-                if (isSucess) {
-                    const options = response.data.map(x => {
-                        return {
-                            label: x.Name,
-                            value: x.id
-                        };
-                    });
-                    this.setState({
-                        units: options
-                    })
-                } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    })
-                }
-            }
-        })
 
         if (id > 0) {
 
@@ -139,6 +99,82 @@ export class CreateProductVariance extends Component {
                 }
             })
         }
+        // fetch shops
+        FetchData({
+            url: '/api/shops/list/all', callback: (response, isSuccess) => {
+                if (isSuccess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    this.setState({
+                        shops: options
+                    })
+
+                    const ids = this.state.shops.filter(option => this.state.productVariance.shops && this.state.productVariance.shops.includes(option.value)).map(el => el.value)
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            shopIds: ids
+                        }
+                    });
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        })
+        // fetch units
+        FetchData({
+            url: '/api/units/list/all/', callback: (response, isSucess) => {
+                if (isSucess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    this.setState({
+                        units: options
+                    })
+
+                    const id = this.state.units.filter(option => option.value === this.state.productVariance.unit_id).map(el => el.value)[0]
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            unitId: id
+                        }
+                    });
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        })
+    }
+
+    handleChangeShops = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                shopIds: event
+            }
+        });
+    }
+
+    handleChangeUnit = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                unitId: event
+            }
+        });
     }
 
     render() {
@@ -147,12 +183,14 @@ export class CreateProductVariance extends Component {
             productVarianceId,
             productId,
             units,
+            unitId,
             files,
             uploadIds,
             contentInfo,
             method,
             url,
-            shops
+            shops,
+            shopIds,
         } = this.state;
         return (
             <App>
@@ -228,8 +266,8 @@ export class CreateProductVariance extends Component {
                                             <AvGroup>
                                                 <Label for="unit_id">Select Unit</Label>
                                                 {productVarianceId === 0 && <AvSelect name="unit_id" options={units}/>}
-                                                {productVarianceId > 0 && <AvSelect name="unit_id"
-                                                                                    value={units.filter(option => option.value === productVariance.unit_id).map(el => el.value)[0]}
+                                                {productVarianceId > 0 && <AvSelect onChange={this.handleChangeUnit} name="unit_id"
+                                                                                    value={unitId}
                                                                                     options={units}/>}
                                             </AvGroup>
 
@@ -243,11 +281,8 @@ export class CreateProductVariance extends Component {
                                                 {productId === 0 &&
                                                 <AvSelect isMulti name="shop_ids" options={shops} required/>}
                                                 {productId > 0 &&
-                                                <AvSelect isMulti name="shop_ids"
-                                                          value={
-                                                              shops.filter(option => productVariance.shops && productVariance.shops.includes(option.value))
-                                                                  .map(el => el.value)
-                                                          }
+                                                <AvSelect isMulti onChange={this.handleChangeShops} name="shop_ids"
+                                                          value={shopIds}
                                                           options={shops} required/>}
                                             </AvGroup>
                                             {productVarianceId === 0 && <Button color="primary">Create</Button>}

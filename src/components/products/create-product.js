@@ -19,6 +19,7 @@ export class CreateProduct extends Component {
             categoryList: [],
             categoryIds: [],
             brands: [],
+            brandId: 0,
 
             contentInfo: {
                 entity: 'product',
@@ -54,8 +55,7 @@ export class CreateProduct extends Component {
                 uploadIds: ids,
                 images: urls
             });
-        }
-        else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
+        } else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
             const file = this.state.files.filter(i => i.id !== response.data.id);
             this.setState((state) => {
                 return {
@@ -86,7 +86,7 @@ export class CreateProduct extends Component {
                 redirect: 'follow',
             })
                 .then(async res => {
-                    this.setState({ loading: false });
+                    this.setState({loading: false});
                     const response = await res.json();
 
                     console.log('product data :::', response.data.product);
@@ -127,17 +127,25 @@ export class CreateProduct extends Component {
         FetchData({
             url: '/api/brands/list/all', callback: (response, isSucess) => {
                 if (isSucess) {
-                    console.log('brands : ',response.data);
+                    console.log('brands : ', response.data);
                     const options = response.data.map(x => {
                         return {
                             label: x.Name,
                             value: x.id
                         };
                     });
-                    console.log('in pr. get brands: ', options);
                     this.setState({
                         brands: options
                     })
+
+                    const id = this.state.brands.filter(option => option.value === this.state.product.brand_id).map(el => el.value)[0];
+
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            brandId: id
+                        }
+                    });
                 } else {
                     this.setState({
                         error: true,
@@ -150,7 +158,7 @@ export class CreateProduct extends Component {
         //fetch categories
         FetchData({
             url: '/api/categories', callback: (response, isSucess) => {
-                console.log('categories : ',response.data);
+                console.log('categories : ', response.data);
                 if (isSucess) {
                     const options = response.data.map(x => {
                         return {
@@ -160,6 +168,14 @@ export class CreateProduct extends Component {
                     });
                     this.setState({
                         categoryList: options,
+                    });
+
+                    const ids = this.state.categoryList.filter(option => this.state.product.categories.includes(option.value)).map(el => el.value)
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            categoryIds: ids
+                        }
                     });
                 } else {
                     this.setState({
@@ -171,8 +187,26 @@ export class CreateProduct extends Component {
         })
     }
 
+    handleChangeCategories = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                categoryIds: event
+            }
+        });
+    }
+
+    handleChangeBrand = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                brandId: event
+            }
+        });
+    }
+
     render() {
-        const {product, brands, categoryList, productId, files, uploadIds, contentInfo, method, url} = this.state;
+        const {product, brands, brandId, categoryList, categoryIds, productId, files, uploadIds, contentInfo, method, url} = this.state;
         return (
             <App>
 
@@ -196,7 +230,7 @@ export class CreateProduct extends Component {
                                                     onUploadSuccess: (response) => {
                                                         this.handleUploadResponse(response);
                                                     }
-                                                }} content={contentInfo} />
+                                                }} content={contentInfo}/>
                                             </div>
                                         </div>
                                     </div>
@@ -220,26 +254,33 @@ export class CreateProduct extends Component {
                                                         window.location.href = '/products/list';
                                                         return;
                                                     }
-                                                    await updateFileStorage(items).then(response =>{
+                                                    await updateFileStorage(items).then(response => {
                                                         window.location.href = '/products/list';
-                                                    } );
+                                                    });
                                                 }
                                             }}
                                         >
                                             <AvGroup>
                                                 <Label for="category_ids">Select category</Label>
-                                                {productId == 0 && <AvSelect isMulti name="category_ids" options={categoryList} required/>}
-                                                {productId > 0 && <AvSelect value={categoryList.filter(option => product.categories.includes(option.value)).map(el=>el.value)} isMulti name="category_ids" options={categoryList} required/>}
+                                                {productId == 0 &&
+                                                <AvSelect isMulti name="category_ids" options={categoryList} required/>}
+                                                {productId > 0 &&
+                                                <AvSelect onChange={this.handleChangeCategories} value={categoryIds}
+                                                          isMulti name="category_ids" options={categoryList} required/>}
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="brand_id">Select Brand</Label>
-                                                {productId == 0 && <AvSelect name="brand_id" options={brands} required/>}
-                                                {productId > 0 && <AvSelect name="brand_id" value={brands.filter(option => option.value === product.brand_id).map(el=>el.value)[0]} options={brands} required/>}
+                                                {productId == 0 &&
+                                                <AvSelect name="brand_id" options={brands} required/>}
+                                                {productId > 0 &&
+                                                <AvSelect onChange={this.handleChangeBrand} name="brand_id"
+                                                          value={brandId} options={brands} required/>}
                                             </AvGroup>
 
                                             <AvGroup>
                                                 <Label for="name">Product Name</Label>
-                                                <AvField className="form-control" name="name" value={product.name} type="text" required/>
+                                                <AvField className="form-control" name="name" value={product.name}
+                                                         type="text" required/>
                                             </AvGroup>
 
                                             {/*<div className="digital-add needs-validation">
@@ -258,7 +299,8 @@ export class CreateProduct extends Component {
                                                     </div>
                                                 </div>*/}
 
-                                            <AvInput type="textarea" name="description" value={product.description} placeholder="Product Description" />
+                                            <AvInput type="textarea" name="description" value={product.description}
+                                                     placeholder="Product Description"/>
 
                                             {productId == 0 && <Button color="primary" className="mt-3">Create</Button>}
                                             {productId > 0 && <Button color="primary" className="mt-3">Update</Button>}
