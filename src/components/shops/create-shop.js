@@ -13,12 +13,14 @@ import '@availity/reactstrap-validation-select/styles.scss';
 import updateFileStorage from "../common/file-storage";
 import AvGroup from 'availity-reactstrap-validation/lib/AvGroup';
 import FetchData from '../common/get-data';
+import CKEditors from "react-ckeditor-component";
+import AvInput from 'availity-reactstrap-validation/lib/AvInput';
 
 export class CreateShop extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            shop: {},
+            shop: undefined,
             contentInfo: {
                 entity: 'shop',
                 folder: 'shop',
@@ -33,7 +35,8 @@ export class CreateShop extends Component {
             loading: true,
             files: [],
             types: [],
-            type_id: 0
+            type_id: 0,
+            description: ''
         }
     }
     handleUploadResponse = (response) => {
@@ -104,7 +107,8 @@ export class CreateShop extends Component {
                                 ...state,
                                 shop: response.data.shop,
                                 type_id: response.data.shop.type_id,
-                                files: response.data.images
+                                files: response.data.images,
+                                description: response.data.shop.description
                             }
                         });
                     } else {
@@ -131,17 +135,25 @@ export class CreateShop extends Component {
         }
 
 
-    }   
-     handleChange = (event) =>{
+    }
+    handleChange = (event) => {
         this.setState((state) => {
             return {
                 ...state,
                 type_id: event
             }
         });
-    } 
+    }
+    onChange = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                description: event.editor.getData(),
+            }
+        });
+    }
     render() {
-        let { shop, shop_id, method, url, contentInfo, files, uploadIds, type_id, types } = this.state;
+        let { shop, shop_id, method, url, contentInfo, files, uploadIds, type_id, types, description } = this.state;
         return (
             <App>
 
@@ -187,35 +199,62 @@ export class CreateShop extends Component {
                                                     window.location.href = '/shops/list';
                                                     return;
                                                 }
-                                                await updateFileStorage(items).then(response =>{
+                                                await updateFileStorage(items).then(response => {
                                                     window.location.href = '/shops/list';
-                                                } );
-                                            }
+                                                });
+                                            },
+                                            dataProcessBeforeSubmit: (value, callback) => {
+                                                callback({
+                                                    ...value,
+                                                    description: description
+                                                });
+                                            },
                                         }}
                                     >
                                         <div className="row">
-                                             <div className="col-6">
-                                             <AvField name="name" label="Name" value={shop.name} type="text" required />
-                                             </div>
-                                             <div className="col-6">
-                                               <AvField name="description" value={shop.description} label="Description" type="text" required />
-                                             </div>
+                                            <div className="col-6">
+                                                <AvField name="name" label="Name" value={shop?.name} type="text" required />
+                                            </div>
+                                            <div className="col-6">
+                                                <label></label>
+                                                {shop && <AvGroup check>
+                                                        <AvInput type="checkbox" className="checkbox_animated mt-2" name="is_active" defaultChecked={shop?.is_active} />Is Active!
+                                        
+                                                </AvGroup>}
+
+                                            </div>
                                         </div>
                                         <div className="row">
-                                             <div className="col-6">
-                                             <AvField name="address" value={shop.address} label="Address" type="text" required />
-                                             </div>
-                                             <div className="col-6">
-                                             <AvGroup>
+                                            <div className="col-6">
+                                                <AvField name="address" value={shop?.address} label="Address" type="text" required />
+                                            </div>
+                                            <div className="col-6">
+                                                <AvGroup>
                                                     <Label for="shopIds">Shop type</Label>
-                                                    <AvSelect   onChange={this.handleChange} value={type_id}  name="type_id" options={types} required />
+                                                    <AvSelect onChange={this.handleChange} value={type_id} name="type_id" options={types} required />
                                                 </AvGroup>
-                                             </div>
+                                            </div>
                                         </div>
-                                       
-                                     
-                                        {shop_id == 0 && <Button color="primary">Create</Button>}
-                                        {shop_id > 0 && <Button color="primary">Update</Button>}
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <label>Description</label>
+                                                <CKEditors
+                                                    activeclassName="p10"
+                                                    content={description}
+                                                    events={{
+                                                        "blur": this.onBlur,
+                                                        "afterPaste": this.afterPaste,
+                                                        "change": this.onChange
+                                                    }}
+                                                    required
+                                                />
+                                            </div>
+
+                                        </div>
+
+
+                                        {shop_id == 0 && <Button className="mt-2" color="primary">Create</Button>}
+                                        {shop_id > 0 && <Button className="mt-2" color="primary">Update</Button>}
                                     </Forms>
                                 </div>
                             </div>

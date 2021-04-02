@@ -1,5 +1,4 @@
 import {Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
-import { ShopRequest } from "./requests/shop.request";
 import { ShopService } from "./shop.service";
 
 @Controller('/api/shops')
@@ -11,7 +10,7 @@ export default class ShopController {
 
     @Post('/')
     async create(
-        @Body() shopRequest: ShopRequest
+        @Body() shopRequest: any
     ) {
         return this.shopService.create(shopRequest);
     }
@@ -19,7 +18,7 @@ export default class ShopController {
     @Put('/update/:id')
     async update(
         @Param('id') id: number,
-        @Body() shopRequest: ShopRequest
+        @Body() shopRequest: any
     ) {
         return this.shopService.update(id,shopRequest);
     }
