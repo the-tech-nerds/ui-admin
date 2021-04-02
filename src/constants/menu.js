@@ -71,6 +71,7 @@ export const MENUITEMS = PermissionTypes ? [
         title: 'Products', icon: ShoppingBag, type: 'sub', active: false,
         permissions: [PermissionTypes.UNIT.GET,PermissionTypes.BRAND.GET],
         children: [
+            {path: '/inventories/list', title: 'Inventory', type: 'link', permissions: [PermissionTypes.INVENTORY.GET]},
             {path: '/products/list', title: 'Product', type: 'link', permissions: [PermissionTypes.PRODUCT.GET]},
             {path: '/units/list', title: 'Unit', type: 'link', permissions: [PermissionTypes.UNIT.GET]},
             {path: '/brands/list', title: 'Brand', type: 'link', permissions: [PermissionTypes.BRAND.GET]},

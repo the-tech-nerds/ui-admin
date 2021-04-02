@@ -9,13 +9,15 @@ import ProductController from "./product/product.controller";
 import {ProductService} from "./product/product.service";
 import ProductVarianceController from "./product-variance/product-variance.controller";
 import {ProductVarianceService} from "./product-variance/product-variance.service";
+import InventoryController from "./inventory/inventory.controller";
+import {InventoryService} from "./inventory/inventory.service";
 
 @Module({
     imports: [
         CacheModule,
         GatewayModule,
     ],
-    controllers: [ProductController, ProductVarianceController, UnitController, BrandController],
-    providers: [ProductService, ProductVarianceService, UnitService, BrandService, ApiResponseService]
+    controllers: [ProductController, InventoryController, ProductVarianceController, UnitController, BrandController],
+    providers: [ProductService, InventoryService, ProductVarianceService, UnitService, BrandService, ApiResponseService]
 })
 export class ProductModule {}
