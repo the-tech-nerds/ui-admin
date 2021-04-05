@@ -1,15 +1,16 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
-import {AvField, AvGroup, AvInput} from "availity-reactstrap-validation";
+import { AvField, AvGroup, AvInput } from "availity-reactstrap-validation";
 import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
-import {Button, Label} from "reactstrap";
+import { Button, Label } from "reactstrap";
 import MyUploader from "../common/dropzone";
-import {DropzoneStatus} from "../../constants/dropzoneStatus";
+import { DropzoneStatus } from "../../constants/dropzoneStatus";
 import updateFileStorage from "../common/file-storage";
+import CKEditors from "react-ckeditor-component";
 
 export class CreateProductVariance extends Component {
     constructor(props) {
@@ -33,6 +34,7 @@ export class CreateProductVariance extends Component {
             method: 'POST',
             url: '/api/product-variances/' + Number(this.props.match.params.productId),
             loading: true,
+            description: ''
         }
     }
 
@@ -100,13 +102,14 @@ export class CreateProductVariance extends Component {
 
             FetchData({
                 url: `/api/product-variances/single/${id}`, callback: (response, isSucess) => {
-                    this.setState({loading: false});
+                    this.setState({ loading: false });
                     if (isSucess) {
                         this.setState((state) => {
                             return {
                                 ...state,
                                 productVariance: response.data.productVariance,
-                                files: response.data.images
+                                files: response.data.images,
+                                description: response.data.productVariance.description
                             }
                         });
                     } else {
@@ -119,6 +122,14 @@ export class CreateProductVariance extends Component {
             })
         }
     }
+    onChange = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                description: event.editor.getData(),
+            }
+        });
+    }
 
     render() {
         const {
@@ -130,12 +141,13 @@ export class CreateProductVariance extends Component {
             uploadIds,
             contentInfo,
             method,
-            url
+            url,
+            description
         } = this.state;
         return (
             <App>
 
-                <Breadcrumb title={productVarianceId > 0 ? 'update' : 'create'} parent="productVariance"/>
+                <Breadcrumb title={productVarianceId > 0 ? 'update' : 'create'} parent="productVariance" />
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
@@ -155,7 +167,7 @@ export class CreateProductVariance extends Component {
                                                     onUploadSuccess: (response) => {
                                                         this.handleUploadResponse(response);
                                                     }
-                                                }} content={contentInfo}/>
+                                                }} content={contentInfo} />
                                             </div>
                                         </div>
                                     </div>
@@ -182,40 +194,74 @@ export class CreateProductVariance extends Component {
                                                     await updateFileStorage(items).then(response => {
                                                         window.location.href = `/product/${productId}/variance/list`;
                                                     });
-                                                }
+                                                },
+                                                dataProcessBeforeSubmit: (value, callback) => {
+                                                    callback({
+                                                        ...value,
+                                                        description: description
+                                                    });
+                                                },
                                             }}
                                         >
-                                            <AvGroup>
-                                                <Label for="title">Variance Title</Label>
-                                                <AvField className="form-control" name="title"
-                                                         value={productVariance.title} type="text" required/>
-                                            </AvGroup>
+                                            <div className="row">
+                                                <div className="col-6">
+                                                    <AvGroup>
+                                                        <Label for="title">Variance Title</Label>
+                                                        <AvField className="form-control" name="title"
+                                                            value={productVariance.title} type="text" required />
+                                                    </AvGroup>
+                                                </div>
+                                                <div className="col-6">
+                                                    <AvGroup>
+                                                        <Label for="price">Variance Price</Label>
+                                                        <AvField className="form-control" name="price"
+                                                            value={productVariance.price} type="text" required />
+                                                    </AvGroup>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-6">
 
-                                            <AvGroup>
-                                                <Label for="price">Variance Price</Label>
-                                                <AvField className="form-control" name="price"
-                                                         value={productVariance.price} type="text" required/>
-                                            </AvGroup>
+                                                    <AvGroup>
+                                                        <Label for="color">Variance Color</Label>
+                                                        <AvField className="form-control" name="color"
+                                                            value={productVariance.color} type="text" />
+                                                    </AvGroup>
+                                                </div>
+                                                <div className="col-3">
+                                                    <AvGroup>
+                                                        <Label for="unit_id">Select Unit</Label>
+                                                        {productVarianceId === 0 && <AvSelect name="unit_id" options={units} />}
+                                                        {productVarianceId > 0 && <AvSelect name="unit_id"
+                                                            value={units.filter(option => option.value === productVariance.unit_id).map(el => el.value)[0]}
+                                                            options={units} />}
+                                                    </AvGroup>
 
-                                            <AvGroup>
-                                                <Label for="color">Variance Color</Label>
-                                                <AvField className="form-control" name="color"
-                                                         value={productVariance.color} type="text"/>
-                                            </AvGroup>
+                                                </div>
+                                                <div className="col-3">
+                                                    <AvGroup>
+                                                        <Label for="unit_value">Unit Value</Label>
+                                                        <AvField className="form-control" name="unit_value"
+                                                            value={productVariance.unit_value} type="text" />
+                                                    </AvGroup>
+                                                </div>
+                                            </div>
+                                            <div className="row mb-2">
+                                                <div className="col-12">
+                                                    <label>Description</label>
+                                                    <CKEditors
+                                                        activeclassName="p10"
+                                                        content={description}
+                                                        events={{
+                                                            "blur": this.onBlur,
+                                                            "afterPaste": this.afterPaste,
+                                                            "change": this.onChange
+                                                        }}
+                                                        required
+                                                    />
+                                                </div>
 
-                                            <AvGroup>
-                                                <Label for="unit_id">Select Unit</Label>
-                                                {productVarianceId === 0 && <AvSelect name="unit_id" options={units}/>}
-                                                {productVarianceId > 0 && <AvSelect name="unit_id"
-                                                                                    value={units.filter(option => option.value === productVariance.unit_id).map(el => el.value)[0]}
-                                                                                    options={units}/>}
-                                            </AvGroup>
-
-                                            <AvGroup>
-                                                <Label for="unit_value">Unit Value</Label>
-                                                <AvField className="form-control" name="unit_value"
-                                                         value={productVariance.unit_value} type="text"/>
-                                            </AvGroup>
+                                            </div>
                                             {productVarianceId === 0 && <Button color="primary">Create</Button>}
                                             {productVarianceId > 0 && <Button color="primary">Update</Button>}
                                         </Forms>
