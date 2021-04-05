@@ -228,13 +228,10 @@ export default class EditCategory extends Component {
 
                                         </div>
                                         <div className="row">
-                                            <div class="col-6">
+                                            <div class="col-12">
                                                 <AvField name="name" label="Name" type="text" required
                                                     value={category.name}
                                                 />
-                                            </div>
-                                            <div className="col-6">
-                                                <AvField disabled ={true} value={category.slug} name="slug" label="Slug Name" type="text" required />
                                             </div>
                                         </div>
                                         <Button color="primary">Edit</Button>
