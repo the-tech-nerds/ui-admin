@@ -36,10 +36,11 @@ export class InventoryService {
         const inventories = inventoryList.map((inventory: any, index: any) => ({
             id: inventory.id,
             'SL No': ++index,
-            'Shop': inventory?.shops?.reduce((shops: any, shop: any) => (shops + shop.name + ', '), '').slice(0, -2) || 'n/a',
-            'Variance': inventory.productVariance ? inventory.productVariance.name : 'n/a',
-            'Stock Unit' : inventory.stock_count,
-            'Stock Price' : inventory.price,
+            'Shops': inventory?.shops?.reduce((shops: any, shop: any) => (shops + shop.name + ', '), '').slice(0, -2) || 'n/a',
+            'Product': inventory?.productVariance?.product?.name || 'n/a',
+            'Variance': inventory?.productVariance?.title || 'n/a',
+            'Stock Unit': inventory.stock_count,
+            'Stock Price': inventory.price,
             'Stock Date': inventory.stock_date,
             'Status': inventory.status ? 'Active' : 'Draft'
         }));
