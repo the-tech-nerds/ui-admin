@@ -15,12 +15,12 @@ export class CreateInventory extends Component {
             inventory: {},
             categoryList: [],
             categoryId: 0,
-            shops:[],
-            shopIds:[],
-            productList:[],
-            productId:0,
+            shops: [],
+            shopId: [],
+            productList: [],
+            productId: 0,
             productVarianceId: 0,
-            productVarianceList:[],
+            productVarianceList: [],
 
             inventoryId: 0,
             method: 'POST',
@@ -95,11 +95,11 @@ export class CreateInventory extends Component {
                         shops: options
                     })
 
-                    const ids = this.state.shops.filter(option => this.state.productVariance.shops && this.state.productVariance.shops.includes(option.value)).map(el => el.value)
+                    const ids = this.state.shops.filter(option => this.state.productVariance.shops && this.state.productVariance.shops.find(shop => shop.id == option.value)).map(el => el.value)
                     this.setState((state) => {
                         return {
                             ...state,
-                            shopIds: ids
+                            shopId: ids
                         }
                     });
                 } else {
@@ -112,10 +112,14 @@ export class CreateInventory extends Component {
         })
 
         //fetch categories
+    }
+
+    handleChangeShops = (event) => {
+        // @todo shop wise categories needed
         FetchData({
-            url: '/api/categories', callback: (response, isSucess) => {
+            url: `/api/shops/${event}/categories`, callback: (response, isSuccess) => {
                 console.log('categories : ', response.data);
-                if (isSucess) {
+                if (isSuccess) {
                     const options = response.data.map(x => {
                         return {
                             label: x.Name,
@@ -140,19 +144,46 @@ export class CreateInventory extends Component {
                     })
                 }
             }
-        })
-    }
-
-    handleChangeShops = (event) => {
+        });
         this.setState((state) => {
             return {
                 ...state,
-                shopIds: event
+                shopId: event
             }
         });
     }
 
     handleChangeCategory = (event) => {
+        //@todo need get products under categories
+        FetchData({
+            url: `/api/categories/${event}/products/` + event, callback: (response, isSuccess) => {
+                console.log('categories : ', response.data);
+                if (isSuccess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    this.setState({
+                        categoryList: options,
+                    });
+
+                    /*const id = this.state.categoryList.filter(option => this.state.inventory.categories.includes(option.value)).map(el => el.value)[0]
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            categoryIds: id
+                        }
+                    });*/
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        });
         this.setState((state) => {
             return {
                 ...state,
@@ -162,6 +193,22 @@ export class CreateInventory extends Component {
     }
 
     handleChangeProduct = (event) => {
+        // @todo get product variance under selected product
+        FetchData({
+            url: `/api/product-variances/${this.state.productId}`, callback: (response, isSucess) => {
+                if (isSucess) {
+                    console.log('product variances : ',response.data);
+                    this.setState({
+                        productVarianceList: response.data,
+                    });
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        })
         this.setState((state) => {
             return {
                 ...state,
@@ -180,10 +227,22 @@ export class CreateInventory extends Component {
     }
 
     render() {
-        const {inventory, shops, shopIds, categoryList, categoryIds, inventoryId, productId, productList, productVarianceId, productVarianceList, method, url} = this.state;
+        const {
+            inventory,
+            shops,
+            shopId,
+            categoryList,
+            categoryIds,
+            inventoryId,
+            productId,
+            productList,
+            productVarianceId,
+            productVarianceList,
+            method,
+            url
+        } = this.state;
         return (
             <App>
-
                 <Breadcrumb title={inventoryId > 0 ? 'update' : 'create'} parent="inventory"/>
                 <div className="container-fluid">
                     <div className="row">
@@ -199,42 +258,47 @@ export class CreateInventory extends Component {
                                                 method: method,
                                                 url: url,
                                                 onSuccess: (response) => {
-                                                    window.location.href ='/inventories/list';
+                                                    window.location.href = '/inventories/list';
                                                 }
                                             }}
                                         >
                                             <AvGroup>
-                                                <Label for="shop_ids">Select Shops</Label>
+                                                <Label for="shop_id">Select Shops</Label>
                                                 {inventoryId === 0 &&
-                                                <AvSelect isMulti name="shop_ids" options={shops} required/>}
+                                                <AvSelect  name="shop_id" options={shops} required/>}
                                                 {inventoryId > 0 &&
-                                                <AvSelect isMulti onChange={this.handleChangeShops} name="shop_ids"
-                                                          value={shopIds}
+                                                <AvSelect  onChange={this.handleChangeShops} name="shop_id"
+                                                          value={shopId}
                                                           options={shops} required/>}
                                             </AvGroup>
-
+                                            {/* @todo category depend on shop type*/}
                                             <AvGroup>
                                                 <Label for="category_id">Select Category</Label>
                                                 {inventoryId === 0 &&
                                                 <AvSelect name="category_id" options={categoryList} required/>}
                                                 {inventoryId > 0 &&
-                                                <AvSelect onChange={this.handleChangeCategory} value={categoryIds} name="category_id" options={categoryList} required/>}
+                                                <AvSelect onChange={this.handleChangeCategory} value={categoryIds}
+                                                          name="category_id" options={categoryList} required/>}
                                             </AvGroup>
-
+                                            {/* @todo product depend on categories*/}
                                             <AvGroup>
                                                 <Label for="product_ids">Select Product</Label>
                                                 {inventoryId === 0 &&
                                                 <AvSelect name="product_id" options={productList} required/>}
                                                 {inventoryId > 0 &&
-                                                <AvSelect onChange={this.handleChangeProduct} value={productId} name="product_id" options={productList} required/>}
+                                                <AvSelect onChange={this.handleChangeProduct} value={productId}
+                                                          name="product_id" options={productList} required/>}
                                             </AvGroup>
-
+                                            {/* @todo product variances depend on product*/}
                                             <AvGroup>
                                                 <Label for="product_variance_id">Select Product Variance</Label>
                                                 {inventoryId === 0 &&
-                                                <AvSelect name="product_variance_id" options={productVarianceList} required/>}
+                                                <AvSelect name="product_variance_id" options={productVarianceList}
+                                                          required/>}
                                                 {inventoryId > 0 &&
-                                                <AvSelect onChange={this.handleChangeProductVariance} value={productVarianceId} name="product_variance_id" options={productVarianceList} required/>}
+                                                <AvSelect onChange={this.handleChangeProductVariance}
+                                                          value={productVarianceId} name="product_variance_id"
+                                                          options={productVarianceList} required/>}
                                             </AvGroup>
 
                                             <AvGroup>
@@ -246,9 +310,13 @@ export class CreateInventory extends Component {
                                             <AvInput type="textarea" name="stock_count" value={inventory.stock_count}
                                                      placeholder="Stock Count"/>
 
-                                            {inventoryId == 0 && <Button name="status" value="1" color="primary" className="mt-3">Save</Button>}
-                                            {inventoryId == 0 && <Button name="status" value="0" color="warning" className="mt-3">Save as Draft</Button>}
-                                            {inventoryId > 0 && <Button color="primary" className="mt-3">Update</Button>}
+                                            {inventoryId == 0 && <Button name="status" value="1" color="primary"
+                                                                         className="mt-3">Save</Button>}
+                                            {inventoryId == 0 &&
+                                            <Button name="status" value="0" color="warning" className="mt-3">Save as
+                                                Draft</Button>}
+                                            {inventoryId > 0 &&
+                                            <Button color="primary" className="mt-3">Update</Button>}
                                         </Forms>
                                     </div>
                                 </div>
