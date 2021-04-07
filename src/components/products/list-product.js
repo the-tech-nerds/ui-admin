@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import App from "../app";
 import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable';
@@ -56,17 +56,18 @@ export default class ListProduct extends Component {
     }
 
     onOpenStatusModal = () => {
-        this.setState({ openStatus: true });
+        this.setState({openStatus: true});
     };
 
     onCloseModal = () => {
-        this.setState({ open: false, openStatus: false });
+        this.setState({open: false, openStatus: false});
     };
+
     render() {
-        let {openStatus, productId } = this.state;
+        let {openStatus, productId} = this.state;
         return (
             <App>
-                <Breadcrumb title="Product List" parent="Users" />
+                <Breadcrumb title="Product List" parent="Users"/>
                 <div className="container-fluid">
                     <div className="card">
                         <div className="card-header">
@@ -92,7 +93,7 @@ export default class ListProduct extends Component {
                                             },
                                         }}
                                     >
-                                        <Alert variant='warning'>Are you sure to update status?  </Alert>
+                                        <Alert variant='warning'>Are you sure to update status? </Alert>
                                         <Button className="btn btn-xs btn-warning float-right">Update</Button>
                                         <br/>
                                     </Forms>
@@ -125,7 +126,7 @@ export default class ListProduct extends Component {
                                                     </span>
 
                                                     <span onClick={() => {
-                                                    window.location.href = `/products/create/${row.original.id}`;
+                                                        window.location.href = `/products/create/${row.original.id}`;
                                                     }} title="Edit Product">
                                                         <i className="fa fa-pencil" style={{
                                                             width: 35,
@@ -142,7 +143,12 @@ export default class ListProduct extends Component {
                                                         })
                                                         this.onOpenStatusModal();
                                                     }} title="Change Status">
-                                                        <i className="fa fa-unlock-alt" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}></i>
+                                                        <i className="fa fa-unlock-alt" style={{
+                                                            width: 35,
+                                                            fontSize: 20,
+                                                            padding: 11,
+                                                            color: '#e4566e'
+                                                        }}></i>
                                                     </span>
                                                 </div>
                                             ),

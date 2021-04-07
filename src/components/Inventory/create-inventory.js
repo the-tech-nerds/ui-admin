@@ -31,9 +31,7 @@ export class CreateInventory extends Component {
 
     async componentDidMount() {
         const id = Number(this.props.match.params.id);
-
         if (id > 0) {
-
             this.setState({
                 inventoryId: id,
                 method: 'PUT',

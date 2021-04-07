@@ -28,8 +28,8 @@ export class CreateProductVariance extends Component {
             uploadIds: [],
             files: [],
             shops: [],
-            shopIds:[],
-            unitId:0,
+            shopIds: [],
+            unitId: 0,
 
             productId: Number(this.props.match.params.productId) || 0,
             productVarianceId: 0,
@@ -112,8 +112,7 @@ export class CreateProductVariance extends Component {
                     this.setState({
                         shops: options
                     })
-
-                    const ids = this.state.shops.filter(option => this.state.productVariance.shops && this.state.productVariance.shops.includes(option.value)).map(el => el.value)
+                    const ids = this.state.shops.filter(option => this.state.productVariance.shops && this.state.productVariance.shops.find(el => option.value === el.id)).map(el => el.value)
                     this.setState((state) => {
                         return {
                             ...state,
@@ -266,9 +265,10 @@ export class CreateProductVariance extends Component {
                                             <AvGroup>
                                                 <Label for="unit_id">Select Unit</Label>
                                                 {productVarianceId === 0 && <AvSelect name="unit_id" options={units}/>}
-                                                {productVarianceId > 0 && <AvSelect onChange={this.handleChangeUnit} name="unit_id"
-                                                                                    value={unitId}
-                                                                                    options={units}/>}
+                                                {productVarianceId > 0 &&
+                                                <AvSelect onChange={this.handleChangeUnit} name="unit_id"
+                                                          value={unitId}
+                                                          options={units}/>}
                                             </AvGroup>
 
                                             <AvGroup>
