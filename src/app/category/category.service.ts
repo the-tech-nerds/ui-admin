@@ -38,7 +38,6 @@ export default class CategoryService {
             'SL No': ++index,
             'Name': category.name,
             'Parent Category': this.findParent(categoryList,category.parent_id),
-            'Slug': category.slug,
             'Active': category.is_active ? 'Yes' : 'No'
         }));
 

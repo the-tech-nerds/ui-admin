@@ -10,6 +10,7 @@ import {Button, Label} from "reactstrap";
 import MyUploader from "../common/dropzone";
 import {DropzoneStatus} from "../../constants/dropzoneStatus";
 import updateFileStorage from "../common/file-storage";
+import CKEditors from "react-ckeditor-component";
 
 export class CreateProductVariance extends Component {
     constructor(props) {
@@ -36,6 +37,7 @@ export class CreateProductVariance extends Component {
             method: 'POST',
             url: '/api/product-variances/' + Number(this.props.match.params.productId),
             loading: true,
+            description: ''
         }
     }
 
@@ -80,14 +82,15 @@ export class CreateProductVariance extends Component {
             });
 
             FetchData({
-                url: `/api/product-variances/single/${id}`, callback: (response, isSuccess) => {
+                url: `/api/product-variances/single/${id}`, callback: (response, isSucess) => {
                     this.setState({loading: false});
-                    if (isSuccess) {
+                    if (isSucess) {
                         this.setState((state) => {
                             return {
                                 ...state,
                                 productVariance: response.data.productVariance,
-                                files: response.data.images
+                                files: response.data.images,
+                                description: response.data.productVariance.description
                             }
                         });
                     } else {
@@ -175,6 +178,14 @@ export class CreateProductVariance extends Component {
             }
         });
     }
+    onChange = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                description: event.editor.getData(),
+            }
+        });
+    }
 
     render() {
         const {
@@ -190,6 +201,7 @@ export class CreateProductVariance extends Component {
             url,
             shops,
             shopIds,
+            description
         } = this.state;
         return (
             <App>
@@ -241,50 +253,86 @@ export class CreateProductVariance extends Component {
                                                     await updateFileStorage(items).then(response => {
                                                         window.location.href = `/product/${productId}/variance/list`;
                                                     });
-                                                }
+                                                },
+                                                dataProcessBeforeSubmit: (value, callback) => {
+                                                    callback({
+                                                        ...value,
+                                                        description: description
+                                                    });
+                                                },
                                             }}
                                         >
-                                            <AvGroup>
-                                                <Label for="title">Variance Title</Label>
-                                                <AvField className="form-control" name="title"
-                                                         value={productVariance.title} type="text" required/>
-                                            </AvGroup>
+                                            <div className="row">
+                                                <div className="col-6">
+                                                    <AvGroup>
+                                                        <Label for="title">Variance Title</Label>
+                                                        <AvField className="form-control" name="title"
+                                                                 value={productVariance.title} type="text" required/>
+                                                    </AvGroup>
+                                                </div>
+                                                <div className="col-6">
+                                                    <AvGroup>
+                                                        <Label for="price">Variance Price</Label>
+                                                        <AvField className="form-control" name="price"
+                                                                 value={productVariance.price} type="text" required/>
+                                                    </AvGroup>
+                                                </div>
+                                            </div>
 
-                                            <AvGroup>
-                                                <Label for="price">Variance Price</Label>
-                                                <AvField className="form-control" name="price"
-                                                         value={productVariance.price} type="text" required/>
-                                            </AvGroup>
+                                            <div className="row">
+                                                <div className="col-6">
+                                                    <AvGroup>
+                                                        <Label for="color">Variance Color</Label>
+                                                        <AvField className="form-control" name="color"
+                                                                 value={productVariance.color} type="text"/>
+                                                    </AvGroup>
+                                                </div>
 
-                                            <AvGroup>
-                                                <Label for="color">Variance Color</Label>
-                                                <AvField className="form-control" name="color"
-                                                         value={productVariance.color} type="text"/>
-                                            </AvGroup>
+                                                <div className="col-6">
+                                                    <AvGroup>
+                                                        <Label for="unit_id">Select Unit</Label>
+                                                        {productVarianceId === 0 &&
+                                                        <AvSelect name="unit_id" options={units}/>}
+                                                        {productVarianceId > 0 &&
+                                                        <AvSelect onChange={this.handleChangeUnit} name="unit_id"
+                                                                  value={unitId}
+                                                                  options={units}/>}
+                                                    </AvGroup>
+                                                    <AvGroup>
+                                                        <Label for="unit_value">Unit Value</Label>
+                                                        <AvField className="form-control" name="unit_value"
+                                                                 value={productVariance.unit_value} type="text"/>
+                                                    </AvGroup>
 
-                                            <AvGroup>
-                                                <Label for="unit_id">Select Unit</Label>
-                                                {productVarianceId === 0 && <AvSelect name="unit_id" options={units}/>}
-                                                {productVarianceId > 0 &&
-                                                <AvSelect onChange={this.handleChangeUnit} name="unit_id"
-                                                          value={unitId}
-                                                          options={units}/>}
-                                            </AvGroup>
+                                                    <AvGroup>
+                                                        <Label for="shop_ids">Select Shops</Label>
+                                                        {productId === 0 &&
+                                                        <AvSelect isMulti name="shop_ids" options={shops} required/>}
+                                                        {productId > 0 &&
+                                                        <AvSelect isMulti onChange={this.handleChangeShops}
+                                                                  name="shop_ids"
+                                                                  value={shopIds}
+                                                                  options={shops} required/>}
+                                                    </AvGroup>
+                                                </div>
+                                            </div>
 
-                                            <AvGroup>
-                                                <Label for="unit_value">Unit Value</Label>
-                                                <AvField className="form-control" name="unit_value"
-                                                         value={productVariance.unit_value} type="text"/>
-                                            </AvGroup>
-                                            <AvGroup>
-                                                <Label for="shop_ids">Select Shops</Label>
-                                                {productId === 0 &&
-                                                <AvSelect isMulti name="shop_ids" options={shops} required/>}
-                                                {productId > 0 &&
-                                                <AvSelect isMulti onChange={this.handleChangeShops} name="shop_ids"
-                                                          value={shopIds}
-                                                          options={shops} required/>}
-                                            </AvGroup>
+                                            <div className="row mb-2">
+                                                <div className="col-12">
+                                                    <label>Description</label>
+                                                    <CKEditors
+                                                        activeclassName="p10"
+                                                        content={description}
+                                                        events={{
+                                                            "blur": this.onBlur,
+                                                            "afterPaste": this.afterPaste,
+                                                            "change": this.onChange
+                                                        }}
+                                                        required
+                                                    />
+                                                </div>
+
+                                            </div>
                                             {productVarianceId === 0 && <Button color="primary">Create</Button>}
                                             {productVarianceId > 0 && <Button color="primary">Update</Button>}
                                         </Forms>

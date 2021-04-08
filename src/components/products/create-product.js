@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
-import {AvField, AvGroup, AvInput} from "availity-reactstrap-validation";
+import {AvField, AvGroup} from "availity-reactstrap-validation";
 import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
@@ -10,6 +10,7 @@ import {Button, Label} from "reactstrap";
 import MyUploader from "../common/dropzone";
 import {DropzoneStatus} from "../../constants/dropzoneStatus";
 import updateFileStorage from "../common/file-storage";
+import CKEditors from "react-ckeditor-component";
 
 export class CreateProduct extends Component {
     constructor(props) {
@@ -35,6 +36,7 @@ export class CreateProduct extends Component {
             method: 'POST',
             url: '/api/products/',
             loading: true,
+            description: ''
         }
     }
 
@@ -98,7 +100,8 @@ export class CreateProduct extends Component {
                             return {
                                 ...state,
                                 product: response.data.product,
-                                files: response.data.images
+                                files: response.data.images,
+                                description: response.data.product.description
                             }
                         });
                     } else {
@@ -187,6 +190,15 @@ export class CreateProduct extends Component {
         })
     }
 
+    onChange = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                description: event.editor.getData(),
+            }
+        });
+    }
+
     handleChangeCategories = (event) => {
         this.setState((state) => {
             return {
@@ -206,7 +218,7 @@ export class CreateProduct extends Component {
     }
 
     render() {
-        const {product, brands, brandId, categoryList, categoryIds, productId, files, uploadIds, contentInfo, method, url} = this.state;
+        const {product, brands, brandId, categoryList, categoryIds, productId, shops, files, uploadIds, contentInfo, method, url, description} = this.state;
         return (
             <App>
 
@@ -257,7 +269,13 @@ export class CreateProduct extends Component {
                                                     await updateFileStorage(items).then(response => {
                                                         window.location.href = '/products/list';
                                                     });
-                                                }
+                                                },
+                                                dataProcessBeforeSubmit: (value, callback) => {
+                                                    callback({
+                                                        ...value,
+                                                        description: description
+                                                    });
+                                                },
                                             }}
                                         >
                                             <AvGroup>
@@ -299,8 +317,22 @@ export class CreateProduct extends Component {
                                                     </div>
                                                 </div>*/}
 
-                                            <AvInput type="textarea" name="description" value={product.description}
-                                                     placeholder="Product Description"/>
+                                            {/* <AvInput type="textarea" name="description" value={product.description} placeholder="Product Description" /> */}
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <label>Description</label>
+                                                    <CKEditors
+                                                        activeclassName="p10"
+                                                        content={description}
+                                                        events={{
+                                                            "blur": this.onBlur,
+                                                            "afterPaste": this.afterPaste,
+                                                            "change": this.onChange
+                                                        }}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
 
                                             {productId == 0 && <Button color="primary" className="mt-3">Create</Button>}
                                             {productId > 0 && <Button color="primary" className="mt-3">Update</Button>}

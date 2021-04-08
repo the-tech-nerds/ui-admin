@@ -4,4 +4,5 @@ export class ShopRequest {
     description?: string;
 
     address?: string;
+    is_active? : boolean;
 }

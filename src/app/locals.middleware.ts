@@ -57,9 +57,9 @@ export const LocalsMiddleware = async (req: any, res: any, next: Function) => {
         res.set('Content-Type', 'text/css');
     }
 
-    /*if (req.url.includes('sockjs') && !req.url.includes('?t=')) {
-        next();
-    }*/
+    // if (req.url.includes('sockjs') && !req.url.includes('?t=')) {
+    //     next();
+    // }
 
     if (req.signedCookies && req.signedCookies.r_code) {
         req.headers.access_token = req.signedCookies.r_code;

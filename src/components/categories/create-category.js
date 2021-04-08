@@ -158,11 +158,8 @@ export class CreateCategory extends Component {
 
                                         </div>
                                         <div className="row">
-                                            <div class="col-6">
+                                            <div class="col-12">
                                                 <AvField name="name" label="Category Name" type="text" required />
-                                            </div>
-                                            <div className="col-6">
-                                                <AvField name="slug" label="Slug Name" type="text" required />
                                             </div>
                                         </div>
 
