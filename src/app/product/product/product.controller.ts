@@ -10,8 +10,13 @@ export default class ProductController {
     }
 
     @Get('/')
-    async gets() {
+    async list() {
         return this.productService.listProducts();
+    }
+
+    @Get('/category/:categoryId')
+    async productListByCategory(@Param('categoryId') categoryId: number) {
+        return this.productService.listProductFromCategory(categoryId);
     }
 
     @Post('/')

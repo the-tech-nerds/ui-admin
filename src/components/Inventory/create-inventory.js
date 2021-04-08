@@ -110,53 +110,19 @@ export class CreateInventory extends Component {
                 }
             }
         })
-
-        //fetch categories
     }
 
     handleChangeShops = (event) => {
-        // @todo shop wise categories needed
-        FetchData({
-            url: `/api/shops/${event}/categories`, callback: (response, isSuccess) => {
-                console.log('categories : ', response.data);
-                if (isSuccess) {
-                    const options = response.data.map(x => {
-                        return {
-                            label: x.Name,
-                            value: x.id
-                        };
-                    });
-                    this.setState({
-                        categoryList: options,
-                    });
-
-                    /*const id = this.state.categoryList.filter(option => this.state.inventory.categories.includes(option.value)).map(el => el.value)[0]
-                    this.setState((state) => {
-                        return {
-                            ...state,
-                            categoryIds: id
-                        }
-                    });*/
-                } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    })
-                }
-            }
-        });
         this.setState((state) => {
             return {
                 ...state,
                 shopId: event
             }
         });
-    }
 
-    handleChangeCategory = (event) => {
-        //@todo need get products under categories
+        // get categoryList against selected shop
         FetchData({
-            url: `/api/categories/${event}/products/` + event, callback: (response, isSuccess) => {
+            url: `/api/categories/shop/${event}`, callback: (response, isSuccess) => {
                 console.log('categories : ', response.data);
                 if (isSuccess) {
                     const options = response.data.map(x => {
@@ -168,14 +134,6 @@ export class CreateInventory extends Component {
                     this.setState({
                         categoryList: options,
                     });
-
-                    /*const id = this.state.categoryList.filter(option => this.state.inventory.categories.includes(option.value)).map(el => el.value)[0]
-                    this.setState((state) => {
-                        return {
-                            ...state,
-                            categoryIds: id
-                        }
-                    });*/
                 } else {
                     this.setState({
                         error: true,
@@ -184,16 +142,47 @@ export class CreateInventory extends Component {
                 }
             }
         });
+    }
+
+    handleChangeCategory = (event) => {
         this.setState((state) => {
             return {
                 ...state,
                 categoryId: event
             }
         });
+
+        FetchData({
+            url: `/api/products/category/${event}` + event, callback: (response, isSuccess) => {
+                console.log('categories : ', response.data);
+                if (isSuccess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    this.setState({
+                        productList: options,
+                    });
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        });
     }
 
     handleChangeProduct = (event) => {
-        // @todo get product variance under selected product
+        this.setState((state) => {
+            return {
+                ...state,
+                productId: event
+            }
+        });
+
         FetchData({
             url: `/api/product-variances/${this.state.productId}`, callback: (response, isSucess) => {
                 if (isSucess) {
@@ -209,12 +198,6 @@ export class CreateInventory extends Component {
                 }
             }
         })
-        this.setState((state) => {
-            return {
-                ...state,
-                productId: event
-            }
-        });
     }
 
     handleChangeVariance = (event) => {
