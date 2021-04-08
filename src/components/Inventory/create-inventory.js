@@ -7,6 +7,7 @@ import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
 import {Button, Label} from "reactstrap";
+import {ShopTypes} from "@the-tech-nerds/common-services";
 
 export class CreateInventory extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ export class CreateInventory extends Component {
             productId: 0,
             productVarianceId: 0,
             productVarianceList: [],
-
+            shopTypeList: ShopTypes,
             inventoryId: 0,
             method: 'POST',
             url: '/api/inventories/',
@@ -30,6 +31,7 @@ export class CreateInventory extends Component {
     }
 
     async componentDidMount() {
+        console.log('Hello shop type',ShopTypes);
         const id = Number(this.props.match.params.id);
         if (id > 0) {
             this.setState({
@@ -153,7 +155,7 @@ export class CreateInventory extends Component {
         });
 
         FetchData({
-            url: `/api/products/category/${event}` + event, callback: (response, isSuccess) => {
+            url: `/api/products/category/${event}`, callback: (response, isSuccess) => {
                 console.log('categories : ', response.data);
                 if (isSuccess) {
                     const options = response.data.map(x => {
@@ -182,13 +184,17 @@ export class CreateInventory extends Component {
                 productId: event
             }
         });
-
         FetchData({
-            url: `/api/product-variances/${this.state.productId}`, callback: (response, isSucess) => {
-                if (isSucess) {
-                    console.log('product variances : ',response.data);
+            url: `/api/product-variances/${event}`, callback: (response, isSuccess) => {
+                if (isSuccess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x['Variance Title'],
+                            value: x['id']
+                        };
+                    });
                     this.setState({
-                        productVarianceList: response.data,
+                        productVarianceList: options,
                     });
                 } else {
                     this.setState({
@@ -197,7 +203,7 @@ export class CreateInventory extends Component {
                     })
                 }
             }
-        })
+        });
     }
 
     handleChangeVariance = (event) => {
@@ -222,7 +228,9 @@ export class CreateInventory extends Component {
             productVarianceId,
             productVarianceList,
             method,
-            url
+            url,
+            shop_type_id,
+            shopTypeList
         } = this.state;
         return (
             <App>
@@ -246,28 +254,39 @@ export class CreateInventory extends Component {
                                             }}
                                         >
                                             <AvGroup>
+                                                <Label for="type_id">Select Shop Type</Label>
+                                                {inventoryId === 0 &&
+                                                <AvSelect onChange={this.handleChangeShopType} name="type_id"
+                                                          options={shopTypeList} required/>}
+                                                {inventoryId > 0 &&
+                                                <AvSelect onChange={this.handleChangeShopType} name="type_id"
+                                                          value={shop_type_id}
+                                                          options={shopTypeList} required/>}
+                                            </AvGroup>
+                                            <AvGroup>
                                                 <Label for="shop_id">Select Shops</Label>
                                                 {inventoryId === 0 &&
-                                                <AvSelect  name="shop_id" options={shops} required/>}
+                                                <AvSelect onChange={this.handleChangeShops} name="shop_id"
+                                                          options={shops} required/>}
                                                 {inventoryId > 0 &&
-                                                <AvSelect  onChange={this.handleChangeShops} name="shop_id"
+                                                <AvSelect onChange={this.handleChangeShops} name="shop_id"
                                                           value={shopId}
                                                           options={shops} required/>}
                                             </AvGroup>
-                                            {/* @todo category depend on shop type*/}
                                             <AvGroup>
                                                 <Label for="category_id">Select Category</Label>
                                                 {inventoryId === 0 &&
-                                                <AvSelect name="category_id" options={categoryList} required/>}
+                                                <AvSelect onChange={this.handleChangeCategory} name="category_id"
+                                                          options={categoryList} required/>}
                                                 {inventoryId > 0 &&
                                                 <AvSelect onChange={this.handleChangeCategory} value={categoryIds}
                                                           name="category_id" options={categoryList} required/>}
                                             </AvGroup>
-                                            {/* @todo product depend on categories*/}
                                             <AvGroup>
-                                                <Label for="product_ids">Select Product</Label>
+                                                <Label for="product_id">Select Product</Label>
                                                 {inventoryId === 0 &&
-                                                <AvSelect name="product_id" options={productList} required/>}
+                                                <AvSelect onChange={this.handleChangeProduct} name="product_id"
+                                                          options={productList} required/>}
                                                 {inventoryId > 0 &&
                                                 <AvSelect onChange={this.handleChangeProduct} value={productId}
                                                           name="product_id" options={productList} required/>}

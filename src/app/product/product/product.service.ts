@@ -50,7 +50,7 @@ export class ProductService {
             method: "GET",
             path: `/api/v1/product/category/${categoryId}`,
         });
-        const products = productList.map((product: any, index: any) => ({
+        const products = (productList || []).map((product: any, index: any) => ({
             id: product.id,
             'Name': product.name,
             'status': product.status
