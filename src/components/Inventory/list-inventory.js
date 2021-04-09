@@ -5,9 +5,10 @@ import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable';
 import Modal from 'react-responsive-modal';
 import Forms from "../form/forms";
-import {Button} from "reactstrap";
+import {Button, Label} from "reactstrap";
 import {Alert} from "react-bootstrap";
 import FetchData from "../common/get-data";
+import {AvField, AvGroup, AvInput} from "availity-reactstrap-validation";
 
 export default class ListInventory extends Component {
     constructor(props) {
@@ -15,8 +16,12 @@ export default class ListInventory extends Component {
         this.state = {
             inventoryList: [],
             inventoryId: '',
+            inventoryPrice:0,
+            inventoryStockCount:0,
+            inventoryShopIds:[],
             open: false,
-            openStatus:false,
+            openStatus: false,
+            openEdit: false,
             error: false,
             errorMessage: null,
         };
@@ -40,17 +45,22 @@ export default class ListInventory extends Component {
     }
 
     onOpenStatusModal = () => {
-        this.setState({ openStatus: true });
+        this.setState({openStatus: true});
+    };
+
+    onOpenEditModal = () => {
+        this.setState({openEdit: true});
     };
 
     onCloseModal = () => {
-        this.setState({ open: false, openStatus: false });
+        this.setState({open: false, openStatus: false, openEdit: false});
     };
+
     render() {
-        let {openStatus, inventoryId } = this.state;
+        let {openStatus, openEdit, inventoryId, inventoryPrice, inventoryStockCount} = this.state;
         return (
             <App>
-                <Breadcrumb title="Inventory List" parent="Users" />
+                <Breadcrumb title="Inventory List" parent="Users"/>
                 <div className="container-fluid">
                     <div className="card">
                         <div className="card-header">
@@ -76,14 +86,46 @@ export default class ListInventory extends Component {
                                             },
                                         }}
                                     >
-                                        <Alert variant='warning'>Are you sure to update status?  </Alert>
+                                        <Alert variant='warning'>Are you sure to update status? </Alert>
                                         <Button className="btn btn-xs btn-warning float-right">Update</Button>
                                         <br/>
                                     </Forms>
                                 </div>
                             </Modal>
 
-                            <div id="batchDelete" className="inventory-table inventory-list order-table coupon-list-delete">
+                            <Modal open={openEdit} onClose={this.onCloseModal} center>
+                                <div className="modal-header bg-success">
+                                    <h5 className="modal-title f-w-600" id="exampleModalLabel2">Update</h5>
+                                </div>
+                                <div className="modal-body">
+                                    <Forms
+                                        options={{
+                                            method: 'PUT',
+                                            url: `/api/inventories/update/${inventoryId}`,
+                                            onSuccess: (response) => {
+                                                window.location.href = '/inventories/list';
+                                            },
+                                        }}
+                                    >
+                                        <AvGroup>
+                                            <Label for="name">Price</Label>
+                                            <AvField className="form-control" name="price"
+                                                     value={inventoryPrice}
+                                                     placeholder="Stock Price" type="text" required/>
+                                        </AvGroup>
+
+                                        <AvInput type="textarea" name="stock_count"
+                                                 value={inventoryStockCount}
+                                                 placeholder="Stock Count"/>
+
+                                        <Button className="btn btn-sm btn-success float-right mt-2 mb-2">Update</Button>
+                                        <br/>
+                                    </Forms>
+                                </div>
+                            </Modal>
+
+                            <div id="batchDelete"
+                                 className="inventory-table inventory-list order-table coupon-list-delete">
                                 <Datatable
                                     url="/api/inventories/"
                                     pageSize={10}
@@ -96,17 +138,22 @@ export default class ListInventory extends Component {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
-                                                    <span onClick={() => {
-                                                    window.location.href = `/inventories/create/${row.original.id}`;
-                                                    }} title="Edit Inventory">
-                                                        <i className="fa fa-pencil" style={{
+                                                    {row.original.is_active === 0 && <span onClick={() => {
+                                                        console.log('row original data : ', row.original)
+                                                        this.setState({
+                                                            inventoryId: row.original.id,
+                                                            inventoryPrice: row.original['Stock Price'],
+                                                            inventoryStockCount: row.original['Stock Unit'],
+                                                        })
+                                                        this.onOpenEditModal();
+                                                    }} title="Edit">
+                                                        <i className="fa fa-edit" style={{
                                                             width: 35,
                                                             fontSize: 20,
                                                             padding: 11,
                                                             color: '#e4566e'
-                                                        }}
-                                                        />
-                                                    </span>
+                                                        }}></i>
+                                                    </span>}
 
                                                     <span onClick={() => {
                                                         this.setState({
@@ -114,7 +161,12 @@ export default class ListInventory extends Component {
                                                         })
                                                         this.onOpenStatusModal();
                                                     }} title="Change Status">
-                                                        <i className="fa fa-unlock-alt" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}></i>
+                                                        <i className="fa fa-unlock-alt" style={{
+                                                            width: 35,
+                                                            fontSize: 20,
+                                                            padding: 11,
+                                                            color: '#e4566e'
+                                                        }}></i>
                                                     </span>
                                                 </div>
                                             ),
@@ -125,7 +177,7 @@ export default class ListInventory extends Component {
                                             sortable: false
                                         },
                                     ]}
-                                    excludeColumns={['id']}
+                                    excludeColumns={['id', 'is_active']}
                                 />
                             </div>
                         </div>

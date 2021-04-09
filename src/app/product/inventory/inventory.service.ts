@@ -42,13 +42,14 @@ export class InventoryService {
             'Stock Unit': inventory.stock_count,
             'Stock Price': inventory.price,
             'Stock Date': inventory.stock_date,
-            'Status': inventory.status ? 'Active' : 'Draft'
+            'Status': inventory.status ? 'Active' : 'Draft',
+            'is_active': inventory.status
         }));
         return this.responseService.response(inventories);
     }
 
     async changeStatus(id: number) {
-        const data = await this.gatewayService.execute("inventory", {
+        const data = await this.gatewayService.execute(MicroService.Product, {
             method: "PUT",
             path: `/api/v1/inventory/${id}/status`,
         });
