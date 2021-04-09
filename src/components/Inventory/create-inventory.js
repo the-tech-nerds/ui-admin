@@ -7,22 +7,31 @@ import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
 import {Button, Label} from "reactstrap";
-import {ShopTypes} from "@the-tech-nerds/common-services";
+import InventoryCart from "./inventory-cart";
 
 export class CreateInventory extends Component {
     constructor(props) {
         super(props)
         this.state = {
             inventory: {},
+            inventoryList: [],
+            inventoryListSubmittable: [],
             categoryList: [],
             categoryId: 0,
             shops: [],
-            shopId: [],
+            shopIds: [],
             productList: [],
             productId: 0,
             productVarianceId: 0,
             productVarianceList: [],
-            shopTypeList: ShopTypes,
+            shopTypeList: [
+                {
+                    label: 'Grocery',
+                    value: 1,
+                },
+                {label: 'Restaurant', value: 2},
+            ],
+            shop_type_id: 0,
             inventoryId: 0,
             method: 'POST',
             url: '/api/inventories/',
@@ -31,7 +40,6 @@ export class CreateInventory extends Component {
     }
 
     async componentDidMount() {
-        console.log('Hello shop type',ShopTypes);
         const id = Number(this.props.match.params.id);
         if (id > 0) {
             this.setState({
@@ -84,10 +92,55 @@ export class CreateInventory extends Component {
         }
 
         // fetch shops
+    }
+
+    deleteSingleInventoryHandle = (index) => {
+        // this.state.inventoryList.splice(index, 1);
+    }
+    editSingleInventoryHandle = (index) => {
+        // this.setState((preState) => ({
+        //     ...preState,
+        //     inventory: this.state.inventoryList[index],
+        // }));
+    }
+    saveInventoryCartHandle = (event) => {
+        event.preventDefault();
+        const type_id = document.getElementsByName('type_id')[0].value;
+        const shop_ids = [];
+        document.getElementsByName('shop_ids')?.forEach(el => shop_ids.push(el.value));
+        const category_id = document.getElementsByName('category_id')[0].value;
+        const product_id = document.getElementsByName('product_id')[0].value;
+        const product_variance_id = document.getElementsByName('product_variance_id')[0].value;
+        const inventoryList = [...this.state.inventoryList];
+        const inventoryListSubmittable = [...this.state.inventoryListSubmittable];
+        inventoryListSubmittable.push({
+            type_id: type_id,
+            shop_ids: shop_ids,
+            category_id: category_id,
+            product_id: product_id,
+            product_variance_id: product_variance_id,
+        });
+        inventoryList.push({
+            shop_type: this.state.shopTypeList?.filter(d => d.value === type_id)[0]?.value,
+            shops: this.state.shops?.filter(d => d.value === type_id)?.reduce((shops, shop) => (shops + shop.label + ', '), '').slice(0, -2),
+            category: this.state.categoryList?.filter(d => d.value === type_id)[0]?.value,
+            product: this.state.productList?.filter(d => d.value === type_id)[0]?.value,
+            product_variance: this.state.productVarianceList?.filter(d => d.value === type_id)[0]?.value,
+        });
+        console.log(inventoryListSubmittable, inventoryList);
+        this.setState((preState) => ({
+            ...preState,
+            inventoryListSubmittable: inventoryListSubmittable,
+            inventoryList: inventoryList
+
+        }));
+        console.log(this.state);
+    }
+    handleChangeShopType = (event) => {
         FetchData({
             url: '/api/shops/list/all', callback: (response, isSuccess) => {
                 if (isSuccess) {
-                    const options = response.data.map(x => {
+                    const options = response.data.filter(shop => event === shop.type_id).map(x => {
                         return {
                             label: x.Name,
                             value: x.id
@@ -101,7 +154,7 @@ export class CreateInventory extends Component {
                     this.setState((state) => {
                         return {
                             ...state,
-                            shopId: ids
+                            shopIds: ids
                         }
                     });
                 } else {
@@ -112,13 +165,13 @@ export class CreateInventory extends Component {
                 }
             }
         })
-    }
 
+    }
     handleChangeShops = (event) => {
         this.setState((state) => {
             return {
                 ...state,
-                shopId: event
+                shopIds: event
             }
         });
 
@@ -206,7 +259,8 @@ export class CreateInventory extends Component {
         });
     }
 
-    handleChangeVariance = (event) => {
+
+    handleChangeProductVariance = (event) => {
         this.setState((state) => {
             return {
                 ...state,
@@ -219,7 +273,7 @@ export class CreateInventory extends Component {
         const {
             inventory,
             shops,
-            shopId,
+            shopIds,
             categoryList,
             categoryIds,
             inventoryId,
@@ -253,49 +307,49 @@ export class CreateInventory extends Component {
                                                 }
                                             }}
                                         >
-                                            <AvGroup>
+                                            {inventoryId === 0 && <AvGroup>
                                                 <Label for="type_id">Select Shop Type</Label>
                                                 {inventoryId === 0 &&
                                                 <AvSelect onChange={this.handleChangeShopType} name="type_id"
                                                           options={shopTypeList} required/>}
-                                                {inventoryId > 0 &&
-                                                <AvSelect onChange={this.handleChangeShopType} name="type_id"
-                                                          value={shop_type_id}
-                                                          options={shopTypeList} required/>}
-                                            </AvGroup>
-                                            <AvGroup>
-                                                <Label for="shop_id">Select Shops</Label>
+                                                {/*{inventoryId > 0 &&*/}
+                                                {/*<AvSelect onChange={this.handleChangeShopType} name="type_id"*/}
+                                                {/*          value={shop_type_id}*/}
+                                                {/*          options={shopTypeList} required/>}*/}
+                                            </AvGroup>}
+                                            {inventoryId === 0 && <AvGroup>
+                                                <Label for="shop_ids">Select Shops</Label>
                                                 {inventoryId === 0 &&
-                                                <AvSelect onChange={this.handleChangeShops} name="shop_id"
+                                                <AvSelect isMulti onChange={this.handleChangeShops} name="shop_ids"
                                                           options={shops} required/>}
-                                                {inventoryId > 0 &&
-                                                <AvSelect onChange={this.handleChangeShops} name="shop_id"
-                                                          value={shopId}
-                                                          options={shops} required/>}
-                                            </AvGroup>
-                                            <AvGroup>
+                                                {/*{inventoryId > 0 &&*/}
+                                                {/*<AvSelect isMulti onChange={this.handleChangeShops} name="shop_ids"*/}
+                                                {/*          value={shopIds}*/}
+                                                {/*          options={shops} required/>}*/}
+                                            </AvGroup>}
+                                            {inventoryId === 0 && <AvGroup>
                                                 <Label for="category_id">Select Category</Label>
                                                 {inventoryId === 0 &&
                                                 <AvSelect onChange={this.handleChangeCategory} name="category_id"
                                                           options={categoryList} required/>}
-                                                {inventoryId > 0 &&
-                                                <AvSelect onChange={this.handleChangeCategory} value={categoryIds}
-                                                          name="category_id" options={categoryList} required/>}
-                                            </AvGroup>
-                                            <AvGroup>
+                                                {/*{inventoryId > 0 &&*/}
+                                                {/*<AvSelect onChange={this.handleChangeCategory} value={categoryIds}*/}
+                                                {/*          name="category_id" options={categoryList} required/>}*/}
+                                            </AvGroup>}
+                                            {inventoryId === 0 && <AvGroup>
                                                 <Label for="product_id">Select Product</Label>
                                                 {inventoryId === 0 &&
                                                 <AvSelect onChange={this.handleChangeProduct} name="product_id"
                                                           options={productList} required/>}
-                                                {inventoryId > 0 &&
-                                                <AvSelect onChange={this.handleChangeProduct} value={productId}
-                                                          name="product_id" options={productList} required/>}
-                                            </AvGroup>
-                                            {/* @todo product variances depend on product*/}
+                                                {/*    {inventoryId > 0 &&*/}
+                                                {/*    <AvSelect onChange={this.handleChangeProduct} value={productId}*/}
+                                                {/*              name="product_id" options={productList} required/>}*/}
+                                            </AvGroup>}
                                             <AvGroup>
                                                 <Label for="product_variance_id">Select Product Variance</Label>
                                                 {inventoryId === 0 &&
-                                                <AvSelect name="product_variance_id" options={productVarianceList}
+                                                <AvSelect value={productVarianceId} readOnly={true}
+                                                          name="product_variance_id" options={productVarianceList}
                                                           required/>}
                                                 {inventoryId > 0 &&
                                                 <AvSelect onChange={this.handleChangeProductVariance}
@@ -305,18 +359,22 @@ export class CreateInventory extends Component {
 
                                             <AvGroup>
                                                 <Label for="name">Price</Label>
-                                                <AvField className="form-control" name="price" value={inventory.price}
+                                                <AvField className="form-control" name="price"
+                                                         value={inventory.price}
                                                          placeholder="Stock Price" type="text" required/>
                                             </AvGroup>
 
-                                            <AvInput type="textarea" name="stock_count" value={inventory.stock_count}
+                                            <AvInput type="textarea" name="stock_count"
+                                                     value={inventory.stock_count}
                                                      placeholder="Stock Count"/>
 
                                             {inventoryId == 0 && <Button name="status" value="1" color="primary"
                                                                          className="mt-3">Save</Button>}
                                             {inventoryId == 0 &&
-                                            <Button name="status" value="0" color="warning" className="mt-3">Save as
-                                                Draft</Button>}
+                                            <Button onClick={this.saveInventoryCartHandle} name="status" value="0"
+                                                    color="warning" className="mt-3">Save as
+                                                Draft</Button>
+                                            }
                                             {inventoryId > 0 &&
                                             <Button color="primary" className="mt-3">Update</Button>}
                                         </Forms>
@@ -326,6 +384,9 @@ export class CreateInventory extends Component {
                         </div>
                     </div>
                 </div>
+                <InventoryCart inventoryList={this.state.inventoryList}
+                               deleteInventory={this.deleteSingleInventoryHandle}
+                               editInventory={this.editSingleInventoryHandle}/>
             </App>
         )
     }
