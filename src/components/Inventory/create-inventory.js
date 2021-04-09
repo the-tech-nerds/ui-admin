@@ -14,8 +14,8 @@ export class CreateInventory extends Component {
         super(props)
         this.state = {
             inventory: {},
-            inventoryList: [],
             inventoryListSubmittable: [],
+            inventoryList: [],
             categoryList: [],
             categoryId: 0,
             shops: [],
@@ -111,29 +111,25 @@ export class CreateInventory extends Component {
         const category_id = document.getElementsByName('category_id')[0].value;
         const product_id = document.getElementsByName('product_id')[0].value;
         const product_variance_id = document.getElementsByName('product_variance_id')[0].value;
-        const inventoryList = [...this.state.inventoryList];
-        const inventoryListSubmittable = [...this.state.inventoryListSubmittable];
-        inventoryListSubmittable.push({
+        const inventoryList = [...this.state.inventoryList, {
+            shop_type: [...this.state.shopTypeList]?.filter(d => d.value == type_id)[0]?.label,
+            shops: [...this.state.shops]?.filter(d => shop_ids.includes(d.value + ''))?.reduce((shops, shop) => (shops + shop.label + ', '), '').slice(0, -2),
+            category: [...this.state.categoryList]?.filter(d => d.value == category_id)[0]?.label,
+            product: [...this.state.productList]?.filter(d => d.value == product_id)[0]?.label,
+            product_variance: [...this.state.productVarianceList]?.filter(d => d.value == product_variance_id)[0]?.label,
+        }];
+        const inventoryListSubmittable = [...this.state.inventoryListSubmittable, {
             type_id: type_id,
             shop_ids: shop_ids,
             category_id: category_id,
             product_id: product_id,
             product_variance_id: product_variance_id,
-        });
-        inventoryList.push({
-            shop_type: this.state.shopTypeList?.filter(d => d.value === type_id)[0]?.value,
-            shops: this.state.shops?.filter(d => d.value === type_id)?.reduce((shops, shop) => (shops + shop.label + ', '), '').slice(0, -2),
-            category: this.state.categoryList?.filter(d => d.value === type_id)[0]?.value,
-            product: this.state.productList?.filter(d => d.value === type_id)[0]?.value,
-            product_variance: this.state.productVarianceList?.filter(d => d.value === type_id)[0]?.value,
-        });
+        }];
         console.log(inventoryListSubmittable, inventoryList);
-        this.setState((preState) => ({
-            ...preState,
+        this.setState({
             inventoryListSubmittable: inventoryListSubmittable,
             inventoryList: inventoryList
-
-        }));
+        });
         console.log(this.state);
     }
     handleChangeShopType = (event) => {
@@ -286,6 +282,7 @@ export class CreateInventory extends Component {
             shop_type_id,
             shopTypeList
         } = this.state;
+        console.log("rana");
         return (
             <App>
                 <Breadcrumb title={inventoryId > 0 ? 'update' : 'create'} parent="inventory"/>

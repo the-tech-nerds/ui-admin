@@ -5,7 +5,6 @@ import Datatable from "../common/datatable";
 
 export default class InventoryCart extends Component {
     constructor(props) {
-        console.log('table', props.inventoryList);
         super(props);
         this.state = {
             inventoryList: props.inventoryList,
@@ -30,6 +29,7 @@ export default class InventoryCart extends Component {
     };
 
     render() {
+        console.log(this.props.inventoryList);
         return (
             <div className="container-fluid">
                 <div className="card">
@@ -40,7 +40,7 @@ export default class InventoryCart extends Component {
                         <div id="batchDelete"
                              className="inventory-table inventory-list order-table coupon-list-delete">
                             <Datatable
-                                myData={this.state.inventoryList}
+                                myData={[...this.props.inventoryList]}
                                 pageSize={10}
                                 pagination={true}
                                 class="-striped -highlight"
@@ -85,7 +85,6 @@ export default class InventoryCart extends Component {
                                         sortable: false
                                     },
                                 ]}
-                                excludeColumns={['id']}
                             />
                         </div>
                     </div>
