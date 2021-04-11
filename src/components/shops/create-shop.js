@@ -82,6 +82,16 @@ export class CreateShop extends Component {
             }
         })
         const id = Number(this.props.match.params.id);
+        if (id == 0) {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    shop: {
+                        is_active: true
+                    }
+                }
+            });
+        }
         if (id > 0) {
 
             this.setState({
@@ -218,8 +228,8 @@ export class CreateShop extends Component {
                                             <div className="col-6">
                                                 <label></label>
                                                 {shop && <AvGroup check>
-                                                        <AvInput type="checkbox" className="checkbox_animated mt-2" name="is_active" defaultChecked={shop?.is_active} />Is Active!
-                                        
+                                                    <AvInput type="checkbox" className="checkbox_animated mt-2" name="is_active" defaultChecked={shop?.is_active} />Is Active!
+
                                                 </AvGroup>}
 
                                             </div>

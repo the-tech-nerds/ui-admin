@@ -13,7 +13,7 @@ export class CreateBrand extends Component {
         this.state = {
             brand: {
                 name: '',
-                description:'',
+                description: '',
                 supplier_id: 0
             },
             contentInfo: {
@@ -35,46 +35,48 @@ export class CreateBrand extends Component {
         }
         this.getAllSupplier();
     }
-    onChangeSelectedOption  = (e) => {
+    onChangeSelectedOption = (e) => {
         this.setState({
-            brand: { description:  this.state.brand.description,
+            brand: {
+                description: this.state.brand.description,
                 name: this.state.brand.name,
-                supplier_id: e.value}
+                supplier_id: e.value
+            }
         });
     };
     handleInputChange = (newValue) => {
         const inputValue = newValue.replace(/\W/g, '');
-        this.setState({ inputValue : inputValue });
+        this.setState({ inputValue: inputValue });
         return inputValue;
-      };
+    };
     changeInputHandler = (event) => {
-        if(event.target.name =="name") {
+        if (event.target.name == "name") {
             this.setState({
                 brand: {
-                    name:  event.target.value,
+                    name: event.target.value,
                     description: this.state.brand.description,
                     supplier_id: this.state.brand.supplier_id
                 }
             });
         }
-        if(event.target.name =="description") {
+        if (event.target.name == "description") {
             this.setState({
                 brand: {
-                    description:  event.target.value,
-                    name:   this.state.brand.name,
+                    description: event.target.value,
+                    name: this.state.brand.name,
                     supplier_id: this.state.brand.supplier_id
                 }
             });
         }
-      }
+    }
 
-     filterOptions = (inputValue) => {
+    filterOptions = (inputValue) => {
         return this.state.suppliers.filter(i =>
             i.label.toLowerCase().includes(inputValue.toLowerCase())
         );
     };
-    
-     loadOptions = (inputValue, callback) => {
+
+    loadOptions = (inputValue, callback) => {
         setTimeout(() => {
             callback(this.filterOptions(inputValue));
         }, 1000);
@@ -90,9 +92,11 @@ export class CreateBrand extends Component {
             redirect: 'follow',
         }).then(async res => {
             const response = await res.json();
-            const options = response.data.map(x=> {
-                 return {   label : x.Name,
-                    value: x.id};
+            const options = response.data.map(x => {
+                return {
+                    label: x.Name,
+                    value: x.id
+                };
             });
             this.setState({
                 suppliers: options
@@ -104,7 +108,7 @@ export class CreateBrand extends Component {
         const id = Number(this.props.match.params.id);
         let url = '/api/brands/';
         let method = 'POST'
-        if(id> 0){
+        if (id > 0) {
             url = `/api/brands/update/${id}`;
             method = 'PUT';
         }
@@ -119,7 +123,7 @@ export class CreateBrand extends Component {
             redirect: 'follow',
         }).then(async res => {
             const response = await res.json();
-            if(response.code ==200){
+            if (response.code == 200) {
                 let items = []
                 await this.state.uploadIds.forEach(x => {
                     items.push({
@@ -134,18 +138,18 @@ export class CreateBrand extends Component {
                     window.location.href = `/brands/list/`;
                     return;
                 }
-                await updateFileStorage(items).then(response =>{
+                await updateFileStorage(items).then(response => {
                     window.location.href = `/brands/list/`;
-                } );
-                
+                });
+
             }
-           
+
         })
             .catch(error => {
-               
+
             })
-      }
-      handleUploadResponse = (response) => {
+    }
+    handleUploadResponse = (response) => {
         if (response.status == DropzoneStatus.UPLOAD_SUCCESS) {
             let ids = this.state.uploadIds;
             let imgs = this.state.images;
@@ -158,13 +162,13 @@ export class CreateBrand extends Component {
         } else if (response.status == DropzoneStatus.REMOVE_UPLOADED_ITEM) {
             const urls = this.state.images.filter(i => i !== response.data.url);
             const ids = this.state.uploadIds.filter(u => u !== response.data.id)
-            this.setState((state) =>{
+            this.setState((state) => {
                 return {
                     ...state,
                     uploadIds: ids,
                     images: urls
                 }
-               
+
             });
         }
         else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
@@ -199,7 +203,9 @@ export class CreateBrand extends Component {
                     this.setState({ loading: false });
                     const response = await res.json();
                     if (response.code === 200) {
-                        var value = this.state.suppliers.filter(x=>x.value == response.data.brand.supplier_id)[0].label;
+                        if (response.data.brand?.supplier_id) {
+                            var value = this.state.suppliers.filter(x => x.value == response.data.brand?.supplier_id)[0].label;
+                        }
                         this.setState((state) => {
                             return {
                                 ...state,
@@ -234,8 +240,8 @@ export class CreateBrand extends Component {
 
     }
     render() {
-        const { brand={}, brand_id, inputValue, contentInfo, files, uploadIds } = this.state;
-   
+        const { brand = {}, brand_id, inputValue, contentInfo, files, uploadIds } = this.state;
+
         return (
             <App>
 
@@ -248,7 +254,7 @@ export class CreateBrand extends Component {
                                     <h5>{brand_id > 0 ? 'Update brand' : 'Add brand'}</h5>
                                 </div>
                                 <div className="card-body">
-                                <div className="card ">
+                                    <div className="card ">
                                         <div className="card-header">
                                             <h5>Media</h5>
                                         </div>
@@ -261,21 +267,33 @@ export class CreateBrand extends Component {
                                             }} content={contentInfo} />
                                         </div>
                                     </div>
-                                    <form  onSubmit={this.mySubmitHandler}>
-                                        <label>Name</label>
-                                        <input className="form-control"  name="name" onChange={this.changeInputHandler} value={brand?.name} placeholder="name"  type="text" required />
-                                       <label className="mt-2">Description</label>
-                                        <input className="form-control" name="description" onChange={this.changeInputHandler} placeholder="description..."  value={brand?.description}  type="text" required />
-                                        <label className="mt-2 mb-2">Suppliers</label>
-                                        <AsyncSelect
-                                            loadOptions={this.loadOptions}
-                                            defaultOptions
-                                            inputValue={inputValue}
-                                            name="supplier_id"
-                                            onChange={this.onChangeSelectedOption }
-                                            onInputChange={this.handleInputChange}
-                                        />
-                                        
+                                    <form onSubmit={this.mySubmitHandler}>
+                                        <div className="row">
+                                            <div className="col-6">
+                                                <label>Name</label>
+                                                <input className="form-control" name="name" onChange={this.changeInputHandler} value={brand?.name} placeholder="name" type="text" required />
+                                            </div>
+                                            <div className="col-6">
+                                                <label className="mt-2 mb-2">Suppliers</label>
+                                                <AsyncSelect
+                                                    loadOptions={this.loadOptions}
+                                                    defaultOptions
+                                                    inputValue={inputValue}
+                                                    name="supplier_id"
+                                                    onChange={this.onChangeSelectedOption}
+                                                    onInputChange={this.handleInputChange}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <label className="mt-2">Description</label>
+                                                <textarea className="form-control" name="description" onChange={this.changeInputHandler} placeholder="description..." value={brand?.description} >
+                                                </textarea>
+                                            </div>
+                                        </div>
+
+
                                         {brand_id == 0 && <Button className="mt-2" color="primary">Create</Button>}
                                         {brand_id > 0 && <Button className="mt-2" color="primary">Update</Button>}
                                     </form>
