@@ -19,11 +19,12 @@ export class ShopService {
             body: shop,
         });
     }
-    update(id: number,shop: any) {
+
+    update(id: number, shop: any) {
         return this.gatewayService.execute(MicroService.Product, {
             method: "PUT",
             path: `/api/v1/shop/${id}`,
-            body: { ...shop},
+            body: {...shop},
         });
     }
 
@@ -38,11 +39,11 @@ export class ShopService {
             'SL No': ++index,
             'Name': shop.name,
             'Description': shop.description,
-            'Address': shop.address
+            'Address': shop.address,
+            'type_id': shop.type_id
         }));
         return this.responseService.response(shops);
     }
-
 
 
     async get(shopId: number) {

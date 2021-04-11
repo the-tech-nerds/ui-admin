@@ -67,6 +67,8 @@ import ListProduct from "./components/products/list-product";
 import CreateProduct from "./components/products/create-product";
 import ListProductVariance from "./components/product-variance/list-product-variance";
 import CreateProductVariance from "./components/product-variance/create-product-variance";
+import ListInventory from "./components/Inventory/list-inventory";
+import CreateInventory from "./components/Inventory/create-inventory";
 
 class Root extends Component {
     permissions = [];
@@ -266,6 +268,22 @@ class Root extends Component {
                         <Route
                             path={`${process.env.PUBLIC_URL}/categories/:id/edit`}
                             component={EditCategory}
+                            exact={true}
+                        />
+                        }
+
+                        //Inventory
+                        {this.hasPermission(this.PermissionTypes.INVENTORY.GET) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/inventories/list`}
+                            component={ListInventory}
+                            exact={true}
+                        />
+                        }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/inventories/create/:id`}
+                            component={CreateInventory}
                             exact={true}
                         />
                         }

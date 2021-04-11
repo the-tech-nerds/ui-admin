@@ -35,6 +35,20 @@ export default class CategoryService {
         });
         const categories = categoryList.map((category: any, index: any) => ({
             id: category.id,
+            'Name': category.name,
+            'status': category.is_active
+        }));
+
+        return this.responseService.response(categories);
+    }
+
+    async listCategoriesByShop(shopId: number) {
+        const {data: categoryList} = await this.gatewayService.execute("product", {
+            method: "GET",
+            path: `/api/v1/category/shop/${shopId}`,
+        });
+        const categories = categoryList.map((category: any, index: any) => ({
+            id: category.id,
             'SL No': ++index,
             'Name': category.name,
             'Parent Category': this.findParent(categoryList,category.parent_id),

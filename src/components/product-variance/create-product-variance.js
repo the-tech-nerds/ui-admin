@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
-import { AvField, AvGroup, AvInput } from "availity-reactstrap-validation";
+import {AvField, AvGroup, AvInput} from "availity-reactstrap-validation";
 import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
-import { Button, Label } from "reactstrap";
+import {Button, Label} from "reactstrap";
 import MyUploader from "../common/dropzone";
-import { DropzoneStatus } from "../../constants/dropzoneStatus";
+import {DropzoneStatus} from "../../constants/dropzoneStatus";
 import updateFileStorage from "../common/file-storage";
 import CKEditors from "react-ckeditor-component";
 
@@ -28,6 +28,9 @@ export class CreateProductVariance extends Component {
             images: [],
             uploadIds: [],
             files: [],
+            shops: [],
+            shopIds: [],
+            unitId: 0,
 
             productId: Number(this.props.match.params.productId) || 0,
             productVarianceId: 0,
@@ -69,28 +72,6 @@ export class CreateProductVariance extends Component {
     async componentDidMount() {
         const id = Number(this.props.match.params.id);
 
-        // fetch units
-        FetchData({
-            url: '/api/units/list/all/', callback: (response, isSucess) => {
-                if (isSucess) {
-                    const options = response.data.map(x => {
-                        return {
-                            label: x.Name,
-                            value: x.id
-                        };
-                    });
-                    this.setState({
-                        units: options
-                    })
-                } else {
-                    this.setState({
-                        error: true,
-                        errorMessage: response.message,
-                    })
-                }
-            }
-        })
-
         if (id > 0) {
 
             this.setState({
@@ -102,7 +83,7 @@ export class CreateProductVariance extends Component {
 
             FetchData({
                 url: `/api/product-variances/single/${id}`, callback: (response, isSucess) => {
-                    this.setState({ loading: false });
+                    this.setState({loading: false});
                     if (isSucess) {
                         this.setState((state) => {
                             return {
@@ -121,6 +102,81 @@ export class CreateProductVariance extends Component {
                 }
             })
         }
+        // fetch shops
+        FetchData({
+            url: '/api/shops/list/all', callback: (response, isSuccess) => {
+                if (isSuccess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    this.setState({
+                        shops: options
+                    })
+                    const ids = this.state.shops.filter(option => this.state.productVariance.shops && this.state.productVariance.shops.find(el => option.value === el.id)).map(el => el.value)
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            shopIds: ids
+                        }
+                    });
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        })
+        // fetch units
+        FetchData({
+            url: '/api/units/list/all/', callback: (response, isSucess) => {
+                if (isSucess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    this.setState({
+                        units: options
+                    })
+
+                    const id = this.state.units.filter(option => option.value === this.state.productVariance.unit_id).map(el => el.value)[0]
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            unitId: id
+                        }
+                    });
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        })
+    }
+
+    handleChangeShops = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                shopIds: event
+            }
+        });
+    }
+
+    handleChangeUnit = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                unitId: event
+            }
+        });
     }
     onChange = (event) => {
         this.setState((state) => {
@@ -137,17 +193,20 @@ export class CreateProductVariance extends Component {
             productVarianceId,
             productId,
             units,
+            unitId,
             files,
             uploadIds,
             contentInfo,
             method,
             url,
+            shops,
+            shopIds,
             description
         } = this.state;
         return (
             <App>
 
-                <Breadcrumb title={productVarianceId > 0 ? 'update' : 'create'} parent="productVariance" />
+                <Breadcrumb title={productVarianceId > 0 ? 'update' : 'create'} parent="productVariance"/>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
@@ -167,7 +226,7 @@ export class CreateProductVariance extends Component {
                                                     onUploadSuccess: (response) => {
                                                         this.handleUploadResponse(response);
                                                     }
-                                                }} content={contentInfo} />
+                                                }} content={contentInfo}/>
                                             </div>
                                         </div>
                                     </div>
@@ -208,44 +267,56 @@ export class CreateProductVariance extends Component {
                                                     <AvGroup>
                                                         <Label for="title">Variance Title</Label>
                                                         <AvField className="form-control" name="title"
-                                                            value={productVariance.title} type="text" required />
+                                                                 value={productVariance.title} type="text" required/>
                                                     </AvGroup>
                                                 </div>
                                                 <div className="col-6">
                                                     <AvGroup>
                                                         <Label for="price">Variance Price</Label>
                                                         <AvField className="form-control" name="price"
-                                                            value={productVariance.price} type="text" required />
+                                                                 value={productVariance.price} type="text" required/>
                                                     </AvGroup>
                                                 </div>
                                             </div>
+
                                             <div className="row">
                                                 <div className="col-6">
-
                                                     <AvGroup>
                                                         <Label for="color">Variance Color</Label>
                                                         <AvField className="form-control" name="color"
-                                                            value={productVariance.color} type="text" />
+                                                                 value={productVariance.color} type="text"/>
                                                     </AvGroup>
                                                 </div>
-                                                <div className="col-3">
+
+                                                <div className="col-6">
                                                     <AvGroup>
                                                         <Label for="unit_id">Select Unit</Label>
-                                                        {productVarianceId === 0 && <AvSelect name="unit_id" options={units} />}
-                                                        {productVarianceId > 0 && <AvSelect name="unit_id"
-                                                            value={units.filter(option => option.value === productVariance.unit_id).map(el => el.value)[0]}
-                                                            options={units} />}
+                                                        {productVarianceId === 0 &&
+                                                        <AvSelect name="unit_id" options={units}/>}
+                                                        {productVarianceId > 0 &&
+                                                        <AvSelect onChange={this.handleChangeUnit} name="unit_id"
+                                                                  value={unitId}
+                                                                  options={units}/>}
                                                     </AvGroup>
-
-                                                </div>
-                                                <div className="col-3">
                                                     <AvGroup>
                                                         <Label for="unit_value">Unit Value</Label>
                                                         <AvField className="form-control" name="unit_value"
-                                                            value={productVariance.unit_value} type="text" />
+                                                                 value={productVariance.unit_value} type="text"/>
+                                                    </AvGroup>
+
+                                                    <AvGroup>
+                                                        <Label for="shop_ids">Select Shops</Label>
+                                                        {productId === 0 &&
+                                                        <AvSelect isMulti name="shop_ids" options={shops} required/>}
+                                                        {productId > 0 &&
+                                                        <AvSelect isMulti onChange={this.handleChangeShops}
+                                                                  name="shop_ids"
+                                                                  value={shopIds}
+                                                                  options={shops} required/>}
                                                     </AvGroup>
                                                 </div>
                                             </div>
+
                                             <div className="row mb-2">
                                                 <div className="col-12">
                                                     <label>Description</label>

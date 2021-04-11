@@ -1,15 +1,15 @@
-import React, { Component, Fragment } from 'react';
+import React, {Component, Fragment} from 'react';
 import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable'
 import App from "../app";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 
 export class ListShop extends Component {
     render() {
         return (
             <App>
-                <Breadcrumb title="Shop List" parent="Shops" />
+                <Breadcrumb title="Shop List" parent="Shops"/>
                 <div className="container-fluid">
                     <div className="card">
                         <div className="card-header">
@@ -54,7 +54,7 @@ export class ListShop extends Component {
                                             sortable: false
                                         },
                                     ]}
-                                    excludeColumns={['id']}
+                                    excludeColumns={['id', 'type_id']}
                                 />
                             </div>
                         </div>
