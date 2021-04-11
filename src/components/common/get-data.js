@@ -1,4 +1,4 @@
-const FetchData = ({url, method='GET', callback}) => {
+const FetchData = ({url, method = 'GET', callback, body = {}}) => {
     fetch(url, {
         method: method,
         headers: {
@@ -6,6 +6,7 @@ const FetchData = ({url, method='GET', callback}) => {
         },
         cache: 'no-cache',
         redirect: 'follow',
+        ...['POST', 'PUT', 'PATCH', 'UPDATE'].includes(method) && {body: JSON.stringify(body)},
     })
         .then(async res => {
             const response = await res.json();

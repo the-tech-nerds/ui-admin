@@ -111,26 +111,65 @@ export class CreateInventory extends Component {
         const category_id = document.getElementsByName('category_id')[0].value;
         const product_id = document.getElementsByName('product_id')[0].value;
         const product_variance_id = document.getElementsByName('product_variance_id')[0].value;
+        const price = document.getElementsByName('price')[0].value;
+        const stock_count = document.getElementsByName('stock_count')[0].value;
+        if (!type_id) {
+            alert('Shop Type is required');
+            return;
+        }
+        if (!shop_ids) {
+            alert('Shop is required');
+            return;
+        }
+        if (!category_id) {
+            alert('Product Category is required');
+            return;
+        }
+        if (!product_id) {
+            alert('Product is required');
+            return;
+        }
+        if (!product_variance_id) {
+            alert('Product Variance is required');
+            return;
+        }
+        if (!price) {
+            alert('Price is required');
+            return;
+        }
+        document.getElementsByName('price')[0].value = '';
+        document.getElementsByName('stock_count')[0].value = '';
+
         const inventoryList = [...this.state.inventoryList, {
             shop_type: [...this.state.shopTypeList]?.filter(d => d.value == type_id)[0]?.label,
             shops: [...this.state.shops]?.filter(d => shop_ids.includes(d.value + ''))?.reduce((shops, shop) => (shops + shop.label + ', '), '').slice(0, -2),
             category: [...this.state.categoryList]?.filter(d => d.value == category_id)[0]?.label,
             product: [...this.state.productList]?.filter(d => d.value == product_id)[0]?.label,
             product_variance: [...this.state.productVarianceList]?.filter(d => d.value == product_variance_id)[0]?.label,
+            price,
+            stock_count
         }];
         const inventoryListSubmittable = [...this.state.inventoryListSubmittable, {
-            type_id: type_id,
-            shop_ids: shop_ids,
-            category_id: category_id,
-            product_id: product_id,
-            product_variance_id: product_variance_id,
+            type_id,
+            shop_ids,
+            category_id,
+            product_id,
+            product_variance_id,
+            price,
+            stock_count,
         }];
-        console.log(inventoryListSubmittable, inventoryList);
         this.setState({
             inventoryListSubmittable: inventoryListSubmittable,
-            inventoryList: inventoryList
+            inventoryList: inventoryList,
+            shops: [],
+            categoryList: [],
+            productList: [],
+            productVarianceList: [],
+            shopIds: [],
+            productId: '',
+            productVarianceId: '',
+            categoryId: '',
         });
-        console.log(this.state);
     }
     handleChangeShopType = (event) => {
         FetchData({
@@ -264,6 +303,20 @@ export class CreateInventory extends Component {
             }
         });
     }
+    saveInventoryHandle = () => {
+        FetchData({
+            url: this.state.url,
+            method: 'POST',
+            body: this.state.inventoryListSubmittable,
+            callback: (response, isSuccess) => {
+                if (isSuccess) {
+                    window.location.href = '/inventories/list';
+                } else {
+
+                }
+            }
+        });
+    }
 
     render() {
         const {
@@ -273,7 +326,7 @@ export class CreateInventory extends Component {
             categoryList,
             categoryIds,
             inventoryId,
-            productId,
+            produtId,
             productList,
             productVarianceId,
             productVarianceList,
@@ -345,13 +398,13 @@ export class CreateInventory extends Component {
                                             <AvGroup>
                                                 <Label for="product_variance_id">Select Product Variance</Label>
                                                 {inventoryId === 0 &&
-                                                <AvSelect value={productVarianceId} readOnly={true}
+                                                <AvSelect value={productVarianceId}
                                                           name="product_variance_id" options={productVarianceList}
                                                           required/>}
-                                                {inventoryId > 0 &&
-                                                <AvSelect onChange={this.handleChangeProductVariance}
-                                                          value={productVarianceId} name="product_variance_id"
-                                                          options={productVarianceList} required/>}
+                                                {/*{inventoryId > 0 &&*/}
+                                                {/*<AvSelect onChange={this.handleChangeProductVariance}*/}
+                                                {/*          value={productVarianceId} name="product_variance_id"*/}
+                                                {/*          options={productVarianceList} required/>}*/}
                                             </AvGroup>
 
                                             <AvGroup>
@@ -361,12 +414,10 @@ export class CreateInventory extends Component {
                                                          placeholder="Stock Price" type="text" required/>
                                             </AvGroup>
 
-                                            <AvInput type="textarea" name="stock_count"
+                                            <AvField type="text" className="form-control" name="stock_count"
                                                      value={inventory.stock_count}
                                                      placeholder="Stock Count"/>
 
-                                            {inventoryId == 0 && <Button name="status" value="1" color="primary"
-                                                                         className="mt-3">Save</Button>}
                                             {inventoryId == 0 &&
                                             <Button onClick={this.saveInventoryCartHandle} name="status" value="0"
                                                     color="warning" className="mt-3">Save as
@@ -383,6 +434,7 @@ export class CreateInventory extends Component {
                 </div>
                 <InventoryCart inventoryList={this.state.inventoryList}
                                deleteInventory={this.deleteSingleInventoryHandle}
+                               saveInventory={this.saveInventoryHandle}
                                editInventory={this.editSingleInventoryHandle}/>
             </App>
         )

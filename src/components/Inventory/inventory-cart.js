@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import App from "../app";
 import Breadcrumb from '../common/breadcrumb';
 import Datatable from "../common/datatable";
+import {Table} from "react-bootstrap";
+import {Button} from "reactstrap";
+import Forms from "../form/forms";
 
 export default class InventoryCart extends Component {
     constructor(props) {
@@ -29,63 +32,45 @@ export default class InventoryCart extends Component {
     };
 
     render() {
-        console.log(this.props.inventoryList);
         return (
             <div className="container-fluid">
                 <div className="card">
                     <div className="card-header">
-                        <h5>Temporary Inventory List</h5>
+                        <h5 className='d-inline-block'>Temporary Inventory List</h5>
+                        <Button name="status" value="1" color="primary"
+                                className="mt-3 pull-right" onClick={this.props.saveInventory}>Save</Button>
                     </div>
                     <div className="card-body">
                         <div id="batchDelete"
                              className="inventory-table inventory-list order-table coupon-list-delete">
-                            <Datatable
-                                myData={[...this.props.inventoryList]}
-                                pageSize={10}
-                                pagination={true}
-                                class="-striped -highlight"
-                                extraColumns={[
-                                    {
-                                        Header: <b>Action</b>,
-                                        id: 'view',
-                                        accessor: str => "view",
-                                        Cell: (row) => (
-                                            <div>
-                                                <span onClick={() => {
-                                                    window.location.href = `/inventories/create/${row.original.id}`;
-                                                }} title="Edit Inventory">
-                                                    <i className="fa fa-pencil" style={{
-                                                        width: 35,
-                                                        fontSize: 20,
-                                                        padding: 11,
-                                                        color: '#e4566e'
-                                                    }}
-                                                    />
-                                                </span>
-
-                                                <span onClick={() => {
-                                                    this.setState({
-                                                        inventoryId: row.original.id
-                                                    })
-                                                    this.onOpenStatusModal();
-                                                }} title="Change Status">
-                                                    <i className="fa fa-unlock-alt" style={{
-                                                        width: 35,
-                                                        fontSize: 20,
-                                                        padding: 11,
-                                                        color: '#e4566e'
-                                                    }}></i>
-                                                </span>
-                                            </div>
-                                        ),
-                                        style: {
-                                            textAlign: 'center',
-                                            cursor: 'pointer',
-                                        },
-                                        sortable: false
-                                    },
-                                ]}
-                            />
+                            <Table className="striped bordered hover">
+                                <thead>
+                                <tr>
+                                    <th>Shop Type</th>
+                                    <th>Shops</th>
+                                    <th>Category</th>
+                                    <th>Product</th>
+                                    <th>Product Variance</th>
+                                    <th>Price</th>
+                                    <th>Stock Count</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {this.props.inventoryList.map((el, index) =>
+                                    (
+                                        <tr key={index + parseInt((Math.random() * 10000) + '') + ''}>
+                                            <td>{el.shop_type}</td>
+                                            <td>{el.shops}</td>
+                                            <td>{el.category}</td>
+                                            <td>{el.product}</td>
+                                            <td>{el.product_variance}</td>
+                                            <td>{el.price}</td>
+                                            <td>{el.stock_count}</td>
+                                        </tr>
+                                    )
+                                )}
+                                </tbody>
+                            </Table>
                         </div>
                     </div>
                 </div>
