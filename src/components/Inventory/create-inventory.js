@@ -31,6 +31,12 @@ export class CreateInventory extends Component {
                     value: 1,
                 },
                 {label: 'Restaurant', value: 2},
+            ], statusList: [
+                {
+                    label: 'Active',
+                    value: 1,
+                },
+                {label: 'Draft', value: 0},
             ],
             shop_type_id: 0,
             inventoryId: 0,
@@ -113,6 +119,7 @@ export class CreateInventory extends Component {
         const product_variance_id = document.getElementsByName('product_variance_id')[0].value;
         const price = document.getElementsByName('price')[0].value;
         const stock_count = document.getElementsByName('stock_count')[0].value;
+        const status = document.getElementsByName('status')[0].value;
         if (!type_id) {
             alert('Shop Type is required');
             return;
@@ -151,6 +158,7 @@ export class CreateInventory extends Component {
             category: [...this.state.categoryList]?.filter(d => d.value == category_id)[0]?.label,
             product: [...this.state.productList]?.filter(d => d.value == product_id)[0]?.label,
             product_variance: [...this.state.productVarianceList]?.filter(d => d.value == product_variance_id)[0]?.label,
+            status: status == 0 ? 'Draft' : 'Active',
             price,
             stock_count
         }];
@@ -162,6 +170,7 @@ export class CreateInventory extends Component {
             product_variance_id,
             price,
             stock_count,
+            status
         }];
         this.setState({
             inventoryListSubmittable: inventoryListSubmittable,
@@ -289,7 +298,14 @@ export class CreateInventory extends Component {
         });
     }
 
-
+    handleChangeStatus = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                status: event
+            }
+        });
+    }
     handleChangeProductVariance = (event) => {
         this.setState((state) => {
             return {
@@ -315,20 +331,17 @@ export class CreateInventory extends Component {
 
     render() {
         const {
-            inventory,
             shops,
-            shopIds,
             categoryList,
-            categoryIds,
             inventoryId,
-            produtId,
             productList,
             productVarianceId,
             productVarianceList,
             method,
             url,
-            shop_type_id,
-            shopTypeList
+            shopTypeList,
+            status,
+            statusList
         } = this.state;
         return (
             <App>
@@ -384,6 +397,14 @@ export class CreateInventory extends Component {
                                                               required/>}
                                                 </Col>
                                                 <Col md="4">
+                                                    <Label for="product_variance_id">Select status</Label>
+                                                    {inventoryId === 0 &&
+                                                    <AvSelect value={status}
+                                                              onChange={this.handleChangeStatus}
+                                                              name="status" options={statusList}
+                                                              required/>}
+                                                </Col>
+                                                <Col md="4">
                                                     <Label for="price">Price</Label>
                                                     <AvField className="form-control" name="price"
                                                              placeholder="Stock Price" type="text" required/>
@@ -397,8 +418,7 @@ export class CreateInventory extends Component {
                                                     <Label for="name" className='opacity-0'>.</Label>
                                                     <Button onClick={this.saveInventoryCartHandle} name="status"
                                                             value="0"
-                                                            color="warning" className="w-100">Save as
-                                                        Draft</Button>
+                                                            color="warning" className="w-100">Add to Cart</Button>
                                                 </Col>
 
                                             </Row>
