@@ -51,6 +51,7 @@ export default class InventoryCart extends Component {
                                     <th>Category</th>
                                     <th>Product</th>
                                     <th>Product Variance</th>
+                                    <th>Status</th>
                                     <th>Price</th>
                                     <th>Stock Count</th>
                                     <th>Action</th>
@@ -65,12 +66,14 @@ export default class InventoryCart extends Component {
                                             <td>{el.category}</td>
                                             <td>{el.product}</td>
                                             <td>{el.product_variance}</td>
+                                            <td>{el.status}</td>
                                             <td>{el.price}</td>
                                             <td>{el.stock_count}</td>
                                             <td>
-                                                <Button name="status" value="1" color="primary"
-                                                        className="mt-3 pull-right"
-                                                        onClick={() => this.props.deleteInventory(index)}>Delete</Button>
+                                                <span style={{cursor: 'pointer', color: 'red'}}
+                                                      className="mt-3 pull-right"
+                                                      onClick={() => this.props.deleteInventory(index)}><i
+                                                    className="fa fa-2x fa-trash-o"/></span>
                                             </td>
                                         </tr>
                                     )
