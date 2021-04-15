@@ -10,8 +10,8 @@ export default class CategoryService {
     ) {
     }
 
-    createCategory(category : any) {
-        category.parent_id = category.parent_id? category.parent_id: 0;
+    createCategory(category: any) {
+        category.parent_id = category.parent_id ? category.parent_id : 0;
         return this.gatewayService.execute("product", {
             method: "POST",
             path: '/api/v1/category',
@@ -20,11 +20,11 @@ export default class CategoryService {
     }
 
     updateCategory(id: number, category: any) {
-        category.parent_id = category.parent_id? category.parent_id: 0;
+        category.parent_id = category.parent_id ? category.parent_id : 0;
         return this.gatewayService.execute("product", {
             method: "PUT",
             path: `/api/v1/category/${id}`,
-            body: { ...category},
+            body: {...category},
         });
     }
 
@@ -35,8 +35,10 @@ export default class CategoryService {
         });
         const categories = categoryList.map((category: any, index: any) => ({
             id: category.id,
+            'SL No': ++index,
             'Name': category.name,
-            'status': category.is_active
+            'Parent Category': this.findParent(categoryList, category.parent_id),
+            'Active': category.is_active ? 'Yes' : 'No'
         }));
 
         return this.responseService.response(categories);
@@ -51,7 +53,7 @@ export default class CategoryService {
             id: category.id,
             'SL No': ++index,
             'Name': category.name,
-            'Parent Category': this.findParent(categoryList,category.parent_id),
+            'Parent Category': this.findParent(categoryList, category.parent_id),
             'Active': category.is_active ? 'Yes' : 'No'
         }));
 
@@ -72,15 +74,17 @@ export default class CategoryService {
             path: `/api/v1/category/${categoryId}/status`,
         });
     }
+
     async getMenuCategory() {
         return this.gatewayService.execute("product", {
             method: "GET",
             path: `/api/v1/category/menu/all`,
         });
     }
-    private findParent(data: any, parent_id: number){
-        if(parent_id === 0) return 'N/A'
-        const parent = data.find( (x:any) =>x.id === parent_id);
+
+    private findParent(data: any, parent_id: number) {
+        if (parent_id === 0) return 'N/A'
+        const parent = data.find((x: any) => x.id === parent_id);
         return parent.name;
     }
 }

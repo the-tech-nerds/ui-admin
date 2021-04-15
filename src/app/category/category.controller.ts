@@ -29,17 +29,15 @@ export default class CategoryController {
     async get() {
         return this.categoryService.listCategories();
     }
-
+    @Get('/shop/type')
+    async getShopType() {
+        return this.responseService.response(ShopTypes);
+    }
     @Get('/shop/:shopId')
     async getCategoriesByShop(
         @Param('shopId') shopId: number
     ) {
         return this.categoryService.listCategoriesByShop(shopId);
-    }
-
-    @Get('/shop/type')
-    async getShopType() {
-        return this.responseService.response(ShopTypes);
     }
     @Get('/:id')
     async getCategory(@Param('id') id: number) {
