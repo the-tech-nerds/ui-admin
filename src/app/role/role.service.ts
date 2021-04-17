@@ -25,14 +25,14 @@ export default class RoleService {
 
         });
 
-        const roles = roleList.map((role: any, index: any) => ({
+        let roles = roleList.map((role: any, index: any) => (
+            {
             hasUser: role.users.length > 0,
             id: role.id,
             'isActive': role.is_active,
             'SL No': ++index,
             'Name': role.name,
         }));
-
         return this.responseService.response(roles);
     }
 
@@ -75,7 +75,6 @@ export default class RoleService {
     }
 
     async getPermissionsFromRole(roleId: number) {
-        console.log(roleId);
         const data = await this.gatewayService.execute("auth", {
             method: "GET",
             path: `/api/v1/authorization/permission/categories/role/${roleId}`,

@@ -11,6 +11,7 @@ import {
     Chrome,
     CheckCircle,
     ShoppingBag,
+    List,
     BarChart, Settings, Archive, LogIn
 } from 'react-feather';
 import {getPermissionTypes} from "../utils/utils";
@@ -43,6 +44,7 @@ export const MENUITEMS = PermissionTypes ? [
             {path: '/create-role', title: 'Add Role', type: 'link', permissions: [PermissionTypes.ROLE.CREATE]},
         ]
     },
+<<<<<<< HEAD
     // {
     //     title: 'Shops', icon: ShoppingBag, type: 'sub', active: false,
     //     permissions: [],
@@ -70,9 +72,42 @@ export const MENUITEMS = PermissionTypes ? [
         title: 'Menus', icon: AlignLeft, type: 'sub', active: false, children: [
             { path: '/menus/list-menu', title: 'List Menu', type: 'link' },
             { path: '/menus/create-menu', title: 'Create Menu', type: 'link' },
+=======
+    {
+        title: 'Shops', icon: ShoppingBag, type: 'sub', active: false,
+        permissions: [PermissionTypes.SHOP.GET, PermissionTypes.SHOP.CREATE],
+        children: [
+            {path: '/shops/list', title: 'Shop List', type: 'link', permissions: [PermissionTypes.SHOP.GET]},
+            {path: '/shops/create/0', title: 'Add Shop', type: 'link', permissions: [PermissionTypes.SHOP.CREATE]},
         ]
     },
     {
+        title: 'Suppliers', icon: ShoppingBag, type: 'sub', active: false,
+        permissions: [PermissionTypes.SUPPLIER.GET, PermissionTypes.SUPPLIER.CREATE],
+        children: [
+            {path: '/suppliers/list', title: 'Supplier List', type: 'link', permissions: [PermissionTypes.SUPPLIER.GET]},
+            {path: '/suppliers/create/0', title: 'Add Supplier', type: 'link', permissions: [PermissionTypes.SUPPLIER.CREATE]},
+        ]
+    },
+    {
+        title: 'Categories', icon: ShoppingBag, type: 'sub', active: false,
+        permissions: [PermissionTypes.PRODUCT_CATEGORY.GET],
+        children: [
+            {path: '/categories/list', title: 'Category List', type: 'link', permissions: []},
+        ]
+    },
+    {
+        title: 'Products', icon: ShoppingBag, type: 'sub', active: false,
+        permissions: [PermissionTypes.UNIT.GET,PermissionTypes.BRAND.GET],
+        children: [
+            {path: '/inventories/list', title: 'Inventory', type: 'link', permissions: [PermissionTypes.INVENTORY.GET]},
+            {path: '/products/list', title: 'Product', type: 'link', permissions: [PermissionTypes.PRODUCT.GET]},
+            {path: '/units/list', title: 'Unit', type: 'link', permissions: [PermissionTypes.UNIT.GET]},
+            {path: '/brands/list', title: 'Brand', type: 'link', permissions: [PermissionTypes.BRAND.GET]},
+>>>>>>> 02fbd2be4dd606a3802a21b2cec6b1bb11f61ef1
+        ]
+    },
+    /*{
         title: 'Products', icon: Box, type: 'sub', active: false, children: [
             {
                 title: 'Physical', type: 'sub', active: false, children: [
@@ -91,6 +126,12 @@ export const MENUITEMS = PermissionTypes ? [
                     { path: '/products/digital/digital-add-product', title: 'Add Product', type: 'link' },
                 ]
             },
+        ]
+    },*/
+    /*{
+        title: 'Menus', icon: AlignLeft, type: 'sub', active: false, children: [
+            { path: '/menus/list-menu', title: 'List Menu', type: 'link' },
+            { path: '/menus/create-menu', title: 'Create Menu', type: 'link' },
         ]
     },
     {

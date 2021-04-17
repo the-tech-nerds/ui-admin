@@ -1,6 +1,6 @@
-import {GatewayService} from "@the-tech-nerds/common-services";
-import {Injectable} from "@nestjs/common";
-import {ApiResponseService} from "../common/response/api-response.service";
+import { GatewayService } from "@the-tech-nerds/common-services";
+import { Injectable } from "@nestjs/common";
+import { ApiResponseService } from "../common/response/api-response.service";
 import MicroService from "../constants/app-constants"
 
 
@@ -19,17 +19,17 @@ export class SupplierService {
             body: supplier,
         });
     }
-    update(id: number,supplier: any) {
+    update(id: number, supplier: any) {
         return this.gatewayService.execute(MicroService.Product, {
             method: "PUT",
             path: `/api/v1/supplier/${id}`,
-            body: { ...supplier},
+            body: { ...supplier },
         });
     }
 
 
     async gets() {
-        const {data: supplierList} = await this.gatewayService.execute(MicroService.Product, {
+        const { data: supplierList } = await this.gatewayService.execute(MicroService.Product, {
             method: "GET",
             path: '/api/v1/supplier/list/all',
         });
@@ -41,6 +41,7 @@ export class SupplierService {
             'Address': supplier.address,
             'Phone': supplier.phone,
             'Email': supplier.email,
+            'IsActive': supplier.is_active
         }));
         return this.responseService.response(suppliers);
     }
@@ -48,7 +49,7 @@ export class SupplierService {
 
 
     async get(supplierId: number) {
-        const {data: supplier} = await this.gatewayService.execute(MicroService.Product, {
+        const { data: supplier } = await this.gatewayService.execute(MicroService.Product, {
             method: "GET",
             path: `/api/v1/supplier/${supplierId}`,
         });

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Alert } from 'react-bootstrap';
+import {Alert} from 'react-bootstrap';
 import * as fetch from 'isomorphic-fetch';
 import {AvForm} from 'availity-reactstrap-validation';
 
@@ -82,7 +82,7 @@ export class Forms extends Component {
                 onInvalidSubmit={this.handleInvalidSubmit}
                 className={className}
             >
-                {error && <Alert variant='danger'>{ formattedErrMessage }</Alert>}
+                {error && <Alert variant='danger'>{formattedErrMessage}</Alert>}
                 {title && <h4>{title}</h4>}
                 {children}
             </AvForm>

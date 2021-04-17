@@ -26,7 +26,7 @@ export class Datatable extends Component {
             fetch(url).then(async res => {
                 const response = await res.json();
 
-                if (response.code === 200 ) {
+                if (response.code === 200) {
                     this.setState({
                         myData: response.data,
                         loading: false,
@@ -34,7 +34,7 @@ export class Datatable extends Component {
                     return;
                 }
                 this.setError("Failed Loading Data");
-            }).catch(e => {})
+            }).catch(e => { })
         }
     }
 
@@ -95,7 +95,7 @@ export class Datatable extends Component {
         return (
             row[id] !== undefined ?
                 String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase())
-            :
+                :
                 true
         );
     }
@@ -107,7 +107,7 @@ export class Datatable extends Component {
 
         if (loading) {
             return <div style={{ display: 'flex', justifyContent: 'center' }}>
-                 <Loader/>
+                <Loader />
             </div>
         }
 
@@ -120,7 +120,7 @@ export class Datatable extends Component {
         let columns = [];
         if (myData) {
             for (var key in myData[0]) {
-                if(excludeColumns.includes(key)){
+                if (excludeColumns.includes(key)) {
                     continue;
                 }
                 let editable = this.renderEditable
@@ -136,7 +136,7 @@ export class Datatable extends Component {
                 if (key === "vendor") {
                     editable = null;
                 }
-                if(key === "order_status"){
+                if (key === "order_status") {
                     editable = null;
                 }
 
@@ -155,11 +155,11 @@ export class Datatable extends Component {
                 columns.push(
                     {
                         Header: <button className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
-                                        onClick={
-                                            (e) => {
-                                                if (window.confirm('Are you sure you wish to delete this item?'))
-                                                    this.handleRemoveRow()
-                                            }}>Delete</button>,
+                            onClick={
+                                (e) => {
+                                    if (window.confirm('Are you sure you wish to delete this item?'))
+                                        this.handleRemoveRow()
+                                }}>Delete</button>,
                         id: 'delete',
                         accessor: str => "delete",
                         sortable: false,
@@ -168,10 +168,10 @@ export class Datatable extends Component {
                         },
                         Cell: (row) => (
                             <div>
-                            <span >
-                                <input type="checkbox" name={row.original.id} defaultChecked={this.state.checkedValues.includes(row.original.id)}
-                                       onChange={e => this.selectRow(e, row.original.id)} />
-                            </span>
+                                <span >
+                                    <input type="checkbox" name={row.original.id} defaultChecked={this.state.checkedValues.includes(row.original.id)}
+                                        onChange={e => this.selectRow(e, row.original.id)} />
+                                </span>
                             </div>
                         ),
                         accessor: key,
@@ -182,7 +182,7 @@ export class Datatable extends Component {
                 )
             }
             if (extraColumns.length > 0) {
-                columns = [ ...columns, ...extraColumns ];
+                columns = [...columns, ...extraColumns];
             }
         }
 
@@ -195,7 +195,7 @@ export class Datatable extends Component {
                     defaultPageSize={pageSize}
                     className={myClass}
                     showPagination={pagination}
-                    defaultFilterMethod={(filter, row) => this.filterCaseInsensitive(filter, row) }
+                    defaultFilterMethod={(filter, row) => this.filterCaseInsensitive(filter, row)}
                 />
                 <ToastContainer />
             </Fragment>

@@ -1,10 +1,10 @@
-import {GatewayService} from "@the-tech-nerds/common-services";
-import {Injectable} from "@nestjs/common";
-import {UserLoginRequest} from "./requests/user.login.request";
-import {ResetPasswordRequest} from "./requests/reset-password.request";
-import * as moment  from "moment";
-import {ApiResponseService} from "../common/response/api-response.service";
-import {ResetPasswordAutoGenerateRequest} from "./requests/reset-password-auto-generate.request";
+import { GatewayService } from "@the-tech-nerds/common-services";
+import { Injectable } from "@nestjs/common";
+import { UserLoginRequest } from "./requests/user.login.request";
+import { ResetPasswordRequest } from "./requests/reset-password.request";
+import * as moment from "moment";
+import { ApiResponseService } from "../common/response/api-response.service";
+import { ResetPasswordAutoGenerateRequest } from "./requests/reset-password-auto-generate.request";
 
 @Injectable()
 export default class UserService {
@@ -26,7 +26,7 @@ export default class UserService {
         return this.gatewayService.execute("auth", {
             method: "PUT",
             path: '/api/v1/user/profile/info/',
-            body: { ...user},
+            body: { ...user },
         });
     }
 
@@ -56,7 +56,9 @@ export default class UserService {
     }
 
     async listUsers() {
-        const {data: userList} = await this.gatewayService.execute("auth", {
+        const {
+            data: userList
+        } = await this.gatewayService.execute("auth", {
             method: "GET",
             qs: {
                 userType: '2',
@@ -64,21 +66,11 @@ export default class UserService {
             path: '/api/v1/user/all',
         });
 
-        const users = userList.map((user: any, index: any) => ({
-            id: user.id,
-            'SL No': ++index,
-            'First Name': user.first_name,
-            'Last Name': user.last_name,
-            'Email': user.email,
-            'Phone': user.phone,
-            'Active': user.is_active ? 'Yes' : 'No'
-        }));
-
-        return this.responseService.response(users);
+        return this.responseService.response(userList);
     }
 
     async listAdmins() {
-        const {data: userList} = await this.gatewayService.execute("auth", {
+        const { data: userList } = await this.gatewayService.execute("auth", {
             method: "GET",
             qs: {
                 userType: '1',
@@ -86,28 +78,15 @@ export default class UserService {
             path: '/api/v1/user/all',
         });
 
-        const users = userList.map((user: any, index: any) => ({
-            id: user.id,
-            'SL No': ++index,
-            isFrozen: !!user.is_frozen,
-            roleIds: user?.roles?.map((role: any) => role.id) || [],
-            'First Name': user.first_name,
-            'Last Name': user.last_name,
-            'Email': user.email,
-            'Phone': user.phone,
-            // @ts-ignore
-            "Roles": user?.roles?.reduce((acc: any, role) => (acc + role.name + ', '), '').slice(0, -2) || 'n/a',
-            'Active': user.is_active ? 'Yes' : 'No',
-        }));
-
-        return this.responseService.response(users);
+        return this.responseService.response(userList);
     }
 
     async getUser(userId: number) {
-        const {data: user} = await this.gatewayService.execute("auth", {
+        const { data: user } = await this.gatewayService.execute("auth", {
             method: "GET",
             path: `/api/v1/user/${userId}`,
         });
+
         const {
             id,
             first_name,
@@ -116,24 +95,25 @@ export default class UserService {
             phone,
             birthday,
             gender_type,
-            roles
+            roles,
+            userShop
         } = user;
-
         return this.responseService.response({
             id,
             first_name,
             last_name,
             email,
             phone,
-            birthday : birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
+            birthday: birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
             gender_type,
-            gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other',
-            roles
+            gender: gender_type == 1 ? 'Male' : gender_type == 2 ? 'female' : 'Other',
+            roles,
+            userShop
         });
     }
 
     async getCurrentUser() {
-        const {data: user} = await this.gatewayService.execute("auth", {
+        const { data: user } = await this.gatewayService.execute("auth", {
             method: "GET",
             path: `/api/v1/user/profile/info`,
         });
@@ -157,16 +137,16 @@ export default class UserService {
             email,
             phone,
             image_url,
-            birthday : birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
+            birthday: birthday ? moment(birthday).format('YYYY-MM-DD') : 'N/A',
             is_mobile_verified,
             gender_type,
-            gender: gender_type == 1? 'Male' : gender_type == 2? 'female' : 'Other',
+            gender: gender_type == 1 ? 'Male' : gender_type == 2 ? 'female' : 'Other',
             roles: roles?.reduce((acc: any, role: any) => (acc + role.name + ', '), '').slice(0, -2) || 'n/a',
         });
     }
 
     async assignRole(userId: number, roles: []) {
-        return await this.gatewayService.execute("auth", {
+        return this.gatewayService.execute("auth", {
             method: "POST",
             path: `/api/v1/user/${userId}/assign-roles`,
             body: roles
@@ -174,7 +154,7 @@ export default class UserService {
     }
 
     async unfreezeUser(userId: number) {
-        return await this.gatewayService.execute("auth", {
+        return this.gatewayService.execute("auth", {
             method: "PUT",
             path: `/api/v1/user/${userId}/unfreeze`,
         });
@@ -184,6 +164,21 @@ export default class UserService {
         this.gatewayService.execute("auth", {
             method: "GET",
             path: '/api/v1/authentication/logout',
-        }).catch(e => {});
+        }).catch(e => { });
+    }
+
+    async updateUserShop(userId: number, shopIds: number[]) {
+        if (shopIds.find(s => s === -1)) {
+            shopIds = [];
+            shopIds.push(-1);
+        }
+        return this.gatewayService.execute("auth", {
+            method: "PUT",
+            qs: {
+                id: String(userId),
+            },
+            path: '/api/v1/user/update/shop',
+            body: shopIds
+        });
     }
 }
