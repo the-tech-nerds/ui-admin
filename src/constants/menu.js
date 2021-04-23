@@ -8,11 +8,10 @@ import {
     AlignLeft,
     UserPlus,
     Users,
-    Chrome,
     CheckCircle,
     ShoppingBag,
     List,
-    BarChart, Settings, Archive, LogIn
+    BarChart, Settings, Archive, LogIn, Truck
 } from 'react-feather';
 import {getPermissionTypes} from "../utils/utils";
 
@@ -33,7 +32,7 @@ export const MENUITEMS = PermissionTypes ? [
                 permissions: [PermissionTypes.USER.GET]
             },
             {path: '/list-admins', title: 'Admin List', type: 'link', permissions: [PermissionTypes.USER.GET]},
-            {path: '/create-user', title: 'Add Admin', type: 'link', permissions: [PermissionTypes.USER.CREATE]},
+            {path: '/create-user/0', title: 'Add Admin', type: 'link', permissions: [PermissionTypes.USER.CREATE]},
         ]
     },
     {
@@ -53,7 +52,7 @@ export const MENUITEMS = PermissionTypes ? [
         ]
     },
     {
-        title: 'Suppliers', icon: ShoppingBag, type: 'sub', active: false,
+        title: 'Suppliers', icon: Users, type: 'sub', active: false,
         permissions: [PermissionTypes.SUPPLIER.GET, PermissionTypes.SUPPLIER.CREATE],
         children: [
             {path: '/suppliers/list', title: 'Supplier List', type: 'link', permissions: [PermissionTypes.SUPPLIER.GET]},
@@ -61,14 +60,14 @@ export const MENUITEMS = PermissionTypes ? [
         ]
     },
     {
-        title: 'Categories', icon: ShoppingBag, type: 'sub', active: false,
+        title: 'Categories', icon: List, type: 'sub', active: false,
         permissions: [PermissionTypes.PRODUCT_CATEGORY.GET],
         children: [
             {path: '/categories/list', title: 'Category List', type: 'link', permissions: []},
         ]
     },
     {
-        title: 'Products', icon: ShoppingBag, type: 'sub', active: false,
+        title: 'Products', icon: Truck, type: 'sub', active: false,
         permissions: [PermissionTypes.UNIT.GET,PermissionTypes.BRAND.GET],
         children: [
             {path: '/inventories/list', title: 'Inventory', type: 'link', permissions: [PermissionTypes.INVENTORY.GET]},
