@@ -82,7 +82,7 @@ export class CreateShop extends Component {
             }
         })
         const id = Number(this.props.match.params.id);
-        if (id == 0) {
+        if (!id) {
             this.setState((state) => {
                 return {
                     ...state,

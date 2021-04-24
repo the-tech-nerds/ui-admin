@@ -62,7 +62,7 @@ export default class ListProductVariance extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to={`/product/${productId}/variance/create/0`} className="btn btn-secondary">Create</Link>
+                                <Link to={`/product/${productId}/variance/create`} className="btn btn-secondary">Create</Link>
                             </div>
                             <div className="clearfix"></div>
 
@@ -101,7 +101,7 @@ export default class ListProductVariance extends Component {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                    window.location.href = `/product/${productId}/variance/create/${row.original.id}`;
+                                                    window.location.href = `/product/${productId}/variance/edit/${row.original.id}`;
                                                     }} title="Edit Product Variance">
                                                         <i className="fa fa-pencil" style={{
                                                             width: 35,

@@ -3,10 +3,10 @@ import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable'
 import App from "../app";
 import { Link } from 'react-router-dom';
+import {userHasPermission, getPermissionTypes} from "../../utils/utils";
 
-
-export class ListUnit extends Component {
-    render() {
+ const ListUnit = () =>{
+    const PermissionTypes = window.permission_types !== 'undefined' ? getPermissionTypes() : null;
         return (
             <App>
                 <Breadcrumb title="unit list" parent="product" />
@@ -17,7 +17,8 @@ export class ListUnit extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/units/create/0" className="btn btn-secondary">Create Unit</Link>
+                                {PermissionTypes && userHasPermission(PermissionTypes.UNIT.CREATE) &&
+                                <Link to="/units/create" className="btn btn-secondary">Create Unit</Link>}
                             </div>
                             <div className="clearfix"></div>
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
@@ -34,7 +35,7 @@ export class ListUnit extends Component {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                        window.location.href = `/units/create/${row.original.id}`;
+                                                        window.location.href = `/units/edit/${row.original.id}`;
                                                     }} title="Edit unit">
                                                         <i className="fa fa-edit" style={{
                                                             width: 35,
@@ -62,7 +63,6 @@ export class ListUnit extends Component {
                 </div>
             </App>
         )
-    }
 }
 
 

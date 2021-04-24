@@ -17,7 +17,7 @@ export class ListShop extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/shops/create/0" className="btn btn-secondary">Create Shop</Link>
+                                <Link to="/shops/create" className="btn btn-secondary">Create Shop</Link>
                             </div>
                             <div className="clearfix"></div>
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
@@ -34,7 +34,7 @@ export class ListShop extends Component {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                        window.location.href = `/shops/create/${row.original.id}`;
+                                                        window.location.href = `/shops/edit/${row.original.id}`;
                                                     }} title="Edit shop">
                                                         <i className="fa fa-edit" style={{
                                                             width: 35,

@@ -17,7 +17,7 @@ export class ListSupplier extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/suppliers/create/0" className="btn btn-secondary">Create supplier</Link>
+                                <Link to="/suppliers/create" className="btn btn-secondary">Create supplier</Link>
                             </div>
                             <div className="clearfix"></div>
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
@@ -34,7 +34,7 @@ export class ListSupplier extends Component {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                        window.location.href = `/suppliers/create/${row.original.id}`;
+                                                        window.location.href = `/suppliers/edit/${row.original.id}`;
                                                     }} title="Edit supplier">
                                                         <i className="fa fa-edit" style={{
                                                             width: 35,

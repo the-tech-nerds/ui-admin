@@ -32,7 +32,7 @@ export const MENUITEMS = PermissionTypes ? [
                 permissions: [PermissionTypes.USER.GET]
             },
             {path: '/list-admins', title: 'Admin List', type: 'link', permissions: [PermissionTypes.USER.GET]},
-            {path: '/create-user/0', title: 'Add Admin', type: 'link', permissions: [PermissionTypes.USER.CREATE]},
+            {path: '/create-user', title: 'Add Admin', type: 'link', permissions: [PermissionTypes.USER.CREATE]},
         ]
     },
     {
@@ -48,7 +48,7 @@ export const MENUITEMS = PermissionTypes ? [
         permissions: [PermissionTypes.SHOP.GET, PermissionTypes.SHOP.CREATE],
         children: [
             {path: '/shops/list', title: 'Shop List', type: 'link', permissions: [PermissionTypes.SHOP.GET]},
-            {path: '/shops/create/0', title: 'Add Shop', type: 'link', permissions: [PermissionTypes.SHOP.CREATE]},
+            {path: '/shops/create', title: 'Add Shop', type: 'link', permissions: [PermissionTypes.SHOP.CREATE]},
         ]
     },
     {
@@ -56,19 +56,20 @@ export const MENUITEMS = PermissionTypes ? [
         permissions: [PermissionTypes.SUPPLIER.GET, PermissionTypes.SUPPLIER.CREATE],
         children: [
             {path: '/suppliers/list', title: 'Supplier List', type: 'link', permissions: [PermissionTypes.SUPPLIER.GET]},
-            {path: '/suppliers/create/0', title: 'Add Supplier', type: 'link', permissions: [PermissionTypes.SUPPLIER.CREATE]},
+            {path: '/suppliers/create', title: 'Add Supplier', type: 'link', permissions: [PermissionTypes.SUPPLIER.CREATE]},
         ]
     },
     {
         title: 'Categories', icon: List, type: 'sub', active: false,
         permissions: [PermissionTypes.PRODUCT_CATEGORY.GET],
         children: [
-            {path: '/categories/list', title: 'Category List', type: 'link', permissions: []},
+            {path: '/categories/list', title: 'Category List', type: 'link', permissions: [PermissionTypes.PRODUCT_CATEGORY.GET]},
+            {path: '/category/create', title: 'Add Category', type: 'link', permissions: [PermissionTypes.PRODUCT_CATEGORY.CREATE]},
         ]
     },
     {
         title: 'Products', icon: Truck, type: 'sub', active: false,
-        permissions: [PermissionTypes.UNIT.GET,PermissionTypes.BRAND.GET],
+        permissions: [PermissionTypes.UNIT.GET,PermissionTypes.BRAND.GET, PermissionTypes.INVENTORY.GET, PermissionTypes.PRODUCT.GET],
         children: [
             {path: '/inventories/list', title: 'Inventory', type: 'link', permissions: [PermissionTypes.INVENTORY.GET]},
             {path: '/products/list', title: 'Product', type: 'link', permissions: [PermissionTypes.PRODUCT.GET]},

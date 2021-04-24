@@ -17,7 +17,7 @@ export class ListBrand extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/brands/create/0" className="btn btn-secondary">Create Brand</Link>
+                                <Link to="/brands/create" className="btn btn-secondary">Create Brand</Link>
                             </div>
                             <div className="clearfix"></div>
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
@@ -34,7 +34,7 @@ export class ListBrand extends Component {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                        window.location.href = `/brands/create/${row.original.id}`;
+                                                        window.location.href = `/brands/edit/${row.original.id}`;
                                                     }} title="Edit brand">
                                                         <i className="fa fa-edit" style={{
                                                             width: 35,
@@ -57,7 +57,7 @@ export class ListBrand extends Component {
                                                                         headers: {
                                                                             'Content-Type': 'application/json',
                                                                         },
-                      
+
                                                                     }).then(async res => {
                                                                         const response = await res.json();
                                                                         if(response.code == 200){
@@ -71,8 +71,8 @@ export class ListBrand extends Component {
                                                               }
                                                             ]
                                                           });
-                                                       
-                                                       
+
+
                                                     }} title="delete brand">
                                                         <i className="fa fa-trash" style={{
                                                             width: 35,

@@ -78,7 +78,7 @@ export default class ListCategory extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/create-category" className="btn btn-secondary">Create Category</Link>
+                                <Link to="/category/create" className="btn btn-secondary">Create Category</Link>
                             </div>
                             <div className="clearfix"></div>
 

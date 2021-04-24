@@ -79,7 +79,7 @@ export default class ListAdmin extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/create-user/0" className="btn btn-secondary">Create Admin</Link>
+                                <Link to="/create-user" className="btn btn-secondary">Create Admin</Link>
                             </div>
                             <div className="clearfix"></div>
                             <Modal open={open} onClose={this.onCloseModal} center>
@@ -153,7 +153,7 @@ export default class ListAdmin extends Component {
                                                         ></i>
                                                     </span>
                                                     <span onClick={() => {
-                                                        window.location.href = `/create-user/${row.original.id}`;
+                                                        window.location.href = `/edit-user/${row.original.id}`;
                                                     }} title="edit user details">
                                                         <i className="fa fa-pencil-square-o" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
                                                         ></i>

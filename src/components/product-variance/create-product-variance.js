@@ -298,12 +298,10 @@ export class CreateProductVariance extends Component {
                                                                   value={unitId}
                                                                   options={units}/>}
                                                     </AvGroup>
-                                                    <AvGroup>
-                                                        <Label for="unit_value">Unit Value</Label>
-                                                        <AvField className="form-control" name="unit_value"
-                                                                 value={productVariance.unit_value} type="text"/>
-                                                    </AvGroup>
-
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-6">
                                                     <AvGroup>
                                                         <Label for="shop_ids">Select Shops</Label>
                                                         {productId === 0 &&
@@ -315,8 +313,15 @@ export class CreateProductVariance extends Component {
                                                                   options={shops} required/>}
                                                     </AvGroup>
                                                 </div>
-                                            </div>
 
+                                                <div className="col-6">
+                                                    <AvGroup>
+                                                        <Label for="unit_value">Unit Value</Label>
+                                                        <AvField className="form-control" name="unit_value"
+                                                                 value={productVariance.unit_value} type="text"/>
+                                                    </AvGroup>
+                                                </div>
+                                            </div>
                                             <div className="row mb-2">
                                                 <div className="col-12">
                                                     <label>Description</label>

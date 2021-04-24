@@ -12,7 +12,7 @@ export class Create_user extends Component {
         super(props)
         this.state = {
             shops: [],
-            userId: Number(this.props.match.params.id),
+            userId: Number(this.props.match.params.id) || 0,
             user: {},
             selectedShops: [],
             method: 'POST',
@@ -34,7 +34,7 @@ export class Create_user extends Component {
                             url: '/api/users/update/shop/' + this.state.userId
                         }
                     });
-                } 
+                }
             }
         })
     }
@@ -61,7 +61,7 @@ export class Create_user extends Component {
                     this.setState({
                         shops: options
                     })
-                } 
+                }
             }
         })
     }
@@ -72,7 +72,7 @@ export class Create_user extends Component {
                 selectedShops: event
             }
         });
-    } 
+    }
 
     render() {
         const {shops, userId, user, selectedShops,  method, url} = this.state;
@@ -104,7 +104,7 @@ export class Create_user extends Component {
                                         <AvGroup>
                                                 <Label for="shopIds">Select Shop</Label>
                                                 {userId == 0 && <AvSelect  isMulti name="shopIds" options={shops} required/>}
-                                                {userId > 0 && <AvSelect  
+                                                {userId > 0 && <AvSelect
                                                 value={shops.filter(option =>  selectedShops?.includes(option.value)).map(el=>el.value)} isMulti name="shopIds"
                                                  options={shops}
                                                  onChange={this.handleChange}
