@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
-import { AvField } from "availity-reactstrap-validation";
-import { Button, Label } from "reactstrap";
+import {AvField} from "availity-reactstrap-validation";
+import {Button, Label} from "reactstrap";
 import * as fetch from "isomorphic-fetch";
 import FetchData from "../common/get-data";
-import { DropzoneStatus } from "../../constants/dropzoneStatus"
+import {DropzoneStatus} from "../../constants/dropzoneStatus"
 import MyUploader from "../common/dropzone";
 import updateFileStorage from "../common/file-storage";
 import AvGroup from 'availity-reactstrap-validation/lib/AvGroup';
@@ -31,6 +31,7 @@ export class CreateCategory extends Component {
             types: []
         };
     }
+
     handleUploadResponse = (response) => {
         if (response.status == DropzoneStatus.UPLOAD_SUCCESS) {
             let ids = this.state.uploadIds;
@@ -48,8 +49,7 @@ export class CreateCategory extends Component {
                 uploadIds: ids,
                 images: urls
             });
-        }
-        else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
+        } else if (response.status == DropzoneStatus.REMOVE_EXISTING_ITEM) {
             const file = this.state.files.filter(i => i.id !== response.data.id);
             this.setState((state) => {
                 return {
@@ -88,11 +88,12 @@ export class CreateCategory extends Component {
             }
         })
     }
+
     render() {
-        let { categoryList, contentInfo, files, uploadIds, types } = this.state
+        let {categoryList, contentInfo, files, uploadIds, types} = this.state
         return (
             <App>
-                <Breadcrumb title="Create Category" parent="List" />
+                <Breadcrumb title="Create Category" parent="List"/>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
@@ -111,7 +112,7 @@ export class CreateCategory extends Component {
                                                 onUploadSuccess: (response) => {
                                                     this.handleUploadResponse(response);
                                                 }
-                                            }} content={contentInfo} />
+                                            }} content={contentInfo}/>
                                         </div>
                                     </div>
                                     <Forms
@@ -140,27 +141,24 @@ export class CreateCategory extends Component {
                                         }}
                                     >
 
-                                        <div className="row">
-                                            <div className="col-6">
-                                                <AvField label="Parent Category" type="select" name="parent_id">
-                                                    <option value="0">Select Parent Category</option>
-                                                    {categoryList.map(category => (
-                                                        <option value={category.id}>{category.Name}</option>
-                                                    ))}
-                                                </AvField>
-                                            </div>
-                                            <div className="col-6">
-                                                <AvGroup>
-                                                    <Label for="type_id">Select Shop</Label>
-                                                    <AvSelect name="type_id" options={types} required />
-                                                </AvGroup>
-                                            </div>
-
+                                        <div className="col-6">
+                                            <AvGroup>
+                                                <Label for="type_id">Shop Type</Label>
+                                                <AvSelect name="type_id" options={types} required/>
+                                            </AvGroup>
                                         </div>
-                                        <div className="row">
-                                            <div class="col-12">
-                                                <AvField name="name" label="Category Name" type="text" required />
-                                            </div>
+
+                                        <div className="col-6">
+                                            <AvField label="Parent Category" type="select" name="parent_id">
+                                                <option value="0">Select Parent Category</option>
+                                                {categoryList.map(category => (
+                                                    <option value={category.id}>{category.Name}</option>
+                                                ))}
+                                            </AvField>
+                                        </div>
+
+                                        <div className="col-6">
+                                            <AvField name="name" label="Category Name" type="text" required/>
                                         </div>
 
                                         <Button color="primary">Create</Button>

@@ -19,6 +19,8 @@ export class CreateProduct extends Component {
             product: {},
             categoryList: [],
             categoryIds: [],
+            suppliers:[],
+            supplierId:0,
             brands: [],
             brandId: 0,
 
@@ -126,11 +128,12 @@ export class CreateProduct extends Component {
                     });
                 });
         }
-        // fetch brands
+
+        // fetch suppliers
         FetchData({
-            url: '/api/brands/list/all', callback: (response, isSucess) => {
+            url: '/api/suppliers/list/all', callback: (response, isSucess) => {
                 if (isSucess) {
-                    console.log('brands : ', response.data);
+                    console.log('suppliers : ', response.data);
                     const options = response.data.map(x => {
                         return {
                             label: x.Name,
@@ -138,15 +141,15 @@ export class CreateProduct extends Component {
                         };
                     });
                     this.setState({
-                        brands: options
+                        suppliers: options
                     })
 
-                    const id = this.state.brands.filter(option => option.value === this.state.product.brand_id).map(el => el.value)[0];
+                    const id = this.state.suppliers.filter(option => option.value === this.state.product.supplier_id).map(el => el.value)[0];
 
                     this.setState((state) => {
                         return {
                             ...state,
-                            brandId: id
+                            supplierId: id
                         }
                     });
                 } else {
@@ -208,6 +211,52 @@ export class CreateProduct extends Component {
         });
     }
 
+    handleChangeSupplier = (event) => {
+        console.log('in supp');
+        this.setState((state) => {
+            return {
+                ...state,
+                supplierId: event
+            }
+        });
+
+        // fetch brands
+        FetchData({
+            url: `/api/brands/list/all/${event}`, callback: (response, isSucess) => {
+                if (isSucess) {
+                    console.log('brands : ', response.data);
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    options.push({
+                        label: "n/a",
+                        value: ''
+                    })
+                    this.setState({
+                        brands: options
+                    })
+
+                    const id = this.state.brands.filter(option => option.value === this.state.product.brand_id).map(el => el.value)[0];
+
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            brandId: id
+                        }
+                    });
+                } else {
+                    this.setState({
+                        error: true,
+                        errorMessage: response.message,
+                    })
+                }
+            }
+        })
+    }
+
     handleChangeBrand = (event) => {
         this.setState((state) => {
             return {
@@ -218,7 +267,7 @@ export class CreateProduct extends Component {
     }
 
     render() {
-        const {product, brands, brandId, categoryList, categoryIds, productId, shops, files, uploadIds, contentInfo, method, url, description} = this.state;
+        const {product, suppliers, supplierId, brands, brandId, categoryList, categoryIds, productId, files, uploadIds, contentInfo, method, url, description} = this.state;
         return (
             <App>
 
@@ -281,15 +330,23 @@ export class CreateProduct extends Component {
                                             <AvGroup>
                                                 <Label for="category_ids">Select category</Label>
                                                 {productId == 0 &&
-                                                <AvSelect isMulti name="category_ids" options={categoryList} required/>}
+                                                <AvSelect isMulti onChange={this.handleChangeCategories} name="category_ids" options={categoryList} required/>}
                                                 {productId > 0 &&
                                                 <AvSelect onChange={this.handleChangeCategories} value={categoryIds}
                                                           isMulti name="category_ids" options={categoryList} required/>}
                                             </AvGroup>
                                             <AvGroup>
+                                                <Label for="supplier_id">Select Supplier</Label>
+                                                {productId == 0 &&
+                                                <AvSelect onChange={this.handleChangeSupplier} name="supplier_id" options={suppliers} required/>}
+                                                {productId > 0 &&
+                                                <AvSelect onChange={this.handleChangeSupplier} name="supplier_id"
+                                                          value={supplierId} options={suppliers} required/>}
+                                            </AvGroup>
+                                            <AvGroup>
                                                 <Label for="brand_id">Select Brand</Label>
                                                 {productId == 0 &&
-                                                <AvSelect name="brand_id" options={brands} required/>}
+                                                <AvSelect onChange={this.handleChangeBrand} name="brand_id" options={brands}/>}
                                                 {productId > 0 &&
                                                 <AvSelect onChange={this.handleChangeBrand} name="brand_id"
                                                           value={brandId} options={brands} required/>}
@@ -301,23 +358,6 @@ export class CreateProduct extends Component {
                                                          type="text" required/>
                                             </AvGroup>
 
-                                            {/*<div className="digital-add needs-validation">
-                                                    <div className="form-group mb-0">
-                                                        <div className="description-sm">
-                                                            <CKEditors
-                                                                activeclassName="p10"
-                                                                content={this.state.content}
-                                                                events={{
-                                                                    "blur": this.onBlur,
-                                                                    "afterPaste": this.afterPaste,
-                                                                    "change": this.onChange
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>*/}
-
-                                            {/* <AvInput type="textarea" name="description" value={product.description} placeholder="Product Description" /> */}
                                             <div className="row">
                                                 <div className="col-12">
                                                     <label>Description</label>
@@ -329,7 +369,6 @@ export class CreateProduct extends Component {
                                                             "afterPaste": this.afterPaste,
                                                             "change": this.onChange
                                                         }}
-                                                        required
                                                     />
                                                 </div>
                                             </div>

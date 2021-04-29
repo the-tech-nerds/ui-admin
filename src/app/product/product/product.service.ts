@@ -38,6 +38,7 @@ export class ProductService {
             'SL No': ++index,
             'Category': product?.categories?.reduce((categories: any, category: any) => (categories + category.name + ', '), '').slice(0, -2) || 'n/a',
             'Shop': product.shop ? product.shop.name : 'n/a',
+            'Supplier': product.supplier ? product.supplier.name : 'n/a',
             'Brand': product.brand ? product.brand.name : 'n/a',
             'Name': product.name,
             'Status': product.status ? 'Active' : 'Inactive'
