@@ -114,9 +114,12 @@ export default class ListInventory extends Component {
                                                      placeholder="Stock Price" type="text" required/>
                                         </AvGroup>
 
-                                        <AvInput type="textarea" name="stock_count"
-                                                 value={inventoryStockCount}
-                                                 placeholder="Stock Count"/>
+                                        <AvGroup>
+                                            <Label for="name">Stock Quantity</Label>
+                                            <AvField className="form-control" name="stock_count"
+                                                     value={inventoryStockCount}
+                                                     placeholder="Stock Quantity" type="text" required/>
+                                        </AvGroup>
 
                                         <Button className="btn btn-sm btn-success float-right mt-2 mb-2">Update</Button>
                                         <br/>

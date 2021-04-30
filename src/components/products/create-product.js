@@ -134,7 +134,7 @@ export class CreateProduct extends Component {
             url: '/api/suppliers/list/all', callback: (response, isSucess) => {
                 if (isSucess) {
                     console.log('suppliers : ', response.data);
-                    const options = response.data.map(x => {
+                    const options = response.data.filter(sup => sup.IsActive === true).map(x => {
                         return {
                             label: x.Name,
                             value: x.id

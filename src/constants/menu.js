@@ -1,11 +1,6 @@
 import {
     Home,
     Box,
-    DollarSign,
-    Tag,
-    Clipboard,
-    Camera,
-    AlignLeft,
     UserPlus,
     Users,
     CheckCircle,
@@ -52,14 +47,6 @@ export const MENUITEMS = PermissionTypes ? [
         ]
     },
     {
-        title: 'Suppliers', icon: Users, type: 'sub', active: false,
-        permissions: [PermissionTypes.SUPPLIER.GET, PermissionTypes.SUPPLIER.CREATE],
-        children: [
-            {path: '/suppliers/list', title: 'Supplier List', type: 'link', permissions: [PermissionTypes.SUPPLIER.GET]},
-            {path: '/suppliers/create', title: 'Add Supplier', type: 'link', permissions: [PermissionTypes.SUPPLIER.CREATE]},
-        ]
-    },
-    {
         title: 'Categories', icon: List, type: 'sub', active: false,
         permissions: [PermissionTypes.PRODUCT_CATEGORY.GET],
         children: [
@@ -69,13 +56,16 @@ export const MENUITEMS = PermissionTypes ? [
     },
     {
         title: 'Products', icon: Truck, type: 'sub', active: false,
-        permissions: [PermissionTypes.UNIT.GET,PermissionTypes.BRAND.GET, PermissionTypes.INVENTORY.GET, PermissionTypes.PRODUCT.GET],
+        permissions: [PermissionTypes.UNIT.GET,PermissionTypes.BRAND.GET, PermissionTypes.PRODUCT.GET, PermissionTypes.SUPPLIER.GET],
         children: [
-            {path: '/inventories/list', title: 'Inventory', type: 'link', permissions: [PermissionTypes.INVENTORY.GET]},
-            {path: '/products/list', title: 'Product', type: 'link', permissions: [PermissionTypes.PRODUCT.GET]},
-            {path: '/units/list', title: 'Unit', type: 'link', permissions: [PermissionTypes.UNIT.GET]},
-            {path: '/brands/list', title: 'Brand', type: 'link', permissions: [PermissionTypes.BRAND.GET]},
+            {path: '/suppliers/list', title: 'Suppliers', type: 'link', permissions: [PermissionTypes.SUPPLIER.GET]},
+            {path: '/brands/list', title: 'Brands', type: 'link', permissions: [PermissionTypes.BRAND.GET]},
+            {path: '/units/list', title: 'Units', type: 'link', permissions: [PermissionTypes.UNIT.GET]},
+            {path: '/products/list', title: 'Products', type: 'link', permissions: [PermissionTypes.PRODUCT.GET]},
         ]
+    },
+    {
+        path: '/inventories/list', icon: Box,  title: 'Inventory', type: 'link', permissions: [PermissionTypes.INVENTORY.GET]
     },
     /*{
         title: 'Products', icon: Box, type: 'sub', active: false, children: [
