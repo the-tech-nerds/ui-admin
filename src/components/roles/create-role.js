@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import Forms from "../form/forms";
 import App from "../app";
@@ -20,6 +20,7 @@ export default class CreateRole extends Component {
         }
         this.setRoleTitle = this.setRoleTitle.bind(this);
         this.checkPermission = this.checkPermission.bind(this);
+        this.selectAllPermission = this.selectAllPermission.bind(this);
     }
 
     componentDidMount() {
@@ -37,7 +38,16 @@ export default class CreateRole extends Component {
                 const response = await res.json();
                 if (response.code === 200) {
                     this.setState((state) => {
-                        return {...state, categories: response.data};
+                        return {
+                            ...state, categories: response?.data?.map((category) => {
+                                category.checked = false;
+                                category?.permissions?.map((permission) => {
+                                    permission.checked = false;
+                                    return true;
+                                })
+                                return category;
+                            }) || []
+                        };
                     });
                 } else {
                     this.setState({
@@ -65,11 +75,33 @@ export default class CreateRole extends Component {
         }), 100);
     }
 
-    checkPermission(category_id, permission_id) {
+    checkPermission(category_index, permission_index) {
+        const categories = [...this.state.categories || []];
+        categories[category_index].permissions[permission_index].checked = !categories[category_index]?.permissions[permission_index]?.checked;
+        const categoryChecked = categories[category_index].permissions.findIndex((permission) => !permission.checked);
+        categories[category_index].checked = categoryChecked === -1;
+        this.setState((prepState) => ({
+            ...prepState,
+            categories: categories
+        }));
+    }
+
+    selectAllPermission(category_index) {
+        const categories = [...this.state.categories || []];
+        const categoryChecked = categories[category_index]?.checked;
+        categories[category_index].permissions = categories[category_index]?.permissions?.map((permission) => {
+            permission.checked = !categoryChecked;
+            return permission;
+        });
+        categories[category_index].checked = !categoryChecked;
+        this.setState((prepState) => ({
+            ...prepState,
+            categories: categories
+        }));
     }
 
     render() {
-        const {categories, loading, selectedPermissions, role} = this.state;
+        const {categories, loading} = this.state;
         return (
             <App>
                 <Breadcrumb title="Create Role" parent="Roles"/>
@@ -91,9 +123,8 @@ export default class CreateRole extends Component {
                                             },
                                             dataProcessBeforeSubmit: (value, callback) => {
                                                 callback({
-                                                    permissions: Object.keys(value)
-                                                        .filter(pk => pk !== 'name')
-                                                        .reduce((allPermission, permissionKey) => [...allPermission, ...value[permissionKey]], []),
+                                                    permissions: this.state?.categories?.map((category) => category?.permissions?.filter((permission) => permission.checked) || [])
+                                                        .reduce((allPermission, permissions) => [...allPermission, ...permissions?.map((permission) => permission.id)], []),
                                                     name: value.name
                                                 });
                                             },
@@ -118,13 +149,24 @@ export default class CreateRole extends Component {
                                                                         name={'permissions_' + i}
                                                                         id={"cat_" + category.id}
                                                                     >
-                                                                        {category.permissions.map(permission => (
+                                                                        <AvCheckbox
+                                                                            label="Select all"
+                                                                            value={category.id}
+                                                                            className="checkbox_animated"
+                                                                            id={"perm_select" + category.id}
+                                                                            key={"perm_select" + category.id}
+                                                                            checked={category.checked}
+                                                                            onChange={() => this.selectAllPermission(i)}
+                                                                        />
+                                                                        {category.permissions.map((permission, j) => (
                                                                             <AvCheckbox
                                                                                 label={permission.name}
                                                                                 value={permission.id}
                                                                                 className="checkbox_animated"
                                                                                 id={"perm_" + permission.id}
                                                                                 key={"perm_" + permission.id}
+                                                                                checked={permission.checked}
+                                                                                onChange={() => this.checkPermission(i, j)}
                                                                             />
                                                                         ))}
                                                                     </AvCheckboxGroup>
