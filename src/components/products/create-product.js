@@ -11,6 +11,7 @@ import MyUploader from "../common/dropzone";
 import {DropzoneStatus} from "../../constants/dropzoneStatus";
 import updateFileStorage from "../common/file-storage";
 import CKEditors from "react-ckeditor-component";
+import { MultilevelSelect } from '../common/multilevel-select';
 
 export class CreateProduct extends Component {
     constructor(props) {
@@ -160,24 +161,34 @@ export class CreateProduct extends Component {
 
         //fetch categories
         FetchData({
-            url: '/api/categories', callback: (response, isSucess) => {
-                console.log('categories : ', response.data);
+            url: '/api/categories/menu/all', callback: (response, isSucess) => {
+                console.log('i am here again');
                 if (isSucess) {
-                    const options = response.data.map(x => {
+                    console.log('categories : ', response.data);
+                    const selectedCategorys = [];
+                    const remapCategories = categories => categories.map(category => {
+                        const selected = this.state.product?.categories?.includes(category.id) || false;
+                        if (selected) {
+                            selectedCategorys.push(category.id);
+                        }
                         return {
-                            label: x.Name,
-                            value: x.id
-                        };
+                            id: category.id,
+                            label: category.name,
+                            children: remapCategories(category.children),
+                            checked: selected,
+                        }
                     });
+                    const options = remapCategories(response.data);
+                    console.log('options', options);
                     this.setState({
                         categoryList: options,
                     });
 
-                    const ids = this.state.categoryList.filter(option => this.state.product.categories.includes(option.value)).map(el => el.value)
+                    // const ids = this.state.categoryList.filter(option => this.state.product.categories.includes(option.value)).map(el => el.value)
                     this.setState((state) => {
                         return {
                             ...state,
-                            categoryIds: ids
+                            categoryIds: selectedCategorys
                         }
                     });
                 } else {
@@ -199,12 +210,9 @@ export class CreateProduct extends Component {
         });
     }
 
-    handleChangeCategories = (event) => {
-        this.setState((state) => {
-            return {
-                ...state,
-                categoryIds: event
-            }
+    handleChangeCategories = (_, selectedNodes) => {
+        this.setState({
+            categoryIds: selectedNodes.map(({ id }) => id),
         });
     }
 
@@ -218,7 +226,7 @@ export class CreateProduct extends Component {
     }
 
     render() {
-        const {product, brands, brandId, categoryList, categoryIds, productId, shops, files, uploadIds, contentInfo, method, url, description} = this.state;
+        const {product, brands, brandId, categoryList, categoryIds, productId, shops, files, uploadIds, contentInfo, method, url, description, error, errorMessage} = this.state;
         return (
             <App>
 
@@ -247,6 +255,7 @@ export class CreateProduct extends Component {
                                         </div>
                                     </div>
                                     <div className="col-xl-12">
+                                        {error && <span className="text-danger">{errorMessage}</span>}
                                         <Forms
                                             options={{
                                                 method: method,
@@ -271,20 +280,27 @@ export class CreateProduct extends Component {
                                                     });
                                                 },
                                                 dataProcessBeforeSubmit: (value, callback) => {
+                                                    if (!this.state.categoryIds.length) {
+                                                        this.setState({
+                                                            error: true,
+                                                            errorMessage: "Select atleast one category",
+                                                        })
+                                                        return;
+                                                    }
                                                     callback({
                                                         ...value,
-                                                        description: description
+                                                        description: description,
+                                                        category_ids: this.state.categoryIds,
                                                     });
                                                 },
                                             }}
                                         >
                                             <AvGroup>
-                                                <Label for="category_ids">Select category</Label>
-                                                {productId == 0 &&
-                                                <AvSelect isMulti name="category_ids" options={categoryList} required/>}
-                                                {productId > 0 &&
-                                                <AvSelect onChange={this.handleChangeCategories} value={categoryIds}
-                                                          isMulti name="category_ids" options={categoryList} required/>}
+                                                <Label>Select category</Label>
+                                                <MultilevelSelect 
+                                                        data={categoryList}
+                                                        onChange={this.handleChangeCategories}
+                                                />
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="brand_id">Select Brand</Label>

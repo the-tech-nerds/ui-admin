@@ -33,12 +33,15 @@ export default class CategoryService {
             method: "GET",
             path: '/api/v1/category/all',
         });
+        console.log(categoryList);
+        
         const categories = categoryList.map((category: any, index: any) => ({
             id: category.id,
             'SL No': ++index,
             'Name': category.name,
             'Parent Category': this.findParent(categoryList, category.parent_id),
-            'Active': category.is_active ? 'Yes' : 'No'
+            'Active': category.is_active ? 'Yes' : 'No',
+            children: category.children,
         }));
 
         return this.responseService.response(categories);
