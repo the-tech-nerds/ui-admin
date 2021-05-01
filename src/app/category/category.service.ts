@@ -33,8 +33,6 @@ export default class CategoryService {
             method: "GET",
             path: '/api/v1/category/all',
         });
-        console.log(categoryList);
-        
         const categories = categoryList.map((category: any, index: any) => ({
             id: category.id,
             'SL No': ++index,

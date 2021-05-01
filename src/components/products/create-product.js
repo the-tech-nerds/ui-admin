@@ -92,11 +92,9 @@ export class CreateProduct extends Component {
                     this.setState({loading: false});
                     const response = await res.json();
 
-                    console.log('product data :::', response.data.product);
                     if (response.code === 200) {
                         response.data.product.categories = response.data.product.categories.map(category => category.id);
 
-                        console.log('product data after manipulation :::', response.data.product);
                         this.setState((state) => {
                             return {
                                 ...state,
@@ -131,7 +129,7 @@ export class CreateProduct extends Component {
         FetchData({
             url: '/api/brands/list/all', callback: (response, isSucess) => {
                 if (isSucess) {
-                    console.log('brands : ', response.data);
+                    
                     const options = response.data.map(x => {
                         return {
                             label: x.Name,
@@ -162,9 +160,7 @@ export class CreateProduct extends Component {
         //fetch categories
         FetchData({
             url: '/api/categories/menu/all', callback: (response, isSucess) => {
-                console.log('i am here again');
                 if (isSucess) {
-                    console.log('categories : ', response.data);
                     const selectedCategorys = [];
                     const remapCategories = categories => categories.map(category => {
                         const selected = this.state.product?.categories?.includes(category.id) || false;
@@ -179,7 +175,7 @@ export class CreateProduct extends Component {
                         }
                     });
                     const options = remapCategories(response.data);
-                    console.log('options', options);
+
                     this.setState({
                         categoryList: options,
                     });
