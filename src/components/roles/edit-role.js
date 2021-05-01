@@ -75,7 +75,6 @@ export default class EditRole extends Component {
                 this.setState({loading: false});
                 const response = await res.json();
                 if (response.code === 200) {
-                    console.log(response);
                     this.setState((state) => {
                         const categories = this.state?.categories?.map((category) => {
                             category.permissions = category.permissions?.map((permission) => {
@@ -91,7 +90,6 @@ export default class EditRole extends Component {
                             selectedRole: response.data.role
                         }
                     });
-                    console.log(this.state.categories);
                 } else {
                     this.setState((state) => {
                         return {
@@ -192,6 +190,7 @@ export default class EditRole extends Component {
                                                                         name={'permissions_' + i}
                                                                         id={"cat_" + category.id}
                                                                     >
+                                                                        {category?.permissions?.length > 1 &&
                                                                         <AvCheckbox
                                                                             label="Select all"
                                                                             value={category.id}
@@ -200,7 +199,7 @@ export default class EditRole extends Component {
                                                                             key={"perm_select" + category.id}
                                                                             checked={category.checked}
                                                                             onChange={() => this.selectAllPermission(i)}
-                                                                        />
+                                                                        />}
                                                                         {category?.permissions?.map((permission, j) => (
                                                                             <AvCheckbox
                                                                                 label={permission.name}
