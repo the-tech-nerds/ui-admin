@@ -3,10 +3,12 @@ import Breadcrumb from '../common/breadcrumb';
 import Datatable from '../common/datatable'
 import App from "../app";
 import {Link} from 'react-router-dom';
+import {getPermissionTypes, userHasPermission} from "../../utils/utils";
 
 
 export class ListShop extends Component {
     render() {
+        const PermissionTypes = getPermissionTypes();
         return (
             <App>
                 <Breadcrumb title="Shop List" parent="Shops"/>
@@ -17,7 +19,8 @@ export class ListShop extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/shops/create" className="btn btn-secondary">Create Shop</Link>
+                                {userHasPermission(PermissionTypes.SHOP.CREATE) &&
+                                <Link to="/shops/create" className="btn btn-secondary">Create Shop</Link>}
                             </div>
                             <div className="clearfix"></div>
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
@@ -33,6 +36,7 @@ export class ListShop extends Component {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
+                                                    {userHasPermission(PermissionTypes.SHOP.UPDATE) &&
                                                     <span onClick={() => {
                                                         window.location.href = `/shops/edit/${row.original.id}`;
                                                     }} title="Edit shop">
@@ -43,7 +47,7 @@ export class ListShop extends Component {
                                                             color: '#e4566e'
                                                         }}
                                                         />
-                                                    </span>
+                                                    </span>}
 
                                                 </div>
                                             ),

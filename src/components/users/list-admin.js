@@ -9,6 +9,7 @@ import { AvField } from "availity-reactstrap-validation";
 import * as fetch from "isomorphic-fetch";
 import { Button } from "reactstrap";
 import { Alert } from "react-bootstrap";
+import {getPermissionTypes, userHasPermission} from "../../utils/utils";
 
 export default class ListAdmin extends Component {
     constructor(props) {
@@ -68,6 +69,7 @@ export default class ListAdmin extends Component {
         this.setState({ open: false, openFreeze: false });
     };
     render() {
+        const PermissionTypes = getPermissionTypes();
         let { open, openFreeze, roleList, userRoles, userId } = this.state;
         return (
             <App>
@@ -146,19 +148,23 @@ export default class ListAdmin extends Component {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
+                                                    {userHasPermission(PermissionTypes.USER.DETAILS) &&
                                                     <span onClick={() => {
                                                         window.location.href = `/users/${row.original.id}`;
                                                     }} title="Show user details">
                                                         <i className="fa fa-eye" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
                                                         ></i>
-                                                    </span>
+                                                    </span>}
+
+                                                    {userHasPermission(PermissionTypes.USER.UPDATE) &&
                                                     <span onClick={() => {
                                                         window.location.href = `/edit-user/${row.original.id}`;
                                                     }} title="edit user details">
                                                         <i className="fa fa-pencil-square-o" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
                                                         ></i>
-                                                    </span>
+                                                    </span>}
 
+                                                    {userHasPermission(PermissionTypes.USER.ROLE_ASSIGN) &&
                                                     <span onClick={() => {
                                                         this.setState({
                                                             userRoles: row.original.roleIds,
@@ -168,9 +174,9 @@ export default class ListAdmin extends Component {
                                                     }} title="Assign role to user">
                                                         <i className="fa fa-lock" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
                                                         ></i>
-                                                    </span>
+                                                    </span>}
 
-                                                    { row.original.isFrozen ?
+                                                    { row.original.isFrozen && userHasPermission(PermissionTypes.USER.UPDATE) &&
                                                         <span onClick={() => {
                                                             this.setState({
                                                                 userId: row.original.id
@@ -179,8 +185,7 @@ export default class ListAdmin extends Component {
                                                         }} title="Unfreeze User">
                                                             <i className="fa fa-unlock-alt" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}
                                                             ></i>
-                                                        </span> : null
-                                                    }
+                                                        </span>}
                                                 </div>
                                             ),
                                             style: {

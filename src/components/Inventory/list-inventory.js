@@ -9,6 +9,7 @@ import {Button, Label} from "reactstrap";
 import {Alert} from "react-bootstrap";
 import FetchData from "../common/get-data";
 import {AvField, AvGroup, AvInput} from "availity-reactstrap-validation";
+import {getPermissionTypes, isSuperAdmin, userHasPermission} from "../../utils/utils";
 
 export default class ListInventory extends Component {
     constructor(props) {
@@ -16,9 +17,9 @@ export default class ListInventory extends Component {
         this.state = {
             inventoryList: [],
             inventoryId: '',
-            inventoryPrice:0,
-            inventoryStockCount:0,
-            inventoryShopIds:[],
+            inventoryPrice: 0,
+            inventoryStockCount: 0,
+            inventoryShopIds: [],
             open: false,
             openStatus: false,
             openEdit: false,
@@ -57,6 +58,7 @@ export default class ListInventory extends Component {
     };
 
     render() {
+        const PermissionTypes = getPermissionTypes();
         let {openStatus, openEdit, inventoryId, inventoryPrice, inventoryStockCount} = this.state;
         return (
             <App>
@@ -68,7 +70,8 @@ export default class ListInventory extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/inventories/create/0" className="btn btn-secondary">Create Inventory</Link>
+                                {userHasPermission(PermissionTypes.INVENTORY.CREATE) &&
+                                <Link to="/inventories/create/0" className="btn btn-secondary">Create Inventory</Link>}
                             </div>
                             <div className="clearfix"></div>
 
@@ -141,7 +144,7 @@ export default class ListInventory extends Component {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
-                                                    {row.original.is_active === 0 && <span onClick={() => {
+                                                    {row.original.is_active === 0 && isSuperAdmin() && <span onClick={() => {
                                                         console.log('row original data : ', row.original)
                                                         this.setState({
                                                             inventoryId: row.original.id,
@@ -158,6 +161,7 @@ export default class ListInventory extends Component {
                                                         }}></i>
                                                     </span>}
 
+                                                    {userHasPermission(PermissionTypes.INVENTORY.UPDATE) &&
                                                     <span onClick={() => {
                                                         this.setState({
                                                             inventoryId: row.original.id
@@ -170,7 +174,7 @@ export default class ListInventory extends Component {
                                                             padding: 11,
                                                             color: '#e4566e'
                                                         }}></i>
-                                                    </span>
+                                                    </span>}
                                                 </div>
                                             ),
                                             style: {

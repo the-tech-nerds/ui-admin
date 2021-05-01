@@ -9,6 +9,7 @@ import {AvField} from "availity-reactstrap-validation";
 import * as fetch from "isomorphic-fetch";
 import {Button} from "reactstrap";
 import {Alert} from "react-bootstrap";
+import {getPermissionTypes, userHasPermission} from "../../utils/utils";
 
 export default class ListCategory extends Component {
     constructor(props) {
@@ -67,6 +68,7 @@ export default class ListCategory extends Component {
         this.setState({ open: false, openStatus: false });
     };
     render() {
+        const PermissionTypes = getPermissionTypes();
         let {  openStatus, CategoryId } = this.state;
         return (
             <App>
@@ -78,7 +80,8 @@ export default class ListCategory extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/category/create" className="btn btn-secondary">Create Category</Link>
+                                {userHasPermission(PermissionTypes.PRODUCT_CATEGORY.CREATE) &&
+                                <Link to="/category/create" className="btn btn-secondary">Create Category</Link>}
                             </div>
                             <div className="clearfix"></div>
 
@@ -116,6 +119,7 @@ export default class ListCategory extends Component {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
+                                                    {userHasPermission(PermissionTypes.PRODUCT_CATEGORY.UPDATE) &&
                                                     <span onClick={() => {
                                                     window.location.href = `/categories/${row.original.id}/edit`;
                                                     }} title="Edit category">
@@ -126,8 +130,9 @@ export default class ListCategory extends Component {
                                                             color: '#e4566e'
                                                         }}
                                                         />
-                                                    </span>
+                                                    </span>}
 
+                                                    {userHasPermission(PermissionTypes.PRODUCT_CATEGORY.UPDATE) &&
                                                     <span onClick={() => {
                                                         this.setState({
                                                             CategoryId: row.original.id
@@ -135,7 +140,7 @@ export default class ListCategory extends Component {
                                                         this.onOpenStatusModal();
                                                     }} title="Change Status">
                                                         <i className="fa fa-unlock-alt" style={{ width: 35, fontSize: 20, padding: 11, color: '#e4566e' }}></i>
-                                                    </span>
+                                                    </span>}
                                                 </div>
                                             ),
                                             style: {

@@ -7,6 +7,7 @@ import Forms from "../form/forms";
 import {Button} from "reactstrap";
 import Modal from "react-responsive-modal";
 import {Alert} from "react-bootstrap";
+import {getPermissionTypes, userHasPermission} from "../../utils/utils";
 
 export default class ListRole extends Component {
     constructor(props) {
@@ -29,6 +30,7 @@ export default class ListRole extends Component {
     };
 
     render() {
+        const PermissionTypes = getPermissionTypes();
         let { open, roleId, hasUser } = this.state;
         return (
             <App>
@@ -40,7 +42,8 @@ export default class ListRole extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/create-role" className="btn btn-secondary">Create Role</Link>
+                                {userHasPermission(PermissionTypes.ROLE.CREATE) &&
+                                <Link to="/create-role" className="btn btn-secondary">Create Role</Link>}
                             </div>
                             <div className="clearfix"></div>
                             <Modal open={open} onClose={this.onCloseModal} center>
@@ -76,7 +79,7 @@ export default class ListRole extends Component {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
-
+                                                    {userHasPermission(PermissionTypes.ROLE.DETAILS) &&
                                                     <span onClick={() => {
                                                         window.location.href = `/roles/${row.original.id}/details`;
                                                     }} title="Show role details">
@@ -87,7 +90,9 @@ export default class ListRole extends Component {
                                                             color: '#e4566e'
                                                         }}
                                                         />
-                                                    </span>
+                                                    </span>}
+
+                                                    {userHasPermission(PermissionTypes.ROLE.UPDATE) &&
                                                     <span onClick={() => {
                                                         window.location.href = `/roles/${row.original.id}/edit`;
                                                     }} title="Edit role">
@@ -98,8 +103,9 @@ export default class ListRole extends Component {
                                                             color: '#e4566e'
                                                         }}
                                                         />
-                                                    </span>
+                                                    </span>}
 
+                                                    {userHasPermission(PermissionTypes.ROLE.UPDATE) &&
                                                     <span onClick={() => {
                                                         this.setState({
                                                             roleId: row.original.id,
@@ -108,7 +114,7 @@ export default class ListRole extends Component {
                                                         this.onOpenModal();
                                                     }} title="Change Status">
                                                         <button className={"btn btn-xs " + (row.original.isActive ? 'btn-success' : 'btn-warning') }>{ row.original.isActive ? 'Active' : 'Inactive' }</button>
-                                                    </span>
+                                                    </span>}
                                                 </div>
                                             ),
                                             style: {

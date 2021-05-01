@@ -8,6 +8,7 @@ import Forms from "../form/forms";
 import * as fetch from "isomorphic-fetch";
 import {Button} from "reactstrap";
 import {Alert} from "react-bootstrap";
+import {getPermissionTypes, userHasPermission} from "../../utils/utils";
 
 export default class ListProduct extends Component {
     constructor(props) {
@@ -64,6 +65,7 @@ export default class ListProduct extends Component {
     };
 
     render() {
+        const PermissionTypes = getPermissionTypes();
         let {openStatus, productId} = this.state;
         return (
             <App>
@@ -75,7 +77,8 @@ export default class ListProduct extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/products/create" className="btn btn-secondary">Create Product</Link>
+                                {userHasPermission(PermissionTypes.PRODUCT.CREATE) &&
+                                <Link to="/products/create" className="btn btn-secondary">Create Product</Link>}
                             </div>
                             <div className="clearfix"></div>
 
@@ -125,6 +128,7 @@ export default class ListProduct extends Component {
                                                         />
                                                     </span>
 
+                                                    {userHasPermission(PermissionTypes.PRODUCT.UPDATE) &&
                                                     <span onClick={() => {
                                                         window.location.href = `/products/edit/${row.original.id}`;
                                                     }} title="Edit Product">
@@ -135,8 +139,9 @@ export default class ListProduct extends Component {
                                                             color: '#e4566e'
                                                         }}
                                                         />
-                                                    </span>
+                                                    </span>}
 
+                                                    {userHasPermission(PermissionTypes.PRODUCT.UPDATE) &&
                                                     <span onClick={() => {
                                                         this.setState({
                                                             productId: row.original.id
@@ -149,7 +154,7 @@ export default class ListProduct extends Component {
                                                             padding: 11,
                                                             color: '#e4566e'
                                                         }}></i>
-                                                    </span>
+                                                    </span>}
                                                 </div>
                                             ),
                                             style: {
