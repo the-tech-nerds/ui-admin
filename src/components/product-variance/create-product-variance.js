@@ -292,7 +292,7 @@ export class CreateProductVariance extends Component {
                                                     <AvGroup>
                                                         <Label for="unit_id">Select Unit</Label>
                                                         {productVarianceId === 0 &&
-                                                        <AvSelect name="unit_id" options={units}/>}
+                                                        <AvSelect name="unit_id" options={units} onChange={this.handleChangeUnit}/> }
                                                         {productVarianceId > 0 &&
                                                         <AvSelect onChange={this.handleChangeUnit} name="unit_id"
                                                                   value={unitId}
@@ -305,7 +305,7 @@ export class CreateProductVariance extends Component {
                                                     <AvGroup>
                                                         <Label for="shop_ids">Select Shops</Label>
                                                         {productId === 0 &&
-                                                        <AvSelect isMulti name="shop_ids" options={shops} required/>}
+                                                        <AvSelect isMulti name="shop_ids" options={shops} onChange={this.handleChangeShops} required/>}
                                                         {productId > 0 &&
                                                         <AvSelect isMulti onChange={this.handleChangeShops}
                                                                   name="shop_ids"

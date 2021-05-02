@@ -281,7 +281,7 @@ export class CreateInventory extends Component {
                 if (isSuccess) {
                     const options = response.data.map(x => {
                         return {
-                            label: x['Variance Title'],
+                            label: `${x['Variance Title']} (${x['Price']} BDT)`,
                             value: x['id']
                         };
                     });

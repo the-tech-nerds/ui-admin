@@ -34,6 +34,12 @@ export default class BrandController {
     async gets() {
         return this.brandService.gets();
     }
+
+    @Get('/list/all/:supplierId')
+    async getBySupplier(@Param('supplierId') supplierId: number) {
+        return this.brandService.getBySupplier(supplierId);
+    }
+
     @Delete('/:id')
     async delete( @Param('id') id: number) {
         return this.brandService.delete(id);

@@ -25,11 +25,22 @@ export const clearLocalStorage = () => {
 }
 
 export const userHasPermission = (permission) => {
-    const permissions = getUserPermissions();
-    const roles = getUserRoles();
-
-    if (roles.includes("Super Admin")) {
+    if(isSuperAdmin()){
         return true;
     }
+
+    if(window.permission_types === 'undefined'){
+        return false;
+    }
+
+    const permissions = getUserPermissions();
+    if(!permissions){
+        return false;
+    }
+
     return permissions.includes(permission);
+}
+
+export const isSuperAdmin = () => {
+    return getUserRoles().includes("Super Admin");
 }

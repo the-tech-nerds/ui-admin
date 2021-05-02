@@ -44,6 +44,20 @@ export class BrandService {
         return this.responseService.response(brands);
     }
 
+    async getBySupplier(supplierId: number) {
+        const { data: brandList } = await this.gatewayService.execute(MicroService.Product, {
+            method: "GET",
+            path: `/api/v1/brand/list/all/${supplierId}`,
+        });
+        const brands = brandList.map((brand: any, index: any) => ({
+            id: brand.id,
+            'SL No': ++index,
+            'Name': brand.name,
+            'Description': brand.description,
+        }));
+        return this.responseService.response(brands);
+    }
+
 
 
     async get(brandId: number) {
