@@ -85,12 +85,14 @@ jobs:
             if [[ ! "${status}" -eq 0 ]]; then
                 aws ecr create-repository --repository-name ${CIRCLE_PROJECT_REPONAME}
             fi
-            if [ "develop" == "$CIRCLE_BRANCH" ]
+            if [ "master" == "$CIRCLE_BRANCH" ]
             then
               docker build -t $DEV_IMAGE_NAME .
               docker tag $DEV_IMAGE_NAME $DEV_IMAGE_NAME_LATEST
               docker push $DEV_IMAGE_NAME_LATEST
               echo "Pushed ${DEV_IMAGE_NAME_LATEST}"
+              IMAGES_TO_DELETE=$( aws ecr list-images --repository-name ${CIRCLE_PROJECT_REPONAME} --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
+              aws ecr batch-delete-image --repository-name ${CIRCLE_PROJECT_REPONAME} --image-ids "$IMAGES_TO_DELETE" || true
             fi
 workflows:
   version: 2
@@ -100,18 +102,18 @@ workflows:
           context: khanfreshcorner
           filters:
             branches:
-              only: develop
+              only: master
       - npm-build:
           context: khanfreshcorner
           requires:
             - npm-install
           filters:
             branches:
-              only: develop
+              only: master
       - docker-build-image:
           context: khanfreshcorner
           requires:
             - npm-build
           filters:
             branches:
-              only: develop
+              only: master

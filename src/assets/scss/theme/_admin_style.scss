@@ -1652,6 +1652,9 @@ ul {
   margin-bottom: 0;
   padding-right: $ul-padding-right;
 }
+li.node {
+  display: block;
+}
 li {
   display: inline-block;
 }
