@@ -21,8 +21,12 @@ export class Forms extends Component {
         event.preventDefault();
         const {
             options: {
-                method = "POST", url = '', headers = null, onSuccess = () => {
-                }, data = {},
+                method = "POST",
+                url = '',
+                headers = null,
+                onSuccess = () => {
+                },
+                data = {},
                 dataProcessBeforeSubmit = (value, callback) => {
                     callback(values);
                 }
