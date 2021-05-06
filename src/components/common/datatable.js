@@ -146,7 +146,8 @@ export class Datatable extends Component {
                         accessor: key,
                         Cell: editable,
                         style: {
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            whiteSpace: 'pre-wrap'
                         }
                     });
             }
