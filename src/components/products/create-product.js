@@ -236,7 +236,7 @@ export class CreateProduct extends Component {
                     });
                     options.push({
                         label: "n/a",
-                        value: ''
+                        value: undefined
                     })
                     this.setState({
                         brands: options
