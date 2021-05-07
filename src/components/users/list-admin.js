@@ -139,8 +139,17 @@ export default class ListAdmin extends Component {
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"
-                                    takeColumns={['id', 'first_name', 'last_name', 'email', 'phone', 'is_active']}
+                                    takeColumns={['id', 'first_name', 'last_name', 'email', 'phone', 'is_active', 'Roles']}
                                     extraQuery="type=admin"
+                                    modifyColumns={
+                                        [
+                                            {
+                                                key: 'roles',
+                                                name: 'Roles',
+                                                modifier: (roles) => roles.map(role => role.name).join(', ')
+                                            }
+                                        ]
+                                    }
                                     extraColumns={[
                                         {
                                             Header: <b>Action</b>,
@@ -167,7 +176,7 @@ export default class ListAdmin extends Component {
                                                     {userHasPermission(PermissionTypes.USER.ROLE_ASSIGN) &&
                                                     <span onClick={() => {
                                                         this.setState({
-                                                            userRoles: row.original.roleIds,
+                                                            userRoles: row.original.roles.map(({id}) => id),
                                                             userId: row.original.id
                                                         })
                                                         this.onOpenModal();
