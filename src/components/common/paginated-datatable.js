@@ -286,7 +286,16 @@ export class PaginatedDatatable extends Component {
     }
 
     render() {
-        const { pageSize, myClass, multiSelectOption, pagination, extraColumns = [], takeColumns = [], excludeColumns = [], } = this.props;
+        const { 
+                pageSize, 
+                myClass, 
+                multiSelectOption,
+                pagination,
+                extraColumns = [],
+                takeColumns = [],
+                excludeColumns = [],
+                modifyColumns = [],
+        } = this.props;
         const { myData = [], loading = false, error = null } = this.state;
 
         if (error) {
@@ -295,9 +304,21 @@ export class PaginatedDatatable extends Component {
             );
         }
 
+        let modifiedData = myData.map((item) => {
+            for (let columnMap of modifyColumns) {
+                const { key = null, name = "" } = columnMap;
+                if (key && item[key]) {
+                    item[name] = columnMap.modifier(item[key]);
+                }
+                console.log(item[name]);
+            }
+            return item;
+        });
+        
+
         let columns = [];
-        if (myData) {
-            for (var key in myData[0]) {
+        if (modifiedData) {
+            for (var key in modifiedData[0]) {
                 if (excludeColumns.includes(key)) {
                     continue;
                 }
