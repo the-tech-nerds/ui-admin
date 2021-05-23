@@ -36,6 +36,7 @@ export class ProductVarianceService {
         const productVariances = productVarianceList.map((productVariance: any, index: any) => ({
             id: productVariance.id,
             'SL No': ++index,
+            'Shops': productVariance.shops?.reduce((acc: any, shop: any) => (acc + shop.name + ', '), '').slice(0, -2) || 'n/a',
             'Product': productVariance.product.name,
             'Variance Title': productVariance.title,
             'SKU': productVariance.sku,
