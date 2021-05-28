@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
-import {AvField, AvGroup} from "availity-reactstrap-validation";
+import { AvField, AvGroup } from "availity-reactstrap-validation";
 import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
-import {Button, Label} from "reactstrap";
+import { Button, Label } from "reactstrap";
 import MyUploader from "../common/dropzone";
-import {DropzoneStatus} from "../../constants/dropzoneStatus";
+import { DropzoneStatus } from "../../constants/dropzoneStatus";
 import updateFileStorage from "../common/file-storage";
 import CKEditors from "react-ckeditor-component";
 import { MultilevelSelect } from '../common/multilevel-select';
@@ -20,8 +20,8 @@ export class CreateProduct extends Component {
             product: {},
             categoryList: [],
             categoryIds: [],
-            suppliers:[],
-            supplierId:0,
+            suppliers: [],
+            supplierId: 0,
             brands: [],
             brandId: 0,
 
@@ -91,7 +91,7 @@ export class CreateProduct extends Component {
                 redirect: 'follow',
             })
                 .then(async res => {
-                    this.setState({loading: false});
+                    this.setState({ loading: false });
                     const response = await res.json();
 
                     if (response.code === 200) {
@@ -164,7 +164,7 @@ export class CreateProduct extends Component {
             url: '/api/categories/menu/all', callback: (response, isSucess) => {
                 if (isSucess) {
                     const selectedCategorys = [];
-                    const remapCategories = categories => categories.map(category => {
+                    const remapCategories = categories => (categories || []).map(category => {
                         const selected = this.state.product?.categories?.includes(category.id) || false;
                         if (selected) {
                             selectedCategorys.push(category.id);
@@ -176,7 +176,7 @@ export class CreateProduct extends Component {
                             checked: selected,
                         }
                     });
-                    const options = remapCategories(response.data);
+                    const options = remapCategories(response.data.menus);
 
                     this.setState({
                         categoryList: options,
@@ -270,11 +270,11 @@ export class CreateProduct extends Component {
     }
 
     render() {
-        const {product, suppliers, supplierId, brands, brandId, categoryList, categoryIds, productId, files, uploadIds, contentInfo, method, url, description, error, errorMessage} = this.state;
+        const { product, suppliers, supplierId, brands, brandId, categoryList, categoryIds, productId, files, uploadIds, contentInfo, method, url, description, error, errorMessage } = this.state;
         return (
             <App>
 
-                <Breadcrumb title={productId > 0 ? 'update' : 'create'} parent="product"/>
+                <Breadcrumb title={productId > 0 ? 'update' : 'create'} parent="product" />
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
@@ -294,7 +294,7 @@ export class CreateProduct extends Component {
                                                     onUploadSuccess: (response) => {
                                                         this.handleUploadResponse(response);
                                                     }
-                                                }} content={contentInfo}/>
+                                                }} content={contentInfo} />
                                             </div>
                                         </div>
                                     </div>
@@ -342,31 +342,31 @@ export class CreateProduct extends Component {
                                             <AvGroup>
                                                 <Label>Select category</Label>
                                                 <MultilevelSelect
-                                                        data={categoryList}
-                                                        onChange={this.handleChangeCategories}
+                                                    data={categoryList}
+                                                    onChange={this.handleChangeCategories}
                                                 />
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="supplier_id">Select Supplier</Label>
                                                 {productId == 0 &&
-                                                <AvSelect onChange={this.handleChangeSupplier} name="supplier_id" options={suppliers} required/>}
+                                                    <AvSelect onChange={this.handleChangeSupplier} name="supplier_id" options={suppliers} required />}
                                                 {productId > 0 &&
-                                                <AvSelect onChange={this.handleChangeSupplier} name="supplier_id"
-                                                          value={supplierId} options={suppliers} required/>}
+                                                    <AvSelect onChange={this.handleChangeSupplier} name="supplier_id"
+                                                        value={supplierId} options={suppliers} required />}
                                             </AvGroup>
                                             <AvGroup>
                                                 <Label for="brand_id">Select Brand</Label>
                                                 {productId == 0 &&
-                                                <AvSelect onChange={this.handleChangeBrand} name="brand_id" options={brands}/>}
+                                                    <AvSelect onChange={this.handleChangeBrand} name="brand_id" options={brands} />}
                                                 {productId > 0 &&
-                                                <AvSelect onChange={this.handleChangeBrand} name="brand_id"
-                                                          value={brandId} options={brands} required/>}
+                                                    <AvSelect onChange={this.handleChangeBrand} name="brand_id"
+                                                        value={brandId} options={brands} required />}
                                             </AvGroup>
 
                                             <AvGroup>
                                                 <Label for="name">Product Name</Label>
                                                 <AvField className="form-control" name="name" value={product.name}
-                                                         type="text" required/>
+                                                    type="text" required />
                                             </AvGroup>
 
                                             <div className="row">
