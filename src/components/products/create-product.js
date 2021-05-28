@@ -95,7 +95,6 @@ export class CreateProduct extends Component {
                     const response = await res.json();
 
                     if (response.code === 200) {
-                        debugger
                         response.data.product.categories = response.data.product.categories.map(category => category.id);
 
                         this.setState((state) => {
