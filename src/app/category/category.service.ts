@@ -86,6 +86,6 @@ export default class CategoryService {
     private findParent(data: any, parent_id: number) {
         if (parent_id === 0) return 'N/A'
         const parent = data.find((x: any) => x.id === parent_id);
-        return parent.name;
+        return parent?.name || '';
     }
 }
