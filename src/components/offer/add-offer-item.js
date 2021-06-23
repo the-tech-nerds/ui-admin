@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Label } from "reactstrap";
 import FetchData from '../common/get-data';
-import DatePicker from "react-datepicker";
-import * as moment from 'moment'
-import { convertLocalDateTime } from '../../utils/utils';
+import AsyncSelect from 'react-select/async';
+
 const ColoredLine = ({ color }) => (
     <hr
         style={{
@@ -16,7 +15,8 @@ const ColoredLine = ({ color }) => (
 );
 export function AddOfferItem(props) {
     const [types, setTypes] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState(null);
+    const [inputCat, setInputCat] = useState('pen');
     const [offerInfo, setOfferInfo] = useState({
         name: '',
         price: 0,
@@ -35,7 +35,14 @@ export function AddOfferItem(props) {
         FetchData({
             url: '/api/categories/', callback: (response, isSucess) => {
                 if (isSucess) {
-                    setCategories(response.data);
+                    debugger
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    setCategories(options);
                 }
             }
         })
@@ -69,6 +76,28 @@ export function AddOfferItem(props) {
             })
         }
     }
+    const changeType = (e) => {
+        console.log(e.target.value);
+    }
+    const filterOptions = (inputValue) => {
+        if (!inputValue) return categories;
+        return categories.filter(i =>
+            i.label.toLowerCase().includes(inputValue.toLowerCase())
+        );
+    };
+    const loadOptions = (inputCat, callback) => {
+        setTimeout(() => {
+            callback(filterOptions(inputCat));
+        }, 1000);
+    };
+    const onChangeSelectedOption = (e) => {
+
+    };
+    const handleInputChange = (newValue) => {
+        const inputValue = newValue.replace(/\W/g, '');
+        setInputCat(inputValue);
+        return inputValue;
+    };
 
     return <div className="row p-2">
         <div className="row col-12">
@@ -102,7 +131,7 @@ export function AddOfferItem(props) {
         <div className="row col-12">
             <div className="col-4">
                 <Label for="shopIds">Shop</Label>
-                <select className="form-control" name="city">
+                <select className="form-control" onChange={changeType} name="city">
                     {types.map((option) => (
                         <option value={option.value}>{option.label}</option>
                     ))}
@@ -110,11 +139,13 @@ export function AddOfferItem(props) {
             </div>
             <div className="col-4">
                 <Label for="shopIds">Category</Label>
-                <select className="form-control" name="city">
-                    {categories.map((option) => (
-                        <option value={option.id}>{option.Name}</option>
-                    ))}
-                </select>
+                {categories && <AsyncSelect
+                    loadOptions={loadOptions}
+                    inputValue={inputCat}
+                    name="category_id"
+                    onChange={onChangeSelectedOption}
+                    onInputChange={handleInputChange}
+                />}
             </div>
             <div className="col-4">
                 <Label for="shopIds">Product</Label>
