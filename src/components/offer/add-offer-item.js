@@ -16,7 +16,12 @@ const ColoredLine = ({ color }) => (
 export function AddOfferItem(props) {
     const [types, setTypes] = useState([]);
     const [categories, setCategories] = useState(null);
-    const [inputCat, setInputCat] = useState('pen');
+    const [options, setOptions] = useState(undefined);
+    const [productOption, setProductOption] = useState([]);
+    const [varianceOption, setVarianceOption] = useState([]);
+    const [typeId, setTypeId] = useState(0);
+    const [categoryId, setCategoryId] = useState(0);
+    const [varianceId, setVarianceId] = useState(null);
     const [offerInfo, setOfferInfo] = useState({
         name: '',
         price: 0,
@@ -35,14 +40,7 @@ export function AddOfferItem(props) {
         FetchData({
             url: '/api/categories/', callback: (response, isSucess) => {
                 if (isSucess) {
-                    debugger
-                    const options = response.data.map(x => {
-                        return {
-                            label: x.Name,
-                            value: x.id
-                        };
-                    });
-                    setCategories(options);
+                    setCategories(response.data);
                 }
             }
         })
@@ -77,96 +75,155 @@ export function AddOfferItem(props) {
         }
     }
     const changeType = (e) => {
-        console.log(e.target.value);
+        const cat = categories.filter(x => x.typeId === Number(e.target.value)).map(y=>{
+            return {
+                label: y.Name,
+                value: y.id
+            };
+        })
+        setOptions(cat);
+        setTypeId(Number(e.target.value))
+        setCategoryId(0);
+        setProductOption([]);
+        setVarianceOption([]);
     }
-    const filterOptions = (inputValue) => {
-        if (!inputValue) return categories;
-        return categories.filter(i =>
-            i.label.toLowerCase().includes(inputValue.toLowerCase())
+    const filterOptions = (inputValue, items) => {
+        return items?.filter(i =>
+            i.label.toLowerCase().includes(inputValue?.toLowerCase())
         );
     };
-    const loadOptions = (inputCat, callback) => {
+    const loadOptions = (inputValue, callback) => {
         setTimeout(() => {
-            callback(filterOptions(inputCat));
+            callback(filterOptions(inputValue, options));
         }, 1000);
     };
-    const onChangeSelectedOption = (e) => {
-
+    const loadProductOptions = (inputValue, callback) => {
+        setTimeout(() => {
+            callback(filterOptions(inputValue, productOption));
+        }, 500);
     };
-    const handleInputChange = (newValue) => {
-        const inputValue = newValue.replace(/\W/g, '');
-        setInputCat(inputValue);
-        return inputValue;
-    };
+    const handleChangeCategory = (event) => {
+        FetchData({
+            url: `/api/products/category/${event.value}`, callback: (response, isSuccess) => {
+                if (isSuccess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id
+                        };
+                    });
+                    setProductOption(options);
+                    setCategoryId(event.value);
+                    setVarianceOption([]);
+                }
+            }
+        });
+    }
 
-    return <div className="row p-2">
-        <div className="row col-12">
-            <div className="col-6">
-                <Label for="shopIds">Name</Label>
-                <input type="text" onChange={changeInputHandler} name="name" className="form-control" id="offer_name" value={offerInfo.name} />
+    const handleChangeProduct = (event) => {
+        FetchData({
+            url: `/api/product-variances/${event.value}`, callback: (response, isSuccess) => {
+                if (isSuccess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: `${x['Variance Title']} (${x['Price']} BDT)`,
+                            value: x['id']
+                        };
+                    });
+                    setVarianceOption(options);
+                    setVarianceId(options.length>0? options[0].value : null);
+                }
+            }
+        });
+    }
+    const handleSubmit = (event) =>{
+        props.addItem({
+           offerInfo,
+           variance: varianceOption.find(x=>x.value === varianceId)
+        })
+        event.preventDefault();
+    }
+  const changeVariance = (e)=>{
+      setVarianceId(Number(e.target.value));
+  }
+    return <form  onSubmit={handleSubmit}>
+        <div className="row p-2">
+            <div className="row col-12">
+                <div className="col-6">
+                    <Label for="shopIds">Name</Label>
+                    <input type="text" onChange={changeInputHandler} name="name" className="form-control" id="offer_name"
+                           value={offerInfo.name} required={true} />
+                </div>
+                <div className="col-4">
+                    <Label for="shopIds">Offer Price</Label>
+                    <input type="number" name="price" onChange={changeInputHandler} className="form-control" id="offer_price"
+                           value={offerInfo.price} required={true} />
+                </div>
             </div>
-            <div className="col-4">
-                <Label for="shopIds">Offer Price</Label>
-                <input type="number" name="price" onChange={changeInputHandler} className="form-control" id="offer_price" value={offerInfo.price} />
+            <div className="row col-12">
+                <div className="col-4">
+                    <Label for="shopIds">Offer Details</Label><br />
+                    <textarea type="number" name="details" onChange={changeInputHandler} className="form-control" id="offer_details" value={offerInfo.details} />
+                </div>
+                <div className="col-4">
+                    <Label for="from">From</Label><br />
+                    <input type="datetime-local" id="fromDate" name="fromDate" onChange={changeInputHandler} className="form-control" required={true}
+                           value={offerInfo.fromDate}/>
+                </div>
+                <div className="col-4">
+                    <Label for="to">To</Label><br />
+                    <input type="datetime-local" id="toDate" name="toDate" onChange={changeInputHandler} className="form-control" required={true}
+                           value={offerInfo.toDate}/>
+                </div>
             </div>
-        </div>
-        <div className="row col-12">
-            <div className="col-4">
-                <Label for="shopIds">Offer Details</Label><br />
-                <textarea type="number" name="details" onChange={changeInputHandler} className="form-control" id="offer_details" value={offerInfo.details} />
+            <div className="row col-12 ml-0">
+                <ColoredLine color="red" />
             </div>
-            <div className="col-4">
-                <Label for="from">From</Label><br />
-                {/* <DatePicker id="from" name="fromDate" onChange={handlerDate} className="form-control" selected={offerInfo.fromDate} /> */}
-                <input type="datetime-local" id="fromDate" name="fromDate" onChange={changeInputHandler} className="form-control" value={offerInfo.fromDate}></input>
-            </div>
-            <div className="col-4">
-                <Label for="to">To</Label><br />
-                <input type="datetime-local" id="toDate" name="toDate" onChange={changeInputHandler} className="form-control" value={offerInfo.toDate}></input>
-            </div>
-        </div>
-        <div className="row col-12 ml-0">
-            <ColoredLine color="red" />
-        </div>
-        <div className="row col-12">
-            <div className="col-4">
-                <Label for="shopIds">Shop</Label>
-                <select className="form-control" onChange={changeType} name="city">
-                    {types.map((option) => (
-                        <option value={option.value}>{option.label}</option>
-                    ))}
-                </select>
-            </div>
-            <div className="col-4">
-                <Label for="shopIds">Category</Label>
-                {categories && <AsyncSelect
-                    loadOptions={loadOptions}
-                    inputValue={inputCat}
-                    name="category_id"
-                    onChange={onChangeSelectedOption}
-                    onInputChange={handleInputChange}
-                />}
-            </div>
-            <div className="col-4">
-                <Label for="shopIds">Product</Label>
-                <select className="form-control" name="city">
-                    {types.map((option) => (
-                        <option value={option.value}>{option.label}</option>
-                    ))}
-                </select>
-            </div>
-            <div className="col-4">
-                <Label for="shopIds">Varience</Label>
-                <select className="form-control" name="city">
-                    {types.map((option) => (
-                        <option value={option.value}>{option.label}</option>
-                    ))}
-                </select>
-            </div>
-            <div className="col-4 mt-1">
-                <Button className="mt-4" color="primary">Add</Button>
-            </div>
-        </div>
+            <div className="row col-12">
+                <div className="col-4">
+                    <Label for="shopIds">Shop</Label>
+                    <select className="form-control" onChange={changeType} name="type_id" value={typeId}>
+                        <option value="0">select</option>
+                        {types.map((option) => (
+                            <option value={option.value}>{option.label}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="col-4">
+                    <Label for="shopIds">Category</Label>
+                    <AsyncSelect
+                        loadOptions={loadOptions}
+                        defaultOptions
+                        key={typeId}
+                        name="supplier_id"
+                        onChange={handleChangeCategory}
 
-    </div >
+                    />
+                </div>
+                <div className="col-4">
+                    <Label for="productId">Product</Label>
+                    <AsyncSelect
+                        loadOptions={loadProductOptions}
+                        defaultOptions
+                        key={categoryId}
+                        name="product_id"
+                        onChange={handleChangeProduct}
+                    />
+                </div>
+                <div className="col-4">
+                    <Label for="shopIds">Variance</Label>
+                    <select className="form-control" name="variance_id" value={varianceId} onChange={changeVariance}>
+                        {varianceOption?.map((option) => (
+                            <option value={option.value}>{option.label}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="col-4 mt-1">
+                    <Button type="submit" className="mt-4" color="primary">Add</Button>
+                </div>
+            </div>
+
+        </div >
+    </form>
+
 }
