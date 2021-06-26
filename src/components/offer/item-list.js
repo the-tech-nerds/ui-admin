@@ -1,32 +1,34 @@
 import React, { useState, useEffect } from 'react';
 export function ItemList(props){
+    const {items} = props;
     return <table className="table">
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">Name</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
+        {items && items.map((item, index) =>{return <tr>
+            <th scope="row">{index +1}</th>
+            <td>{item.label}</td>
+            <td>
+                <input className="form-control" value={item.quantity} type="number"/>
+            </td>
+            <td>
+                <input type="number" value={item.price}/>
+            </td>
+            <td>
+                <button onClick={()=>props.deleteItem(index)} className="btn"><i className="fa fa-trash"></i></button>
+            </td>
+        </tr>})}
         <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
+            <td colspan="3">Total value must be equal to offer price</td>
+            <td>{items.reduce((x,y)=>(x.price * x.quantity) + (y.price * y.quantity), 0)}</td>
+            <td></td>
         </tr>
         </tbody>
     </table>

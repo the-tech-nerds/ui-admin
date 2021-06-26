@@ -137,11 +137,11 @@ export function AddOfferItem(props) {
         });
     }
     const handleSubmit = (event) =>{
+        event.preventDefault();
         props.addItem({
            offerInfo,
            variance: varianceOption.find(x=>x.value === varianceId)
         })
-        event.preventDefault();
     }
   const changeVariance = (e)=>{
       setVarianceId(Number(e.target.value));
