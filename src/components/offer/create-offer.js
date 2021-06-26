@@ -8,7 +8,8 @@ export function CreateOffer(props) {
     const [offerInfo, setOfferInfo] = useState();
     const [itemsKey, setItemsKey] = useState(Math.random()*100);
     const addItem = (items)=>{
-        setOfferInfo(variances.offerInfo);
+        debugger
+        setOfferInfo(items.offerInfo);
         setVariances(variances.concat({
             ...items.variance,
             quantity: 1,

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Label } from "reactstrap";
 import FetchData from '../common/get-data';
 import AsyncSelect from 'react-select/async';
+import MyUploader from "../common/dropzone";
 
 const ColoredLine = ({ color }) => (
     <hr
@@ -22,6 +23,13 @@ export function AddOfferItem(props) {
     const [typeId, setTypeId] = useState(0);
     const [categoryId, setCategoryId] = useState(0);
     const [varianceId, setVarianceId] = useState(null);
+    const [contentInfo, setContentInfo ] = useState(
+         {
+            entity: 'brand',
+            folder: 'brand',
+            entity_id: 0,
+            serviceName: 'product'
+        })
     const [offerInfo, setOfferInfo] = useState({
         name: '',
         price: 0,
@@ -148,33 +156,41 @@ export function AddOfferItem(props) {
   }
     return <form  onSubmit={handleSubmit}>
         <div className="row p-2">
-            <div className="row col-12">
-                <div className="col-6">
-                    <Label for="shopIds">Name</Label>
-                    <input type="text" onChange={changeInputHandler} name="name" className="form-control" id="offer_name"
-                           value={offerInfo.name} required={true} />
-                </div>
-                <div className="col-4">
-                    <Label for="shopIds">Offer Price</Label>
-                    <input type="number" name="price" onChange={changeInputHandler} className="form-control" id="offer_price"
-                           value={offerInfo.price} required={true} />
-                </div>
+            <div className="col-6">
+                    <div className="col-12">
+                        <Label for="shopIds">Name</Label>
+                        <input type="text" onChange={changeInputHandler} name="name" className="form-control" id="offer_name"
+                               value={offerInfo.name} required={true} />
+                    </div>
+                    <div className="col-12">
+                        <Label for="shopIds">Offer Price</Label>
+                        <input type="number" name="price" onChange={changeInputHandler} className="form-control" id="offer_price"
+                               value={offerInfo.price} required={true} />
+                    </div>
+                    <div className="col-12">
+                        <Label for="shopIds">Offer Details</Label><br />
+                        <textarea type="number" name="details" onChange={changeInputHandler} className="form-control" id="offer_details" value={offerInfo.details} />
+                    </div>
+                    <div className="col-12">
+                        <Label for="from">From</Label><br />
+                        <input type="datetime-local" id="fromDate" name="fromDate" onChange={changeInputHandler} className="form-control" required={true}
+                               value={offerInfo.fromDate}/>
+                    </div>
+                    <div className="col-12">
+                        <Label for="to">To</Label><br />
+                        <input type="datetime-local" id="toDate" name="toDate" onChange={changeInputHandler} className="form-control" required={true}
+                               value={offerInfo.toDate}/>
+                    </div>
+
             </div>
-            <div className="row col-12">
-                <div className="col-4">
-                    <Label for="shopIds">Offer Details</Label><br />
-                    <textarea type="number" name="details" onChange={changeInputHandler} className="form-control" id="offer_details" value={offerInfo.details} />
-                </div>
-                <div className="col-4">
-                    <Label for="from">From</Label><br />
-                    <input type="datetime-local" id="fromDate" name="fromDate" onChange={changeInputHandler} className="form-control" required={true}
-                           value={offerInfo.fromDate}/>
-                </div>
-                <div className="col-4">
-                    <Label for="to">To</Label><br />
-                    <input type="datetime-local" id="toDate" name="toDate" onChange={changeInputHandler} className="form-control" required={true}
-                           value={offerInfo.toDate}/>
-                </div>
+            <div className="col-6">
+                <Label for="shopIds">Media</Label>
+                <MyUploader options={{
+                    images: [],
+                    onUploadSuccess: (response) => {
+
+                    }
+                }} content={contentInfo} />
             </div>
             <div className="row col-12 ml-0">
                 <ColoredLine color="red" />

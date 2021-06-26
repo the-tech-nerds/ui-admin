@@ -1,35 +1,85 @@
 import React, { useState, useEffect } from 'react';
+import FetchData from "../common/get-data";
 export function ItemList(props){
-    const {items} = props;
-    return <table className="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Price</th>
-            <th scope="col">Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        {items && items.map((item, index) =>{return <tr>
-            <th scope="row">{index +1}</th>
-            <td>{item.label}</td>
-            <td>
-                <input className="form-control" value={item.quantity} type="number"/>
-            </td>
-            <td>
-                <input type="number" value={item.price}/>
-            </td>
-            <td>
-                <button onClick={()=>props.deleteItem(index)} className="btn"><i className="fa fa-trash"></i></button>
-            </td>
-        </tr>})}
-        <tr>
-            <td colspan="3">Total value must be equal to offer price</td>
-            <td>{items.reduce((x,y)=>(x.price * x.quantity) + (y.price * y.quantity), 0)}</td>
-            <td></td>
-        </tr>
-        </tbody>
-    </table>
+    const {items, offer} = props;
+    let [variances, setVariances] = useState([]);
+    let [error, setError] = useState(undefined);
+    let [totalPrice, setTotalPrice] = useState(0);
+    const [itemsKey, setItemsKey] = useState(Math.random()*100);
+    useEffect(() => {
+        setVariances(items);
+        let total = 0;
+        items.forEach(ele =>{
+            total += (ele.quantity * ele.price);
+        });
+        setTotalPrice(total);
+    }, [items]);
+    const handlePrice = (index, value) =>{
+       variances[index].price = Number(value);
+       setVariances(variances);
+       setItemsKey(Math.random()*100);
+       getTotal();
+    }
+    const getTotal=()=>{
+        let total = 0;
+        variances.forEach(ele =>{
+            total += (ele.quantity * ele.price);
+        });
+        setTotalPrice(total);
+    }
+    const handleQuantity = (index, value) =>{
+        variances[index].quantity = Number(value);
+        setVariances(variances);
+        setItemsKey(Math.random()*100);
+        getTotal();
+    }
+    const handleSubmit = () =>{
+        if(totalPrice !==offer.price){
+         setError('Total price must be ' + offer.price);
+        }
+    }
+    return <div>
+        {error &&<div className="alert alert-danger" role="alert">
+            {error}
+        </div>}
+        <table key={itemsKey} className="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {variances && variances.map((item, index) => {
+                return <tr>
+                    <th scope="row">{index + 1}</th>
+                    <td>{item.label}</td>
+                    <td>
+                        <input className="form-control" value={item.quantity}
+                               onChange={(event) => handleQuantity(index, event.target.value)} type="number"/>
+                    </td>
+                    <td>
+                        <input type="number" className="form-control"
+                               onChange={(event) => handlePrice(index, event.target.value)} value={item.price}/>
+                    </td>
+                    <td>
+                        <button onClick={() => props.deleteItem(index)} className="btn"><i className="fa fa-trash"/>
+                        </button>
+                    </td>
+                </tr>
+            })}
+            <tr>
+                <td colSpan="3">Total value must be equal to offer price</td>
+                <td>{totalPrice}</td>
+                <td>
+                    <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 }
