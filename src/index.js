@@ -70,6 +70,7 @@ import CreateProductVariance from "./components/product-variance/create-product-
 import ListInventory from "./components/Inventory/list-inventory";
 import CreateInventory from "./components/Inventory/create-inventory";
 import { CreateOffer } from './components/offer/create-offer';
+import ListOffer from "./components/offer/list-offer";
 
 class Root extends Component {
     permissions = [];
@@ -367,12 +368,19 @@ class Root extends Component {
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.PRODUCT.UPDATE) &&
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
                             <Route
                                 path={`${process.env.PUBLIC_URL}/offer/create`}
                                 component={CreateOffer}
                                 exact={true}
                             />
+                        }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.GET) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/offer/list`}
+                            component={ListOffer}
+                            exact={true}
+                        />
                         }
                         {/*<Route path={`${process.env.PUBLIC_URL}/vendors/list_vendors`} component={List_vendors}/>*/}
                         {/*<Route path={`${process.env.PUBLIC_URL}/vendors/create-vendors`}*/}

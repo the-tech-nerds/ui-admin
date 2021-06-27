@@ -34,8 +34,10 @@ export function ItemList(props){
         getTotal();
     }
     const handleSubmit = () =>{
-        if(totalPrice !==offer.price){
-         setError('Total price must be ' + offer.price);
+        if(totalPrice !==offer.total_price){
+         setError('Total price must be ' + offer.total_price);
+        } else{
+            props.handleSubmit(variances);
         }
     }
     return <div>
