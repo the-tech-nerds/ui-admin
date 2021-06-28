@@ -18,9 +18,10 @@ export default class OfferController {
     @Put('/update/:id')
     async update(
         @Param('id') id: number,
-        @Body() brandRequest: any
+        @Body() offerRequest: any
     ) {
-        return this.offerService.update(id,brandRequest);
+        console.log(offerRequest);
+        return this.offerService.update(id,offerRequest);
     }
     @Get('/:id')
     async get(@Param('id') id: number) {

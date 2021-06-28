@@ -375,6 +375,13 @@ class Root extends Component {
                                 exact={true}
                             />
                         }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.UPDATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/offer/edit/:id`}
+                            component={CreateOffer}
+                            exact={true}
+                        />
+                        }
                         {this.hasPermission(this.PermissionTypes.PRODUCT.GET) &&
                         <Route
                             path={`${process.env.PUBLIC_URL}/offer/list`}

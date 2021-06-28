@@ -58,7 +58,7 @@ export function ItemList(props){
             {variances && variances.map((item, index) => {
                 return <tr>
                     <th scope="row">{index + 1}</th>
-                    <td>{item.label}</td>
+                    <td>{item.name}</td>
                     <td>
                         <input className="form-control" value={item.quantity}
                                onChange={(event) => handleQuantity(index, event.target.value)} type="number"/>

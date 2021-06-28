@@ -32,8 +32,8 @@ function ListOffer (props) {
                                             Cell: (row) => (
                                                 <div>
                                                     <span onClick={() => {
-                                                        window.location.href = `/offers/edit/${row.original.id}`;
-                                                    }} title="Edit brand">
+                                                        window.location.href = `/offer/edit/${row.original.id}`;
+                                                    }} title="Edit offer">
                                                         <i className="fa fa-edit" style={{
                                                             width: 35,
                                                             fontSize: 20,

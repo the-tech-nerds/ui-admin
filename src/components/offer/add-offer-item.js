@@ -4,6 +4,8 @@ import FetchData from '../common/get-data';
 import AsyncSelect from 'react-select/async';
 import MyUploader from "../common/dropzone";
 import {DropzoneStatus} from "../../constants/dropzoneStatus";
+import {convertLocalDateTime} from "../../utils/utils";
+import * as moment from "moment";
 
 const ColoredLine = ({ color }) => (
     <hr
@@ -30,8 +32,8 @@ export function AddOfferItem(props) {
     let[ files, setFiles] = useState([]);
     const [contentInfo, setContentInfo ] = useState(
          {
-            entity: 'brand',
-            folder: 'brand',
+            entity: 'offers',
+            folder: 'offer',
             entity_id: 0,
             serviceName: 'product'
         })
@@ -43,6 +45,17 @@ export function AddOfferItem(props) {
         end_date: null
     });
     useEffect(() => {
+        if(props.offerInfo){
+            setOfferInfo({
+                ...props.offerInfo,
+                start_date:  moment.utc(props.offerInfo.start_date).format("YYYY-MM-DD[T]HH:mm:ss"),
+                end_date:  moment.utc(props.offerInfo.end_date).format("YYYY-MM-DD[T]HH:mm:ss")
+            })
+            setContentInfo({
+                ...contentInfo,
+                entity_id: props.offerInfo.id
+            })
+        }
         FetchData({
             url: '/api/categories/shop/type', callback: (response, isSucess) => {
                 if (isSucess) {
@@ -57,11 +70,19 @@ export function AddOfferItem(props) {
                 }
             }
         })
+      setFiles(props.images)
     }, []);
-    const changeInputHandler = (event) => {
+    useEffect(() => {
+        props.addItem({
+            offerInfo,
+            variance: null,
+            uploadIds
+        })
+    }, [offerInfo]);
+    const changeInputHandler =  (event) => {
         const value = event.target.value;
         if (event.target.name === 'name') {
-            setOfferInfo({
+             setOfferInfo({
                 ...offerInfo,
                 name: value
             })
@@ -69,6 +90,8 @@ export function AddOfferItem(props) {
             setOfferInfo({
                 ...offerInfo,
                 total_price: Number(value)
+            }, () =>{
+
             })
         } else if (event.target.name === 'description') {
             setOfferInfo({
