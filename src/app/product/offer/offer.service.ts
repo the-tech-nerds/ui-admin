@@ -46,30 +46,17 @@ export class OfferService {
         return this.responseService.response(offers);
     }
 
-    async getBySupplier(supplierId: number) {
-        const { data: brandList } = await this.gatewayService.execute(MicroService.Product, {
+    async get(offerId: number) {
+        const { data: offer } = await this.gatewayService.execute(MicroService.Product, {
             method: "GET",
-            path: `/api/v1/offer/list/all/${supplierId}`,
+            path: `/api/v1/offer/${offerId}`,
         });
-        const brands = brandList.map((brand: any, index: any) => ({
-            id: brand.id,
-            'SL No': ++index,
-            'Name': brand.name,
-            'Description': brand.description,
-        }));
-        return this.responseService.response(brands);
+        return this.responseService.response(offer);
     }
-    async get(brandId: number) {
-        const { data: brand } = await this.gatewayService.execute(MicroService.Product, {
-            method: "GET",
-            path: `/api/v1/offer/${brandId}`,
-        });
-        return this.responseService.response(brand);
-    }
-    async delete(brandId: number) {
+    async delete(offerId: number) {
         const res = await this.gatewayService.execute(MicroService.Product, {
             method: "DELETE",
-            path: `/api/v1/offer/${brandId}`,
+            path: `/api/v1/offer/${offerId}`,
         });
         return this.responseService.response(res);
     }
