@@ -37,9 +37,11 @@ export class OfferService {
             id: offer.id,
             'SL No': ++index,
             'Name': offer.name,
-            'Description': offer.description,
+            'price': offer.total_price,
             'Start Date': moment(offer.start_date).format('YYYY-MM-DD HH:mm:ss'),
             'End Date': moment(offer.end_date).format('YYYY-MM-DD HH:mm:ss'),
+            'Offer Status': offer.status == 1? 'active' : offer.status == 2 ? 'inactive' : 'draft',
+             status: offer.status
         }));
         return this.responseService.response(offers);
     }

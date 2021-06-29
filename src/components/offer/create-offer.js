@@ -60,7 +60,7 @@ export function CreateOffer(props) {
         setVariances(variances);
         setItemsKey(Math.random()*100);
     }
-    const handleSubmit=(offerDetail) =>{
+    const handleSubmit=(offerDetail, status) =>{
          const variances = offerDetail.map( x=>{
              return {
                  id: x.value,
@@ -74,7 +74,8 @@ export function CreateOffer(props) {
          });
          offerInfo = {
              ...offerInfo,
-             offer_detail: JSON.stringify(variances)
+             offer_detail: JSON.stringify(variances),
+             status: status
          }
          let method = 'POST';
          let url = '/api/offers/';

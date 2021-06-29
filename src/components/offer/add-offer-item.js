@@ -12,7 +12,7 @@ const ColoredLine = ({ color }) => (
         style={{
             color: color,
             backgroundColor: color,
-            height: 1,
+            height: 0.5,
             width: '100%'
         }}
     />
@@ -42,7 +42,8 @@ export function AddOfferItem(props) {
         total_price: 0,
         description: '',
         start_date: null,
-        end_date: null
+        end_date: null,
+        status: 0
     });
     useEffect(() => {
         if(props.offerInfo){
@@ -247,7 +248,7 @@ export function AddOfferItem(props) {
                 }} content={contentInfo} />
             </div>
             <div className="row col-12 ml-0">
-                <ColoredLine color="red" />
+                <ColoredLine color="gray" />
             </div>
             <div className="row col-12">
                 <div className="col-4">

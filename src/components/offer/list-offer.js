@@ -31,7 +31,7 @@ function ListOffer (props) {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
-                                                    <span onClick={() => {
+                                                    {!row.original.status && <span onClick={() => {
                                                         window.location.href = `/offer/edit/${row.original.id}`;
                                                     }} title="Edit offer">
                                                         <i className="fa fa-edit" style={{
@@ -41,25 +41,28 @@ function ListOffer (props) {
                                                             color: '#e4566e'
                                                         }}
                                                         />
-                                                    </span>
-                                                    <span onClick={async () => {
+                                                    </span>}
+                                                    {row.original.status > 0 && <span onClick={async () => {
                                                         confirmAlert({
-                                                            title: 'Confirm to delete',
+                                                            title: 'Confirm to change current status',
                                                             message: 'Are you sure to do this?',
                                                             buttons: [
                                                                 {
                                                                     label: 'Yes',
                                                                     onClick:async () => {
-                                                                        await fetch(`/api/offers/${row.original.id}`, {
-                                                                            method: 'DELETE',
+                                                                        await fetch(`/api/offers/update/${row.original.id}`, {
+                                                                            method: 'PUT',
                                                                             headers: {
                                                                                 'Content-Type': 'application/json',
                                                                             },
-
+                                                                           body: JSON.stringify({
+                                                                               id:row.original.id,
+                                                                               status: row.original.status === 1 ? 2 : 1
+                                                                           })
                                                                         }).then(async res => {
                                                                             const response = await res.json();
-                                                                            if(response.code == 200){
-                                                                                window.location.href = `/offers/list`;
+                                                                            if(response.code === 200){
+                                                                                window.location.href = `/offer/list`;
                                                                             }
                                                                         })
                                                                     }
@@ -71,15 +74,15 @@ function ListOffer (props) {
                                                         });
 
 
-                                                    }} title="delete brand">
-                                                        <i className="fa fa-trash" style={{
+                                                    }} title="status change">
+                                                        <i className="fa fa-lock" style={{
                                                             width: 35,
                                                             fontSize: 20,
                                                             padding: 11,
                                                             color: '#e4566e'
                                                         }}
                                                         />
-                                                    </span>
+                                                    </span>}
                                                 </div>
                                             ),
                                             style: {
@@ -89,7 +92,7 @@ function ListOffer (props) {
                                             sortable: false
                                         },
                                     ]}
-                                    excludeColumns={['id']}
+                                    excludeColumns={['id', 'status']}
                                 />
                             </div>
                         </div>

@@ -33,11 +33,11 @@ export function ItemList(props){
         setItemsKey(Math.random()*100);
         getTotal();
     }
-    const handleSubmit = () =>{
+    const handleSubmit = (status) =>{
         if(totalPrice !==offer.total_price){
          setError('Total price must be ' + offer.total_price);
         } else{
-            props.handleSubmit(variances);
+            props.handleSubmit(variances, status);
         }
     }
     return <div>
@@ -77,7 +77,8 @@ export function ItemList(props){
                 <td colSpan="3">Total value must be equal to offer price</td>
                 <td>{totalPrice}</td>
                 <td>
-                    <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
+                    <button onClick={() =>handleSubmit(0)} className="btn btn-primary">Save & Draft</button>
+                    <button onClick={() =>handleSubmit(1)} className="btn btn-primary ml-2">Save & Complete</button>
                 </td>
             </tr>
             </tbody>

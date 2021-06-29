@@ -20,7 +20,6 @@ export default class OfferController {
         @Param('id') id: number,
         @Body() offerRequest: any
     ) {
-        console.log(offerRequest);
         return this.offerService.update(id,offerRequest);
     }
     @Get('/:id')
@@ -31,11 +30,6 @@ export default class OfferController {
     @Get('/list/all')
     async gets() {
         return this.offerService.gets();
-    }
-
-    @Get('/list/all/:supplierId')
-    async getBySupplier(@Param('supplierId') supplierId: number) {
-        return this.offerService.getBySupplier(supplierId);
     }
 
     @Delete('/:id')
