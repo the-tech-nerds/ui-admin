@@ -25,16 +25,16 @@ export const clearLocalStorage = () => {
 }
 
 export const userHasPermission = (permission) => {
-    if(isSuperAdmin()){
+    if (isSuperAdmin()) {
         return true;
     }
 
-    if(window.permission_types === 'undefined'){
+    if (window.permission_types === 'undefined') {
         return false;
     }
 
     const permissions = getUserPermissions();
-    if(!permissions){
+    if (!permissions) {
         return false;
     }
 
@@ -44,3 +44,11 @@ export const userHasPermission = (permission) => {
 export const isSuperAdmin = () => {
     return getUserRoles().includes("Super Admin");
 }
+export const convertLocalDateTime = (date) => {
+    return `${date.getFullYear()}-${`${date.getMonth() + 1}`
+        .padStart(2, 0)}-${`${date.getDay() + 1}`
+            .padStart(2, 0)}T${`${date.getHours()}`
+                .padStart(2, 0)}:${`${date.getMinutes()}`
+                    .padStart(2, 0)}`;
+}
+

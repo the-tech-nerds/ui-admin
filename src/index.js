@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import './index.scss';
 // import {ScrollContext} from 'react-router-scroll-4';
 // Components
@@ -52,10 +52,10 @@ import EditRole from "./components/roles/edit-role";
 import RoleDetails from "./components/roles/role-details";
 import NotFound from "./components/404/not-found";
 import CreateShop from "./components/shops/create-shop"
-import {getPermissionTypes, getUserPermissions, getUserRoles} from "./utils/utils";
+import { getPermissionTypes, getUserPermissions, getUserRoles } from "./utils/utils";
 import ListShop from "./components/shops/list-shops";
 import ListUnit from './components/unit/list-unit';
-import {CreateUnit} from './components/unit/create-unit';
+import { CreateUnit } from './components/unit/create-unit';
 import CreateSupplier from './components/suppliers/create-supplier';
 import ListSupplier from './components/suppliers/list-supplier';
 import ListCategory from "./components/categories/list-category";
@@ -69,6 +69,8 @@ import ListProductVariance from "./components/product-variance/list-product-vari
 import CreateProductVariance from "./components/product-variance/create-product-variance";
 import ListInventory from "./components/Inventory/list-inventory";
 import CreateInventory from "./components/Inventory/create-inventory";
+import { CreateOffer } from './components/offer/create-offer';
+import ListOffer from "./components/offer/list-offer";
 
 class Root extends Component {
     permissions = [];
@@ -94,8 +96,8 @@ class Root extends Component {
             <BrowserRouter basename={'/'}>
                 <div>
                     <Switch>
-                        <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} component={Login}/>
-                        <Route exact path={`${process.env.PUBLIC_URL}/dashboard`} component={Dashboard}/>
+                        <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} component={Login} />
+                        <Route exact path={`${process.env.PUBLIC_URL}/dashboard`} component={Dashboard} />
 
                         {/*<Route exact path={`${process.env.PUBLIC_URL}/products/physical/category`}
                                component={Category}/>
@@ -134,235 +136,256 @@ class Root extends Component {
                         {/*    <Route path={`${process.env.PUBLIC_URL}/menus/create-menu`} component={Create_menu}/>*/}
 
                         {this.hasPermission(this.PermissionTypes.USER.GET) &&
-                        <Route
-                            exact
-                            path={`${process.env.PUBLIC_URL}/list-users`}
-                            component={List_user}
-                        />
+                            <Route
+                                exact
+                                path={`${process.env.PUBLIC_URL}/list-users`}
+                                component={List_user}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.USER.GET) &&
-                        <Route
-                            exact
-                            path={`${process.env.PUBLIC_URL}/list-admins`}
-                            component={ListAdmin}
-                        />
+                            <Route
+                                exact
+                                path={`${process.env.PUBLIC_URL}/list-admins`}
+                                component={ListAdmin}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.USER.CREATE) &&
-                        <Route
-                            exact
-                            path={`${process.env.PUBLIC_URL}/create-user`}
-                            component={Create_user}
-                        />
+                            <Route
+                                exact
+                                path={`${process.env.PUBLIC_URL}/create-user`}
+                                component={Create_user}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.USER.UPDATE) &&
-                        <Route
-                            exact
-                            path={`${process.env.PUBLIC_URL}/edit-user/:id`}
-                            component={Create_user}
-                        />
+                            <Route
+                                exact
+                                path={`${process.env.PUBLIC_URL}/edit-user/:id`}
+                                component={Create_user}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.USER.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/users/:id`}
-                            component={UserDetails}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/users/:id`}
+                                component={UserDetails}
+                            />
                         }
 
                         {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/list-roles`}
-                            component={ListRole} exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/list-roles`}
+                                component={ListRole} exact={true}
+                            />
                         }
 
                         {this.hasPermission(this.PermissionTypes.ROLE.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/create-role`}
-                            component={CreateRole}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/create-role`}
+                                component={CreateRole}
+                                exact={true}
+                            />
                         }
 
                         {this.hasPermission(this.PermissionTypes.ROLE.UPDATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/roles/:id/edit`}
-                            component={EditRole}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/roles/:id/edit`}
+                                component={EditRole}
+                                exact={true}
+                            />
                         }
 
                         {this.hasPermission(this.PermissionTypes.ROLE.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/roles/:id/details`}
-                            component={RoleDetails}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/roles/:id/details`}
+                                component={RoleDetails}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.SHOP.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/shops/create`}
-                            component={CreateShop}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/shops/create`}
+                                component={CreateShop}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.SHOP.UPDATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/shops/edit/:id`}
-                            component={CreateShop}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/shops/edit/:id`}
+                                component={CreateShop}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.SHOP.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/shops/list`}
-                            component={ListShop}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/shops/list`}
+                                component={ListShop}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.UNIT.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/units/create`}
-                            component={CreateUnit}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/units/create`}
+                                component={CreateUnit}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.UNIT.UPDATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/units/edit/:id`}
-                            component={CreateUnit}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/units/edit/:id`}
+                                component={CreateUnit}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.UNIT.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/units/list`}
-                            component={ListUnit}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/units/list`}
+                                component={ListUnit}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.BRAND.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/brands/create`}
-                            component={CreateBrand}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/brands/create`}
+                                component={CreateBrand}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.BRAND.UPDATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/brands/edit/:id`}
-                            component={CreateBrand}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/brands/edit/:id`}
+                                component={CreateBrand}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.BRAND.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/brands/list`}
-                            component={ListBrand}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/brands/list`}
+                                component={ListBrand}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.SUPPLIER.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/suppliers/create`}
-                            component={CreateSupplier}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/suppliers/create`}
+                                component={CreateSupplier}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.SUPPLIER.UPDATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/suppliers/edit/:id`}
-                            component={CreateSupplier}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/suppliers/edit/:id`}
+                                component={CreateSupplier}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.SUPPLIER.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/suppliers/list`}
-                            component={ListSupplier}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/suppliers/list`}
+                                component={ListSupplier}
+                                exact={true}
+                            />
                         }
 
                         //Category
                         {this.hasPermission(this.PermissionTypes.PRODUCT_CATEGORY.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/categories/list`}
-                            component={ListCategory}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/categories/list`}
+                                component={ListCategory}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.PRODUCT_CATEGORY.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/category/create`}
-                            component={CreateCategory}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/category/create`}
+                                component={CreateCategory}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.PRODUCT_CATEGORY.UPDATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/categories/:id/edit`}
-                            component={EditCategory}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/categories/:id/edit`}
+                                component={EditCategory}
+                                exact={true}
+                            />
                         }
 
                         //Inventory
                         {this.hasPermission(this.PermissionTypes.INVENTORY.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/inventories/list`}
-                            component={ListInventory}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/inventories/list`}
+                                component={ListInventory}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/inventories/create/:id`}
-                            component={CreateInventory}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/inventories/create/:id`}
+                                component={CreateInventory}
+                                exact={true}
+                            />
                         }
 
                         //Product
                         {this.hasPermission(this.PermissionTypes.PRODUCT.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/products/list`}
-                            component={ListProduct}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/products/list`}
+                                component={ListProduct}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/products/create`}
-                            component={CreateProduct}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/products/create`}
+                                component={CreateProduct}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.PRODUCT.UPDATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/products/edit/:id`}
-                            component={CreateProduct}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/products/edit/:id`}
+                                component={CreateProduct}
+                                exact={true}
+                            />
                         }
                         //Product Variance
                         {this.hasPermission(this.PermissionTypes.PRODUCT.GET) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/product/:productId/variance/list`}
-                            component={ListProductVariance}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/product/:productId/variance/list`}
+                                component={ListProductVariance}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
-                        <Route
-                            path={`${process.env.PUBLIC_URL}/product/:productId/variance/create`}
-                            component={CreateProductVariance}
-                            exact={true}
-                        />
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/product/:productId/variance/create`}
+                                component={CreateProductVariance}
+                                exact={true}
+                            />
+                        }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.UPDATE) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/product/:productId/variance/edit/:id`}
+                                component={CreateProductVariance}
+                                exact={true}
+                            />
+                        }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                            <Route
+                                path={`${process.env.PUBLIC_URL}/offer/create`}
+                                component={CreateOffer}
+                                exact={true}
+                            />
                         }
                         {this.hasPermission(this.PermissionTypes.PRODUCT.UPDATE) &&
                         <Route
-                            path={`${process.env.PUBLIC_URL}/product/:productId/variance/edit/:id`}
-                            component={CreateProductVariance}
+                            path={`${process.env.PUBLIC_URL}/offer/edit/:id`}
+                            component={CreateOffer}
+                            exact={true}
+                        />
+                        }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.GET) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/offer/list`}
+                            component={ListOffer}
                             exact={true}
                         />
                         }
@@ -377,16 +400,16 @@ class Root extends Component {
 
                         {/*<Route path={`${process.env.PUBLIC_URL}/reports/report`} component={Reports}/>*/}
 
-                        <Route path={`${process.env.PUBLIC_URL}/settings/profile`} component={Profile}/>
+                        <Route path={`${process.env.PUBLIC_URL}/settings/profile`} component={Profile} />
 
                         {/*<Route path={`${process.env.PUBLIC_URL}/invoice`} component={Invoice}/>*/}
 
                         {/*<Route path={`${process.env.PUBLIC_URL}/data-table`} component={Datatable}/>*/}
 
-                        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Dashboard}/>
+                        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Dashboard} />
                         {/*<Redirect to="/" />*/}
                         {/*</Switch>*/}
-                        <Route component={NotFound}/>
+                        <Route component={NotFound} />
                     </Switch>
                 </div>
             </BrowserRouter>
@@ -394,6 +417,6 @@ class Root extends Component {
     }
 }
 
-ReactDOM.render(<Root/>, document.getElementById('root'));
+ReactDOM.render(<Root />, document.getElementById('root'));
 
 

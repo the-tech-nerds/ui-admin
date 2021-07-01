@@ -1,6 +1,6 @@
-import {GatewayService} from "@the-tech-nerds/common-services";
-import {Injectable} from "@nestjs/common";
-import {ApiResponseService} from "../common/response/api-response.service";
+import { GatewayService } from "@the-tech-nerds/common-services";
+import { Injectable } from "@nestjs/common";
+import { ApiResponseService } from "../common/response/api-response.service";
 
 @Injectable()
 export default class CategoryService {
@@ -24,12 +24,12 @@ export default class CategoryService {
         return this.gatewayService.execute("product", {
             method: "PUT",
             path: `/api/v1/category/${id}`,
-            body: {...category},
+            body: { ...category },
         });
     }
 
     async listCategories() {
-        const {data: categoryList} = await this.gatewayService.execute("product", {
+        const { data: categoryList } = await this.gatewayService.execute("product", {
             method: "GET",
             path: '/api/v1/category/all',
         });
@@ -40,13 +40,14 @@ export default class CategoryService {
             'Parent Category': this.findParent(categoryList, category.parent_id),
             'Active': category.is_active ? 'Yes' : 'No',
             children: category.children,
+            typeId: category.type_id
         }));
 
         return this.responseService.response(categories);
     }
 
     async listCategoriesByShop(shopId: number) {
-        const {data: categoryList} = await this.gatewayService.execute("product", {
+        const { data: categoryList } = await this.gatewayService.execute("product", {
             method: "GET",
             path: `/api/v1/category/shop/${shopId}`,
         });
