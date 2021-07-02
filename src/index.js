@@ -69,6 +69,7 @@ import ListProductVariance from "./components/product-variance/list-product-vari
 import CreateProductVariance from "./components/product-variance/create-product-variance";
 import ListInventory from "./components/Inventory/list-inventory";
 import CreateInventory from "./components/Inventory/create-inventory";
+import CreateDiscount from "./components/discount/create-discount";
 
 class Root extends Component {
     permissions = [];
@@ -314,7 +315,7 @@ class Root extends Component {
                             exact={true}
                         />
                         }
-                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        {this.hasPermission(this.PermissionTypes.INVENTORY.CREATE) &&
                         <Route
                             path={`${process.env.PUBLIC_URL}/inventories/create/:id`}
                             component={CreateInventory}
@@ -363,6 +364,14 @@ class Root extends Component {
                         <Route
                             path={`${process.env.PUBLIC_URL}/product/:productId/variance/edit/:id`}
                             component={CreateProductVariance}
+                            exact={true}
+                        />
+                        }
+
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/discounts/create/:id`}
+                            component={CreateDiscount}
                             exact={true}
                         />
                         }
