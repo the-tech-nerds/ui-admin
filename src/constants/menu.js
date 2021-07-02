@@ -67,6 +67,13 @@ export const MENUITEMS = PermissionTypes ? [
     {
         path: '/inventories/list', icon: Box,  title: 'Inventory', type: 'link', permissions: [PermissionTypes.INVENTORY.GET]
     },
+    {
+        title: 'Offer & Discount', icon: Truck, type: 'sub', active: false,
+        permissions: [],
+        children: [
+            {path: '/offer/list', title: 'Offer', type: 'link', permissions: []},
+        ]
+    },
     /*{
         title: 'Products', icon: Box, type: 'sub', active: false, children: [
             {
