@@ -126,7 +126,8 @@ export function CreateOffer(props) {
                 <AddOfferItem key ={itemsKey} images ={files} offerInfo={offerInfo} addItem={addItem} />
             </div>
             <div className="card">
-                <ItemList key={itemsKey} offer={offerInfo} items={variances} deleteItem = {removeItem} handleSubmit = {handleSubmit}/>
+                {variances?.length > 0 &&<ItemList key={itemsKey} offer={offerInfo} items={variances} deleteItem = {removeItem}
+                 handleSubmit = {handleSubmit}/>}
             </div>
         </div>
     </App>

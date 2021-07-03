@@ -3,8 +3,8 @@ import { Button, Label } from "reactstrap";
 import FetchData from '../common/get-data';
 import AsyncSelect from 'react-select/async';
 import MyUploader from "../common/dropzone";
-import {DropzoneStatus} from "../../constants/dropzoneStatus";
-import {convertLocalDateTime} from "../../utils/utils";
+import { DropzoneStatus } from "../../constants/dropzoneStatus";
+import { convertLocalDateTime } from "../../utils/utils";
 import * as moment from "moment";
 
 const ColoredLine = ({ color }) => (
@@ -27,11 +27,11 @@ export function AddOfferItem(props) {
     const [productId, setProductId] = useState(0);
     const [categoryId, setCategoryId] = useState(0);
     const [varianceId, setVarianceId] = useState(null);
-    let[ uploadIds, setUploadIds] = useState([]);
-    let[ images, setImages] = useState([]);
-    let[ files, setFiles] = useState([]);
-    const [contentInfo, setContentInfo ] = useState(
-         {
+    let [uploadIds, setUploadIds] = useState([]);
+    let [images, setImages] = useState([]);
+    let [files, setFiles] = useState([]);
+    const [contentInfo, setContentInfo] = useState(
+        {
             entity: 'offers',
             folder: 'offer',
             entity_id: 0,
@@ -41,16 +41,16 @@ export function AddOfferItem(props) {
         name: '',
         total_price: 0,
         description: '',
-        start_date: null,
-        end_date: null,
+        start_date: moment().format("YYYY-MM-DD[T]HH:mm:ss"),
+        end_date: moment().format("YYYY-MM-DD[T]HH:mm:ss"),
         status: 0
     });
     useEffect(() => {
-        if(props.offerInfo){
+        if (props.offerInfo) {
             setOfferInfo({
                 ...props.offerInfo,
-                start_date:  moment.utc(props.offerInfo.start_date).format("YYYY-MM-DD[T]HH:mm:ss"),
-                end_date:  moment.utc(props.offerInfo.end_date).format("YYYY-MM-DD[T]HH:mm:ss")
+                start_date: moment.utc(props.offerInfo.start_date).format("YYYY-MM-DD[T]HH:mm:ss"),
+                end_date: moment.utc(props.offerInfo.end_date).format("YYYY-MM-DD[T]HH:mm:ss")
             })
             setContentInfo({
                 ...contentInfo,
@@ -71,7 +71,7 @@ export function AddOfferItem(props) {
                 }
             }
         })
-      setFiles(props.images)
+        setFiles(props.images)
     }, []);
     useEffect(() => {
         props.addItem({
@@ -80,10 +80,10 @@ export function AddOfferItem(props) {
             uploadIds
         })
     }, [offerInfo]);
-    const changeInputHandler =  (event) => {
+    const changeInputHandler = (event) => {
         const value = event.target.value;
         if (event.target.name === 'name') {
-             setOfferInfo({
+            setOfferInfo({
                 ...offerInfo,
                 name: value
             })
@@ -91,7 +91,7 @@ export function AddOfferItem(props) {
             setOfferInfo({
                 ...offerInfo,
                 total_price: Number(value)
-            }, () =>{
+            }, () => {
 
             })
         } else if (event.target.name === 'description') {
@@ -112,7 +112,7 @@ export function AddOfferItem(props) {
         }
     }
     const changeType = (e) => {
-        const cat = categories.filter(x => x.typeId === Number(e.target.value)).map(y=>{
+        const cat = categories.filter(x => x.typeId === Number(e.target.value)).map(y => {
             return {
                 label: y.Name,
                 value: y.id
@@ -169,28 +169,28 @@ export function AddOfferItem(props) {
                     });
                     setVarianceOption(options);
                     setProductId(Number(event.value));
-                    setVarianceId(options.length>0? options[0].value : null);
+                    setVarianceId(options.length > 0 ? options[0].value : null);
                 }
             }
         });
     }
-    const handleSubmit = (event) =>{
+    const handleSubmit = (event) => {
         event.preventDefault();
-        let variance = varianceOption.find(x=>x.value === varianceId);
+        let variance = varianceOption.find(x => x.value === varianceId);
         props.addItem({
-           offerInfo,
-           variance: {
-               ...variance,
-               shopType: typeId,
-               categoryId: categoryId,
-               productId: productId
-           },
+            offerInfo,
+            variance: {
+                ...variance,
+                shopType: typeId,
+                categoryId: categoryId,
+                productId: productId
+            },
             uploadIds
         })
     }
-  const changeVariance = (e)=>{
-      setVarianceId(Number(e.target.value));
-  }
+    const changeVariance = (e) => {
+        setVarianceId(Number(e.target.value));
+    }
     const handleUploadResponse = (response) => {
         if (response.status === DropzoneStatus.UPLOAD_SUCCESS) {
             let ids = uploadIds;
@@ -210,40 +210,44 @@ export function AddOfferItem(props) {
             setFiles(file);
         }
     }
-    return <form  onSubmit={handleSubmit}>
+    return <form onSubmit={handleSubmit}>
         <div className="row p-2">
             <div className="col-6">
-                    <div className="col-12">
-                        <Label for="shopIds">Name</Label>
-                        <input type="text" onChange={changeInputHandler} name="name" className="form-control" id="offer_name"
-                               value={offerInfo.name} required={true} />
-                    </div>
-                    <div className="col-12">
-                        <Label for="shopIds">Offer Price</Label>
-                        <input type="number" name="total_price" onChange={changeInputHandler} className="form-control" id="offer_price"
-                               value={offerInfo.total_price} required={true} />
-                    </div>
-                    <div className="col-12">
-                        <Label for="shopIds">Offer Details</Label><br />
-                        <textarea type="number" name="description" onChange={changeInputHandler} className="form-control" id="offer_details" value={offerInfo.description} />
-                    </div>
-                    <div className="col-12">
-                        <Label for="from">From</Label><br />
-                        <input type="datetime-local" id="start_date" name="start_date" onChange={changeInputHandler} className="form-control" required={true}
-                               value={offerInfo.start_date}/>
-                    </div>
-                    <div className="col-12">
-                        <Label for="to">To</Label><br />
-                        <input type="datetime-local" id="end_date" name="end_date" onChange={changeInputHandler} className="form-control" required={true}
-                               value={offerInfo.end_date}/>
-                    </div>
+                <div className="col-12">
+                    <Label for="shopIds">Name</Label>
+                    <input type="text" onChange={changeInputHandler} name="name" className="form-control" id="offer_name"
+                        value={offerInfo.name} required={true} />
+                </div>
+                <div className="col-12">
+                    <Label for="shopIds">Offer Price</Label>
+                    <input type="number" name="total_price" onChange={changeInputHandler} className="form-control" id="offer_price"
+                        value={offerInfo.total_price} required={true} />
+                </div>
+                <div className="col-12">
+                    <Label for="shopIds">Offer Details</Label><br />
+                    <textarea type="number" name="description" onChange={changeInputHandler} className="form-control" id="offer_details" value={offerInfo.description} />
+                </div>
+                <div className="col-12">
+                    <Label for="from">From</Label><br />
+                    <input type="datetime-local" id="start_date" name="start_date"
+                        onChange={changeInputHandler}
+                        className="form-control"
+                        value={offerInfo.start_date} />
+                </div>
+                <div className="col-12">
+                    <Label for="to">To</Label><br />
+                    <input type="datetime-local" id="end_date" name="end_date"
+                        onChange={changeInputHandler} className="form-control"
+                        value={offerInfo.end_date} />
+                </div>
 
             </div>
             <div className="col-6">
                 <Label for="shopIds">Media</Label>
                 <MyUploader options={{
                     images: files,
-                    onUploadSuccess: (response) => {handleUploadResponse(response)
+                    onUploadSuccess: (response) => {
+                        handleUploadResponse(response)
                     }
                 }} content={contentInfo} />
             </div>
