@@ -35,7 +35,7 @@ export class ProductService {
         });
         const products = productList.map((product: any, index: any) => ({
             id: product.id,
-            'SL No': product.id,
+            'SL No': ++index,
             'Category': product?.categories?.reduce((categories: any, category: any) => (categories + category.name + ', '), '').slice(0, -2) || 'n/a',
             'Shop': product.shop ? product.shop.name : 'n/a',
             'Supplier': product.supplier ? product.supplier.name : 'n/a',

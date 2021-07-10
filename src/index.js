@@ -43,10 +43,11 @@ import ListProductVariance from "./components/product-variance/list-product-vari
 import CreateProductVariance from "./components/product-variance/create-product-variance";
 import ListInventory from "./components/Inventory/list-inventory";
 import CreateInventory from "./components/Inventory/create-inventory";
-import AssignDiscount from "./components/discount/create-discount";
 import {CreateOffer} from './components/offer/create-offer';
 import ListOffer from "./components/offer/list-offer";
 import ListDiscount from "./components/discount/list-discount";
+import CreateDiscount from "./components/discount/create-discount";
+import AssignDiscount from "./components/discount/assign-discount";
 
 class Root extends Component {
     permissions = [];
@@ -368,7 +369,7 @@ class Root extends Component {
 
                         {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
                         <Route
-                            path={`${process.env.PUBLIC_URL}/discounts/list`}
+                            path={`${process.env.PUBLIC_URL}/discount/list`}
                             component={ListDiscount}
                             exact={true}
                         />
@@ -376,14 +377,14 @@ class Root extends Component {
                         {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
                         <Route
                             path={`${process.env.PUBLIC_URL}/discounts/create`}
-                            component={AssignDiscount}
+                            component={CreateDiscount}
                             exact={true}
                         />
                         }
                         {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
                         <Route
                             path={`${process.env.PUBLIC_URL}/discounts/edit/:id`}
-                            component={AssignDiscount}
+                            component={CreateDiscount}
                             exact={true}
                         />
                         }

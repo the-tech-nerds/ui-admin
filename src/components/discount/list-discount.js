@@ -10,6 +10,7 @@ import * as fetch from "isomorphic-fetch";
 import { Button } from "reactstrap";
 import { Alert } from "react-bootstrap";
 import {getPermissionTypes, userHasPermission} from "../../utils/utils";
+import Datatable from "../common/datatable";
 
 export default class ListDiscount extends Component {
     constructor(props) {
@@ -42,27 +43,18 @@ export default class ListDiscount extends Component {
                         </div>
                         <div className="card-body">
                             <div className="btn-popup pull-right">
-                                <Link to="/discounts/create" className="btn btn-secondary">Create Discount</Link>
+                                <Link to="/discounts/create" className="btn btn-sm btn-secondary mr-1">Create Discount</Link>
+                                <Link to="/discounts/assign" className="btn btn-sm btn-secondary">Assign Discount</Link>
                             </div>
+
                             <div className="clearfix"></div>
 
                             <div id="batchDelete" className="category-table user-list order-table coupon-list-delete">
-                                <PaginatedDatatable
+                                <Datatable
                                     url="/api/discounts"
                                     pageSize={10}
                                     pagination={true}
                                     class="-striped -highlight"
-                                    takeColumns={['id', 'name', 'discount_amount', 'discount_percentage', 'start_date', 'end_date', 'status']}
-                                    extraQuery="type=discount"
-                                    modifyColumns={
-                                        [
-                                            /*{
-                                                key: 'roles',
-                                                name: 'Roles',
-                                                modifier: (roles) => roles.map(role => role.name).join(', ')
-                                            }*/
-                                        ]
-                                    }
                                     extraColumns={[
                                         {
                                             Header: <b>Action</b>,
@@ -105,7 +97,7 @@ export default class ListDiscount extends Component {
                                             sortable: false
                                         },
                                     ]}
-                                    excludeColumns={['id', 'roleIds', 'isFrozen']}
+                                    excludeColumns={['id']}
                                 />
                             </div>
                         </div>

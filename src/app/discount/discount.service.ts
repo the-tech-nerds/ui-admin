@@ -40,7 +40,17 @@ export default class DiscountService {
             path: '/api/v1/discount/all',
         });
 
-        return this.responseService.response(discountList);
+        const discounts = discountList.map((discount: any, index: any) => ({
+            id: discount.id,
+            'SL No': ++index,
+            'Name': discount.name,
+            'Amount': discount.discount_amount,
+            'Percentage': discount.discount_percentage,
+            'Status': discount.status ? 'Active' : 'Inactive',
+            'Assignment': discount.is_assigned ? 'Assigned' : 'Not Assigned',
+        }));
+
+        return this.responseService.response(discounts);
     }
 
     async getDiscount(discountId: number) {

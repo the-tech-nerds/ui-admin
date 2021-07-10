@@ -22,10 +22,16 @@ export default class DiscountController {
         return this.discountService.assign(discountAssignRequest);
     }
 
-    @Put('/:id')
+    @Get('/:id')
+    async getById(@Param('id') id: number) {
+        return this.discountService.getDiscount(id);
+    }
+
+    @Put('update/:id')
     async update(
         @Body() discountUpdateRequest: any, @Param('id') id: number
     ) {
+        console.log('in discount controller eidt', id)
         return this.discountService.updateDiscount(id, discountUpdateRequest);
     }
 

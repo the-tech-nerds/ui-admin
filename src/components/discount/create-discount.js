@@ -3,9 +3,8 @@ import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
 import {AvField} from "availity-reactstrap-validation";
-import AvSelect from '@availity/reactstrap-validation-select';
-import '@availity/reactstrap-validation-select/styles.scss';
-import FetchData from "../common/get-data";
+import {AvDateField} from '@availity/reactstrap-validation-date';
+import '@availity/reactstrap-validation-date/styles.scss';
 import {Button, Label} from "reactstrap";
 import {Col} from "react-bootstrap";
 
@@ -42,6 +41,7 @@ export class CreateDiscount extends Component {
                 .then(async res => {
                     this.setState({loading: false});
                     const response = await res.json();
+                    console.log('discount: ',response.data);
                     if (response.code === 200) {
                         this.setState((state) => {
                             return {
@@ -97,7 +97,7 @@ export class CreateDiscount extends Component {
                                                 method: method,
                                                 url: url,
                                                 onSuccess: (response) => {
-                                                    window.location.href = '/discounts/list';
+                                                    window.location.href = '/discount/list';
                                                 }
                                             }}
                                         >
@@ -121,6 +121,25 @@ export class CreateDiscount extends Component {
                                                          value={discount.discount_percentage}
                                                          placeholder="Discount Percentage" type="text"/>
                                             </Col>
+
+                                            <Col md="8">
+                                                <AvDateField name="start_date" label="From" defaultValue={discount.start_date} required />
+                                            </Col>
+
+                                            <Col md="8">
+                                                <AvDateField name="end_date" label="To" defaultValue={discount.end_date} required />
+                                            </Col>
+
+                                            {/*<div className="col-8">
+                                                <Label for="from">From</Label><br />
+                                                <input type="datetime-local" id="start_date" name="start_date" className="form-control" required={true}
+                                                       value={discount.start_date}/>
+                                            </div>
+                                            <div className="col-8">
+                                                <Label for="to">To</Label><br />
+                                                <input type="datetime-local" id="end_date" name="end_date" className="form-control" required={true}
+                                                       value={discount.end_date}/>
+                                            </div>*/}
 
                                             <Col md='8'>
                                                 {discountId === 0 &&

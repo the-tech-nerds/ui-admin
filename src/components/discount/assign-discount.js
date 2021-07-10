@@ -16,12 +16,14 @@ export class AssignDiscount extends Component {
             discount: {},
             discountListSubmittable: [],
             discountList: [],
-            discountLevels: [{'label': 'Category', 'value': 1}, {'label': 'Product', 'value': 2}, {'label': 'Product variance', 'value': 3}],
+            discountLevels: [{'label': 'Category', 'value': 1}, {'label': 'Product', 'value': 2}, {'label': 'Product variance', 'value': 3}, {'label': 'Offer', 'value': 4}],
             discountLevelNo: 0,
             discountId: 0,
 
             categoryList: [],
             categoryId: 0,
+            offerList: [],
+            offerId: 0,
             productList: [],
             productId: 0,
             productVarianceId: 0,
@@ -41,9 +43,9 @@ export class AssignDiscount extends Component {
         FetchData({
             url: `/api/discounts`, callback: (response, isSuccess) => {
                 if (isSuccess) {
-                    const options = response.data.filter(discount => discount.status === 1).map(x => {
+                    const options = response.data.filter(discount => discount.Status.toLowerCase() === 'active').map(x => {
                         return {
-                            label: x.Name,
+                            label: `${x.Name} (amount: ${x.Amount || 0} - percentage: ${x.Percentage || 0+'%'})`,
                             value: x.id
                         };
                     });
@@ -58,7 +60,6 @@ export class AssignDiscount extends Component {
                 }
             }
         });
-
 
         // get categoryList
         FetchData({
@@ -90,6 +91,31 @@ export class AssignDiscount extends Component {
                 discountLevelNo: event
             }
         });
+
+        if(event === 4){
+            // get Offers
+            FetchData({
+                url: `/api/offers/list/all`, callback: (response, isSuccess) => {
+                    console.log('offers in view: ', response.data);
+                    if (isSuccess) {
+                        const options = response.data.map(x => {
+                            return {
+                                label: x.Name,
+                                value: x.id
+                            };
+                        });
+                        this.setState({
+                            offerList: options,
+                        });
+                    } else {
+                        this.setState({
+                            error: true,
+                            errorMessage: response.message,
+                        })
+                    }
+                }
+            });
+        }
     }
 
     handleChangeCategory = (event) => {
@@ -160,6 +186,15 @@ export class AssignDiscount extends Component {
         });
     }
 
+    handleChangeOffer = (event) => {
+        this.setState((state) => {
+            return {
+                ...state,
+                offerId: event
+            }
+        });
+    }
+
     handleChangeDiscount = (event) => {
         this.setState((state) => {
             return {
@@ -179,6 +214,8 @@ export class AssignDiscount extends Component {
             productList,
             productVarianceId,
             productVarianceList,
+            offerId,
+            offerList
         } = this.state;
         return (
             <App>
@@ -197,25 +234,16 @@ export class AssignDiscount extends Component {
                                                 method: 'POST',
                                                 url: '/api/discounts/assign',
                                                 onSuccess: (response) => {
-                                                    window.location.href = '/discounts/list';
+                                                    window.location.href = '/discount/list';
                                                 }
                                             }}
                                         >
                                             <Col md="8">
-                                                <Label for="category_id">Select Discount</Label>
+                                                <Label for="discount_id">Select Discount</Label>
 
                                                 <AvSelect onChange={this.handleChangeDiscount} name="discount_id"
                                                           options={discountList}/>
                                             </Col>
-
-                                            <AvGroup>
-                                                <Label for="supplier_id">Select Discount</Label>
-                                                {discountId === 0 &&
-                                                <AvSelect onChange={this.handleChangeDiscount} name="discount_id" options={discountList} required />}
-                                                {discountId > 0 &&
-                                                <AvSelect onChange={this.handleChangeDiscount} name="discount_id"
-                                                          value={discountId} options={discountList} required />}
-                                            </AvGroup>
 
                                             <Col md="8">
                                                 <Label for="discount_level">Select Discount Level</Label>
@@ -225,13 +253,13 @@ export class AssignDiscount extends Component {
 
                                             { discountLevelNo === 1 &&
                                             <Col md="8">
-                                                <Label for="category_id">Select Category</Label>
+                                                <Label for="category_ids">Select Category</Label>
 
-                                                <AvSelect isMulti onChange={this.handleChangeCategory} name="category_id"
+                                                <AvSelect isMulti onChange={this.handleChangeCategory} name="category_ids"
                                                           options={categoryList}/>
                                             </Col>}
 
-                                            { discountLevelNo > 1 &&
+                                            { discountLevelNo !== 4 && discountLevelNo > 1 &&
                                             <Col md="8">
                                                 <Label for="category_id">Select Category</Label>
 
@@ -249,24 +277,31 @@ export class AssignDiscount extends Component {
 
                                             { discountLevelNo === 2 &&
                                             <Col md="8">
-                                                <Label for="product_id">Select Product</Label>
+                                                <Label for="product_ids">Select Product</Label>
 
-                                                <AvSelect isMulti onChange={this.handleChangeProduct} name="product_id"
+                                                <AvSelect isMulti onChange={this.handleChangeProduct} name="product_ids"
                                                           options={productList}/>
                                             </Col>}
 
 
                                             { discountLevelNo === 3 &&
                                             <Col md="8">
-                                                <Label for="product_variance_id">Select Product Variance</Label>
+                                                <Label for="product_variance_ids">Select Product Variance</Label>
                                                 <AvSelect isMulti value={productVarianceId}
                                                           onChange={this.handleChangeProductVariance}
-                                                          name="product_variance_id" options={productVarianceList}/>
+                                                          name="product_variance_ids" options={productVarianceList}/>
+                                            </Col>}
+
+                                            { discountLevelNo === 4 &&
+                                            <Col md="8">
+                                                <Label for="offer_ids">Select Offer</Label>
+                                                <AvSelect isMulti value={offerId}
+                                                          onChange={this.handleChangeOffer}
+                                                          name="offer_ids" options={offerList}/>
                                             </Col>}
 
                                             <Col md='8'>
-                                                {discountId === 0 && <Button color="primary" className="mt-3">Create</Button>}
-                                                {discountId > 0 && <Button color="primary" className="mt-3">Update</Button>}
+                                                <Button color="primary" className="mt-3">Assign</Button>
                                             </Col>
                                         </Forms>
                                     </div>
