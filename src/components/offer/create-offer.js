@@ -25,13 +25,15 @@ export function CreateOffer(props) {
               .then(async res => {
                   const response = await res.json();
                   if (response.code === 200) {
+                      debugger
                       setOfferInfo({
                           id: response.data.offer.id,
                           name: response.data.offer.name,
                           total_price: response.data.offer.total_price,
                           description: response.data.offer.description,
                           start_date: response.data.offer.start_date,
-                          end_date: response.data.offer.end_date
+                          end_date: response.data.offer.end_date,
+                          stock: response.data.offer.stock
                       });
                       setVariances(JSON.parse(response.data.offer.offer_detail));
                       setFiles(response.data.images)

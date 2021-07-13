@@ -4,8 +4,8 @@ import FetchData from '../common/get-data';
 import AsyncSelect from 'react-select/async';
 import MyUploader from "../common/dropzone";
 import { DropzoneStatus } from "../../constants/dropzoneStatus";
-import { convertLocalDateTime } from "../../utils/utils";
 import * as moment from "moment";
+import CKEditors from "react-ckeditor-component";
 
 const ColoredLine = ({ color }) => (
     <hr
@@ -43,7 +43,8 @@ export function AddOfferItem(props) {
         description: '',
         start_date: moment().format("YYYY-MM-DD[T]HH:mm:ss"),
         end_date: moment().format("YYYY-MM-DD[T]HH:mm:ss"),
-        status: 0
+        status: 0,
+        stock: 0
     });
     useEffect(() => {
         if (props.offerInfo) {
@@ -94,12 +95,7 @@ export function AddOfferItem(props) {
             }, () => {
 
             })
-        } else if (event.target.name === 'description') {
-            setOfferInfo({
-                ...offerInfo,
-                description: value
-            })
-        } else if (event.target.name === 'start_date') {
+        }else if (event.target.name === 'start_date') {
             setOfferInfo({
                 ...offerInfo,
                 start_date: value
@@ -108,6 +104,11 @@ export function AddOfferItem(props) {
             setOfferInfo({
                 ...offerInfo,
                 end_date: value
+            })
+        }else if (event.target.name === 'stock') {
+            setOfferInfo({
+                ...offerInfo,
+                stock: value
             })
         }
     }
@@ -210,6 +211,12 @@ export function AddOfferItem(props) {
             setFiles(file);
         }
     }
+    const onCkEditorChange = (event) => {
+        setOfferInfo({
+            ...offerInfo,
+            description: event.editor.getData()
+        })
+    }
     return <form onSubmit={handleSubmit}>
         <div className="row p-2">
             <div className="col-6">
@@ -218,14 +225,28 @@ export function AddOfferItem(props) {
                     <input type="text" onChange={changeInputHandler} name="name" className="form-control" id="offer_name"
                         value={offerInfo.name} required={true} />
                 </div>
-                <div className="col-12">
-                    <Label for="shopIds">Offer Price</Label>
-                    <input type="number" name="total_price" onChange={changeInputHandler} className="form-control" id="offer_price"
-                        value={offerInfo.total_price} required={true} />
+                <div className="col-12 row">
+                    <div className="col">
+                        <Label for="shopIds">Offer Price</Label>
+                        <input type="number" name="total_price" onChange={changeInputHandler} className="form-control" id="offer_price"
+                               value={offerInfo.total_price} required={true} />
+                    </div>
+                    <div className="col">
+                        <Label for="shopIds">Quantity</Label>
+                        <input type="number" name="stock" onChange={changeInputHandler} className="form-control" id="stock"
+                               value={offerInfo.stock} required={true} />
+                    </div>
                 </div>
                 <div className="col-12">
-                    <Label for="shopIds">Offer Details</Label><br />
-                    <textarea type="number" name="description" onChange={changeInputHandler} className="form-control" id="offer_details" value={offerInfo.description} />
+                    <label>Description</label>
+                    <CKEditors
+                        activeclassName="p5"
+                        content={offerInfo.description}
+                        events={{
+                            "change": onCkEditorChange
+                        }}
+                        required
+                    />
                 </div>
                 <div className="col-12">
                     <Label for="from">From</Label><br />
