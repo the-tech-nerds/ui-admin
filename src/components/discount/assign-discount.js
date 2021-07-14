@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
-import {AvGroup} from "availity-reactstrap-validation";
 import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
@@ -34,11 +33,15 @@ export class AssignDiscount extends Component {
 
     async componentDidMount() {
         const id = Number(this.props.match.params.id);
+        console.log('assign id: ', id);
         this.setState({
             discountId: id,
             loading: true
         });
 
+        if(id>0){
+            this.fetchDiscountById(id);
+        }
         // get discountList
         FetchData({
             url: `/api/discounts`, callback: (response, isSuccess) => {
@@ -79,6 +82,19 @@ export class AssignDiscount extends Component {
                         error: true,
                         errorMessage: response.message,
                     })
+                }
+            }
+        });
+    }
+
+    fetchDiscountById = (id) => {
+        FetchData({
+            url: `/api/discounts/${id}`, callback: (response, isSuccess) => {
+                console.log('discount', response.data);
+                if (isSuccess) {
+                    this.setState({
+                        discount: response.data,
+                    });
                 }
             }
         });
@@ -196,6 +212,8 @@ export class AssignDiscount extends Component {
     }
 
     handleChangeDiscount = (event) => {
+        this.fetchDiscountById(event);
+
         this.setState((state) => {
             return {
                 ...state,

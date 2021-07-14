@@ -48,6 +48,10 @@ export default class DiscountService {
             'Percentage': discount.discount_percentage,
             'Status': discount.status ? 'Active' : 'Inactive',
             'Assignment': discount.is_assigned ? 'Assigned' : 'Not Assigned',
+            'categories': discount.categories,
+            'products': discount.products,
+            'productVariances': discount.productVariances,
+            'offers': discount.offers,
         }));
 
         return this.responseService.response(discounts);
