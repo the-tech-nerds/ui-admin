@@ -81,7 +81,7 @@ export function ItemList(props){
                     <button onClick={() =>handleSubmit(0)} className="btn btn-primary">Draft</button>
                     <button onClick={() =>
                          confirmAlert({
-                            title: 'Confirm to active offer. You can not edit after that',
+                            title: 'Confirm to activate the offer. This cannot be edited once it is activated.',
                             message: 'Are you sure to do this?',
                             buttons: [
                                 {
