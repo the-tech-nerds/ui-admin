@@ -25,7 +25,6 @@ export function CreateOffer(props) {
               .then(async res => {
                   const response = await res.json();
                   if (response.code === 200) {
-                      debugger
                       setOfferInfo({
                           id: response.data.offer.id,
                           name: response.data.offer.name,
