@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Breadcrumb from '../common/breadcrumb';
 import App from "../app";
 import Forms from "../form/forms";
+import queryString from 'query-string';
 import AvSelect from '@availity/reactstrap-validation-select';
 import '@availity/reactstrap-validation-select/styles.scss';
 import FetchData from "../common/get-data";
@@ -12,19 +13,15 @@ export class AssignDiscount extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            discount: {},
             discountListSubmittable: [],
             discountList: [],
             discountLevels: [{'label': 'Category', 'value': 1}, {'label': 'Product', 'value': 2}, {'label': 'Product variance', 'value': 3}, {'label': 'Offer', 'value': 4}],
             discountLevelNo: 0,
-            discountId: 0,
+            discountId: Number(queryString.parse(this.props.location.search).id),
 
             categoryList: [],
-            categoryId: 0,
             offerList: [],
-            offerId: 0,
             productList: [],
-            productId: 0,
             productVarianceId: 0,
             productVarianceList: [],
             loading: true,
@@ -32,16 +29,6 @@ export class AssignDiscount extends Component {
     }
 
     async componentDidMount() {
-        const id = Number(this.props.match.params.id);
-        console.log('assign id: ', id);
-        this.setState({
-            discountId: id,
-            loading: true
-        });
-
-        if(id>0){
-            this.fetchDiscountById(id);
-        }
         // get discountList
         FetchData({
             url: `/api/discounts`, callback: (response, isSuccess) => {
@@ -71,7 +58,7 @@ export class AssignDiscount extends Component {
                     const options = response.data.map(x => {
                         return {
                             label: x.Name,
-                            value: x.id
+                            value: x
                         };
                     });
                     this.setState({
@@ -82,19 +69,6 @@ export class AssignDiscount extends Component {
                         error: true,
                         errorMessage: response.message,
                     })
-                }
-            }
-        });
-    }
-
-    fetchDiscountById = (id) => {
-        FetchData({
-            url: `/api/discounts/${id}`, callback: (response, isSuccess) => {
-                console.log('discount', response.data);
-                if (isSuccess) {
-                    this.setState({
-                        discount: response.data,
-                    });
                 }
             }
         });
@@ -112,12 +86,11 @@ export class AssignDiscount extends Component {
             // get Offers
             FetchData({
                 url: `/api/offers/list/all`, callback: (response, isSuccess) => {
-                    console.log('offers in view: ', response.data);
                     if (isSuccess) {
                         const options = response.data.map(x => {
                             return {
                                 label: x.Name,
-                                value: x.id
+                                value: x
                             };
                         });
                         this.setState({
@@ -135,20 +108,13 @@ export class AssignDiscount extends Component {
     }
 
     handleChangeCategory = (event) => {
-        this.setState((state) => {
-            return {
-                ...state,
-                categoryId: event
-            }
-        });
-
         FetchData({
-            url: `/api/products/category/${event}`, callback: (response, isSuccess) => {
+            url: `/api/products/category/${event.id}`, callback: (response, isSuccess) => {
                 if (isSuccess) {
                     const options = response.data.map(x => {
                         return {
                             label: x.Name,
-                            value: x.id
+                            value: x
                         };
                     });
                     this.setState({
@@ -165,19 +131,13 @@ export class AssignDiscount extends Component {
     }
 
     handleChangeProduct = (event) => {
-        this.setState((state) => {
-            return {
-                ...state,
-                productId: event
-            }
-        });
         FetchData({
-            url: `/api/product-variances/${event}`, callback: (response, isSuccess) => {
+            url: `/api/product-variances/${event.id}`, callback: (response, isSuccess) => {
                 if (isSuccess) {
                     const options = response.data.map(x => {
                         return {
                             label: `${x['Variance Title']} (${x['Price']} BDT)`,
-                            value: x['id']
+                            value: x
                         };
                     });
                     this.setState({
@@ -193,27 +153,7 @@ export class AssignDiscount extends Component {
         });
     }
 
-    handleChangeProductVariance = (event) => {
-        this.setState((state) => {
-            return {
-                ...state,
-                productVarianceId: event
-            }
-        });
-    }
-
-    handleChangeOffer = (event) => {
-        this.setState((state) => {
-            return {
-                ...state,
-                offerId: event
-            }
-        });
-    }
-
     handleChangeDiscount = (event) => {
-        this.fetchDiscountById(event);
-
         this.setState((state) => {
             return {
                 ...state,
@@ -230,20 +170,18 @@ export class AssignDiscount extends Component {
             discountLevels,
             discountLevelNo,
             productList,
-            productVarianceId,
             productVarianceList,
-            offerId,
             offerList
         } = this.state;
         return (
             <App>
-                <Breadcrumb title={discountId > 0 ? 'update' : 'create'} parent="discount"/>
+                <Breadcrumb title="Assign" parent="discount"/>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header">
-                                    <h5>{discountId > 0 ? 'Update Discount' : 'Add Discount'}</h5>
+                                    <h5>Assign Discount</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="col-xl-12">
@@ -259,7 +197,7 @@ export class AssignDiscount extends Component {
                                             <Col md="8">
                                                 <Label for="discount_id">Select Discount</Label>
 
-                                                <AvSelect onChange={this.handleChangeDiscount} name="discount_id"
+                                                <AvSelect onChange={this.handleChangeDiscount} name="discount_id" value={discountId}
                                                           options={discountList}/>
                                             </Col>
 
@@ -271,9 +209,9 @@ export class AssignDiscount extends Component {
 
                                             { discountLevelNo === 1 &&
                                             <Col md="8">
-                                                <Label for="category_ids">Select Category</Label>
+                                                <Label for="categories">Select Category</Label>
 
-                                                <AvSelect isMulti onChange={this.handleChangeCategory} name="category_ids"
+                                                <AvSelect isMulti name="categories"
                                                           options={categoryList}/>
                                             </Col>}
 
@@ -295,27 +233,25 @@ export class AssignDiscount extends Component {
 
                                             { discountLevelNo === 2 &&
                                             <Col md="8">
-                                                <Label for="product_ids">Select Product</Label>
+                                                <Label for="products">Select Product</Label>
 
-                                                <AvSelect isMulti onChange={this.handleChangeProduct} name="product_ids"
+                                                <AvSelect isMulti name="products"
                                                           options={productList}/>
                                             </Col>}
 
 
                                             { discountLevelNo === 3 &&
                                             <Col md="8">
-                                                <Label for="product_variance_ids">Select Product Variance</Label>
-                                                <AvSelect isMulti value={productVarianceId}
-                                                          onChange={this.handleChangeProductVariance}
-                                                          name="product_variance_ids" options={productVarianceList}/>
+                                                <Label for="product_variances">Select Product Variance</Label>
+                                                <AvSelect isMulti
+                                                          name="product_variances" options={productVarianceList}/>
                                             </Col>}
 
                                             { discountLevelNo === 4 &&
                                             <Col md="8">
-                                                <Label for="offer_ids">Select Offer</Label>
-                                                <AvSelect isMulti value={offerId}
-                                                          onChange={this.handleChangeOffer}
-                                                          name="offer_ids" options={offerList}/>
+                                                <Label for="offers">Select Offer</Label>
+                                                <AvSelect isMulti
+                                                          name="offers" options={offerList}/>
                                             </Col>}
 
                                             <Col md='8'>

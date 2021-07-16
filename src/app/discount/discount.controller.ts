@@ -12,7 +12,8 @@ export default class DiscountController {
     async create(
         @Body() discountCreateRequest: any
     ) {
-        return this.discountService.createDiscount(discountCreateRequest);
+        console.log(discountCreateRequest);
+        //return this.discountService.createDiscount(discountCreateRequest);
     }
 
     @Post('/assign')
@@ -31,7 +32,6 @@ export default class DiscountController {
     async update(
         @Body() discountUpdateRequest: any, @Param('id') id: number
     ) {
-        console.log('in discount controller eidt', id)
         return this.discountService.updateDiscount(id, discountUpdateRequest);
     }
 

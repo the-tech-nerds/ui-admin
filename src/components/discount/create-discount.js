@@ -7,6 +7,7 @@ import {AvDateField} from '@availity/reactstrap-validation-date';
 import '@availity/reactstrap-validation-date/styles.scss';
 import {Button, Label} from "reactstrap";
 import {Col} from "react-bootstrap";
+import * as moment from "moment";
 
 export class CreateDiscount extends Component {
     constructor(props) {
@@ -41,6 +42,8 @@ export class CreateDiscount extends Component {
                 .then(async res => {
                     this.setState({loading: false});
                     const response = await res.json();
+                    response.data.start_date = moment.utc(response.data.start_date).format("YYYY-MM-DD[T]HH:mm:ss");
+                    response.data.end_date = moment.utc(response.data.end_date).format("YYYY-MM-DD[T]HH:mm:ss");
                     console.log('discount: ',response.data);
                     if (response.code === 200) {
                         this.setState((state) => {
@@ -71,6 +74,25 @@ export class CreateDiscount extends Component {
                     });
                 });
         }
+    }
+
+    handleChangeStartDate = (event) => {
+        console.log('date', event.target.value)
+        this.setState({
+            discount: {
+                ...this.state.discount,
+                start_date: moment.utc(event.target.value).format("YYYY-MM-DD[T]HH:mm:ss")
+            }
+        });
+    }
+
+    handleChangeEndDate = (event) => {
+        this.setState({
+            discount: {
+                ...this.state.discount,
+                end_date: moment.utc(event.target.value).format("YYYY-MM-DD[T]HH:mm:ss")
+            }
+        });
     }
 
     render() {
@@ -108,38 +130,32 @@ export class CreateDiscount extends Component {
                                                          placeholder="Discount Title" type="text"/>
                                             </Col>
 
+                                            {!discountId &&
                                             <Col md="8">
                                                 <Label for="price">Discount Amount</Label>
                                                 <AvField className="form-control" name="discount_amount"
                                                          value={discount.discount_amount}
                                                          placeholder="Discount Amount" type="text"/>
                                             </Col>
-
+                                            }
+                                            {!discountId &&
                                             <Col md="8">
                                                 <Label for="price">Discount Percentage</Label>
                                                 <AvField className="form-control" name="discount_percentage"
                                                          value={discount.discount_percentage}
                                                          placeholder="Discount Percentage" type="text"/>
-                                            </Col>
+                                            </Col>}
 
-                                            <Col md="8">
-                                                <AvDateField name="start_date" label="From" defaultValue={discount.start_date} required />
-                                            </Col>
-
-                                            <Col md="8">
-                                                <AvDateField name="end_date" label="To" defaultValue={discount.end_date} required />
-                                            </Col>
-
-                                            {/*<div className="col-8">
+                                            <div className="col-8">
                                                 <Label for="from">From</Label><br />
-                                                <input type="datetime-local" id="start_date" name="start_date" className="form-control" required={true}
+                                                <input type="datetime-local" id="start_date" name="start_date" onChange={this.handleChangeStartDate} className="form-control" required={true}
                                                        value={discount.start_date}/>
                                             </div>
                                             <div className="col-8">
                                                 <Label for="to">To</Label><br />
-                                                <input type="datetime-local" id="end_date" name="end_date" className="form-control" required={true}
+                                                <input type="datetime-local" id="end_date" name="end_date" onChange={this.handleChangeEndDate} className="form-control" required={true}
                                                        value={discount.end_date}/>
-                                            </div>*/}
+                                            </div>
 
                                             <Col md='8'>
                                                 {discountId === 0 &&
