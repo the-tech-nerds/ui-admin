@@ -31,7 +31,8 @@ export function CreateOffer(props) {
                           total_price: response.data.offer.total_price,
                           description: response.data.offer.description,
                           start_date: response.data.offer.start_date,
-                          end_date: response.data.offer.end_date
+                          end_date: response.data.offer.end_date,
+                          stock: response.data.offer.stock
                       });
                       setVariances(JSON.parse(response.data.offer.offer_detail));
                       setFiles(response.data.images)
@@ -126,7 +127,8 @@ export function CreateOffer(props) {
                 <AddOfferItem key ={itemsKey} images ={files} offerInfo={offerInfo} addItem={addItem} />
             </div>
             <div className="card">
-                <ItemList key={itemsKey} offer={offerInfo} items={variances} deleteItem = {removeItem} handleSubmit = {handleSubmit}/>
+                {variances?.length > 0 &&<ItemList key={itemsKey} offer={offerInfo} items={variances} deleteItem = {removeItem}
+                 handleSubmit = {handleSubmit}/>}
             </div>
         </div>
     </App>

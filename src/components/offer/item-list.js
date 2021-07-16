@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
 import FetchData from "../common/get-data";
 export function ItemList(props){
     const {items, offer} = props;
@@ -74,11 +75,27 @@ export function ItemList(props){
                 </tr>
             })}
             <tr>
-                <td colSpan="3">Total value must be equal to offer price</td>
-                <td>{totalPrice}</td>
+                <td colSpan="3" className=" font-weight-bold">Total value must be equal to offer price</td>
+                <td className="font-weight-bold">{totalPrice}</td>
                 <td>
-                    <button onClick={() =>handleSubmit(0)} className="btn btn-primary">Save & Draft</button>
-                    <button onClick={() =>handleSubmit(1)} className="btn btn-primary ml-2">Save & Complete</button>
+                    <button onClick={() =>handleSubmit(0)} className="btn btn-primary">Draft</button>
+                    <button onClick={() =>
+                         confirmAlert({
+                            title: 'Confirm to activate the offer. This cannot be edited once it is activated.',
+                            message: 'Are you sure to do this?',
+                            buttons: [
+                                {
+                                    label: 'Yes',
+                                    onClick:async () => {
+                                        handleSubmit(1)
+                                    }
+                                },
+                                {
+                                    label: 'No',
+                                }
+                            ]
+                        })
+                        } className="btn btn-success ml-2">Complete</button>
                 </td>
             </tr>
             </tbody>
