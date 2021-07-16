@@ -32,7 +32,8 @@ export function CreateOffer(props) {
                           description: response.data.offer.description,
                           start_date: response.data.offer.start_date,
                           end_date: response.data.offer.end_date,
-                          stock: response.data.offer.stock
+                          stock: response.data.offer.stock,
+                          shops: response.data.offer?.shops
                       });
                       setVariances(JSON.parse(response.data.offer.offer_detail));
                       setFiles(response.data.images)
@@ -75,6 +76,7 @@ export function CreateOffer(props) {
          });
          offerInfo = {
              ...offerInfo,
+             shops: offerInfo.shops?.map(x=>x.value),
              offer_detail: JSON.stringify(variances),
              status: status
          }

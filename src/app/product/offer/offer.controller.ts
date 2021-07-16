@@ -22,6 +22,13 @@ export default class OfferController {
     ) {
         return this.offerService.update(id,offerRequest);
     }
+    @Put('/:id/status/:status')
+    async updateStatus(
+        @Param('id') id: number,
+        @Param('status') status: number
+    ) {
+        return this.offerService.updateStatus(id,status);
+    }
     @Get('/:id')
     async get(@Param('id') id: number) {
         return this.offerService.get(id);

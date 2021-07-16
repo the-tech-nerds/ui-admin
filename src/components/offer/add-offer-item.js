@@ -19,8 +19,9 @@ const ColoredLine = ({ color }) => (
 );
 export function AddOfferItem(props) {
     const [types, setTypes] = useState([]);
+    const [shopOptions, setShopOptions] = useState([]);
     const [categories, setCategories] = useState(null);
-    const [options, setOptions] = useState(undefined);
+    const [categoryOptions, setCategoryOptions] = useState(undefined);
     const [productOption, setProductOption] = useState([]);
     const [varianceOption, setVarianceOption] = useState([]);
     const [typeId, setTypeId] = useState(0);
@@ -44,14 +45,22 @@ export function AddOfferItem(props) {
         start_date: moment().format("YYYY-MM-DD[T]HH:mm:ss"),
         end_date: moment().format("YYYY-MM-DD[T]HH:mm:ss"),
         status: 0,
-        stock: 0
+        stock: 0,
+        shops: []
     });
     useEffect(() => {
         if (props.offerInfo) {
+            const options =  props.offerInfo?.shops?.map(x => {
+                return {
+                    label: x.name,
+                    value: x.id
+                };
+            });
             setOfferInfo({
                 ...props.offerInfo,
                 start_date: moment.utc(props.offerInfo.start_date).format("YYYY-MM-DD[T]HH:mm:ss"),
-                end_date: moment.utc(props.offerInfo.end_date).format("YYYY-MM-DD[T]HH:mm:ss")
+                end_date: moment.utc(props.offerInfo.end_date).format("YYYY-MM-DD[T]HH:mm:ss"),
+                shops: options
             })
             setContentInfo({
                 ...contentInfo,
@@ -69,6 +78,19 @@ export function AddOfferItem(props) {
             url: '/api/categories/', callback: (response, isSucess) => {
                 if (isSucess) {
                     setCategories(response.data);
+                }
+            }
+        })
+        FetchData({
+            url: '/api/shops/list/all', callback: (response, isSuccess) => {
+                if (isSuccess) {
+                    const options = response.data.map(x => {
+                        return {
+                            label: x.Name,
+                            value: x.id,
+                        };
+                    });
+                    setShopOptions(options);
                 }
             }
         })
@@ -91,7 +113,7 @@ export function AddOfferItem(props) {
         } else if (event.target.name === 'total_price') {
             setOfferInfo({
                 ...offerInfo,
-                total_price: Number(value)
+                total_price: value
             }, () => {
 
             })
@@ -119,7 +141,7 @@ export function AddOfferItem(props) {
                 value: y.id
             };
         })
-        setOptions(cat);
+        setCategoryOptions(cat);
         setTypeId(Number(e.target.value))
         setCategoryId(0);
         setProductOption([]);
@@ -130,14 +152,19 @@ export function AddOfferItem(props) {
             i.label.toLowerCase().includes(inputValue?.toLowerCase())
         );
     };
-    const loadOptions = (inputValue, callback) => {
+    const loadCategoryOptions = (inputValue, callback) => {
         setTimeout(() => {
-            callback(filterOptions(inputValue, options));
+            callback(filterOptions(inputValue,categoryOptions));
         }, 1000);
     };
     const loadProductOptions = (inputValue, callback) => {
         setTimeout(() => {
             callback(filterOptions(inputValue, productOption));
+        }, 500);
+    };
+    const loadShopOptions = (inputValue, callback) => {
+        setTimeout(() => {
+            callback(filterOptions(inputValue, shopOptions));
         }, 500);
     };
     const handleChangeCategory = (event) => {
@@ -157,7 +184,13 @@ export function AddOfferItem(props) {
             }
         });
     }
-
+ const handleShop = (event) => {
+        debugger
+       setOfferInfo({
+           ...offerInfo,
+           shops: event
+       })
+ }
     const handleChangeProduct = (event) => {
         FetchData({
             url: `/api/product-variances/${event.value}`, callback: (response, isSuccess) => {
@@ -238,6 +271,19 @@ export function AddOfferItem(props) {
                     </div>
                 </div>
                 <div className="col-12">
+                    <Label for="shopIds">Shops</Label>
+                    {shopOptions.length > 0 && <AsyncSelect
+                        loadOptions={loadShopOptions}
+                        defaultOptions
+                        isMulti
+                        value={offerInfo.shops}
+                        name="shops"
+                        key = "shop_option"
+                        onChange={handleShop}
+                        required = {true}
+                    />}
+                </div>
+                <div className="col-12">
                     <label>Description</label>
                     <CKEditors
                         activeclassName="p5"
@@ -245,7 +291,8 @@ export function AddOfferItem(props) {
                         events={{
                             "change": onCkEditorChange
                         }}
-                        required
+                        required = {true}
+                        key = "description"
                     />
                 </div>
                 <div className="col-12">
@@ -277,7 +324,7 @@ export function AddOfferItem(props) {
             </div>
             <div className="row col-12">
                 <div className="col-4">
-                    <Label for="shopIds">Shop</Label>
+                    <Label for="shopIds">Shop Type</Label>
                     <select className="form-control" onChange={changeType} name="type_id" value={typeId}>
                         <option value="0">select</option>
                         {types.map((option) => (
@@ -288,7 +335,7 @@ export function AddOfferItem(props) {
                 <div className="col-4">
                     <Label for="shopIds">Category</Label>
                     <AsyncSelect
-                        loadOptions={loadOptions}
+                        loadOptions={loadCategoryOptions}
                         defaultOptions
                         key={typeId}
                         name="supplier_id"
