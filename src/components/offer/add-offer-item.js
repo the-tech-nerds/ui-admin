@@ -19,7 +19,7 @@ const ColoredLine = ({ color }) => (
 );
 export function AddOfferItem(props) {
     const [types, setTypes] = useState([]);
-    const [shopOptions, setShopOptions] = useState([]);
+    const [shopOptions, setShopOptions] = useState(undefined);
     const [categories, setCategories] = useState(null);
     const [categoryOptions, setCategoryOptions] = useState(undefined);
     const [productOption, setProductOption] = useState([]);
@@ -50,17 +50,10 @@ export function AddOfferItem(props) {
     });
     useEffect(() => {
         if (props.offerInfo) {
-            const options =  props.offerInfo?.shops?.map(x => {
-                return {
-                    label: x.name,
-                    value: x.id
-                };
-            });
             setOfferInfo({
                 ...props.offerInfo,
                 start_date: moment.utc(props.offerInfo.start_date).format("YYYY-MM-DD[T]HH:mm:ss"),
                 end_date: moment.utc(props.offerInfo.end_date).format("YYYY-MM-DD[T]HH:mm:ss"),
-                shops: options
             })
             setContentInfo({
                 ...contentInfo,
@@ -89,7 +82,7 @@ export function AddOfferItem(props) {
                             label: x.Name,
                             value: x.id,
                         };
-                    });
+                    }) || [];
                     setShopOptions(options);
                 }
             }
@@ -185,7 +178,6 @@ export function AddOfferItem(props) {
         });
     }
  const handleShop = (event) => {
-        debugger
        setOfferInfo({
            ...offerInfo,
            shops: event
@@ -211,13 +203,15 @@ export function AddOfferItem(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         let variance = varianceOption.find(x => x.value === varianceId);
+        debugger
         props.addItem({
             offerInfo,
             variance: {
-                ...variance,
+                id: variance.value,
+                name: variance.label,
                 shopType: typeId,
                 categoryId: categoryId,
-                productId: productId
+                productId: productId,
             },
             uploadIds
         })
@@ -272,7 +266,7 @@ export function AddOfferItem(props) {
                 </div>
                 <div className="col-12">
                     <Label for="shopIds">Shops</Label>
-                    {shopOptions.length > 0 && <AsyncSelect
+                    {shopOptions && <AsyncSelect
                         loadOptions={loadShopOptions}
                         defaultOptions
                         isMulti
