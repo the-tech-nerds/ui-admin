@@ -73,7 +73,7 @@ export default class ListDiscount extends Component {
 
                             <div className="clearfix"></div>
 
-                            <Modal open={open} onClose={this.onCloseModal} center>
+                            <Modal open={open} onClose={this.onCloseModal} blockScroll={false} center>
                                 <div className="modal-header bg-warning">
                                     <h5 className="modal-title f-w-600" id="exampleModalLabel2">Update Status</h5>
                                 </div>

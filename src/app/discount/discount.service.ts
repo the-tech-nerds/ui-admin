@@ -1,6 +1,7 @@
 import { GatewayService } from "@the-tech-nerds/common-services";
 import { Injectable } from "@nestjs/common";
 import { ApiResponseService } from "../common/response/api-response.service";
+import * as moment from "moment";
 
 @Injectable()
 export default class DiscountService {
@@ -46,6 +47,8 @@ export default class DiscountService {
             'Name': discount.name,
             'Amount': discount.discount_amount,
             'Percentage': discount.discount_percentage,
+            'Start Date': moment(discount.start_date).format('YYYY-MM-DD HH:mm'),
+            'End Date': moment(discount.end_date).format('YYYY-MM-DD HH:mm'),
             'Status': discount.status ? 'Active' : 'Inactive',
             'Assignment': discount.is_assigned ? 'Assigned' : 'Not Assigned',
             'categories': discount.categories,

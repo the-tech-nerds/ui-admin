@@ -77,11 +77,10 @@ export class CreateDiscount extends Component {
     }
 
     handleChangeStartDate = (event) => {
-        console.log('date', event.target.value)
         this.setState({
             discount: {
                 ...this.state.discount,
-                start_date: moment.utc(event.target.value).format("YYYY-MM-DD[T]HH:mm:ss")
+                start_date: event.target.value
             }
         });
     }
@@ -90,7 +89,7 @@ export class CreateDiscount extends Component {
         this.setState({
             discount: {
                 ...this.state.discount,
-                end_date: moment.utc(event.target.value).format("YYYY-MM-DD[T]HH:mm:ss")
+                end_date: event.target.value
             }
         });
     }
@@ -120,7 +119,16 @@ export class CreateDiscount extends Component {
                                                 url: url,
                                                 onSuccess: (response) => {
                                                     window.location.href = '/discount/list';
-                                                }
+                                                },
+                                                dataProcessBeforeSubmit: (value, callback) => {
+                                                    callback({
+                                                        'name': value.name,
+                                                        'discount_amount': value.discount_amount,
+                                                        'discount_percentage': value.discount_percentage,
+                                                        'start_date': this.state.discount.start_date,
+                                                        'end_date': this.state.discount.end_date,
+                                                    });
+                                                },
                                             }}
                                         >
 

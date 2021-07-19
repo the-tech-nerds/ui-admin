@@ -18,6 +18,7 @@ export class Forms extends Component {
 
 
     handleValidSubmit(event, values) {
+        console.log('form value', values);
         event.preventDefault();
         const {
             options: {

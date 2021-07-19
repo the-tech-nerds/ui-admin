@@ -12,8 +12,7 @@ export default class DiscountController {
     async create(
         @Body() discountCreateRequest: any
     ) {
-        console.log(discountCreateRequest);
-        //return this.discountService.createDiscount(discountCreateRequest);
+        return this.discountService.createDiscount(discountCreateRequest);
     }
 
     @Post('/assign')
