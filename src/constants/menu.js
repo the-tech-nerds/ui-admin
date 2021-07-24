@@ -72,6 +72,7 @@ export const MENUITEMS = PermissionTypes ? [
         permissions: [],
         children: [
             {path: '/offer/list', title: 'Offer', type: 'link', permissions: []},
+            {path: '/discount/list', title: 'Discount', type: 'link', permissions: []},
         ]
     },
     /*{

@@ -270,7 +270,7 @@ export class CreateProduct extends Component {
     }
 
     render() {
-        const { product, suppliers, supplierId, brands, brandId, categoryList, categoryIds, productId, files, uploadIds, contentInfo, method, url, description, error, errorMessage } = this.state;
+        const { product, suppliers, supplierId, brands, brandId, categoryList, productId, files, uploadIds, contentInfo, method, url, description, error, errorMessage } = this.state;
         return (
             <App>
 

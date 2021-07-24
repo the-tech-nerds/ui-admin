@@ -1,49 +1,23 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import './index.scss';
 // import {ScrollContext} from 'react-router-scroll-4';
 // Components
 import Dashboard from './components/dashboard';
 
 // Products physical
-import Category from './components/products/physical/category';
-import Sub_category from './components/products/physical/sub-category';
-import Product_list from './components/products/physical/product-list';
-import Add_product from './components/products/physical/add-product';
-import Product_detail from './components/products/physical/product-detail';
 
 //Product Digital
-import Digital_category from './components/products/digital/digital-category';
-import Digital_sub_category from './components/products/digital/digital-sub-category';
-import Digital_pro_list from './components/products/digital/digital-pro-list';
-import Digital_add_pro from './components/products/digital/digital-add-pro';
 
 //Sales
-import Orders from './components/sales/orders';
-import Transactions_sales from './components/sales/transactions-sales';
 //Coupons
-import ListCoupons from './components/coupons/list-coupons';
-import Create_coupons from './components/coupons/create-coupons';
 
 //Pages
-import ListPages from './components/pages/list-page';
-import Create_page from './components/pages/create-page';
-import Media from './components/media/media';
-import List_menu from './components/menus/list-menu';
-import Create_menu from './components/menus/create-menu';
 import List_user from './components/users/list-user';
 import Create_user from './components/users/create-user';
 import UserDetails from './components/users/user-details';
-import List_vendors from './components/vendors/list-vendors';
-import Create_vendors from './components/vendors/create.vendors';
-import Translations from './components/localization/translations';
-import Rates from './components/localization/rates';
-import Taxes from './components/localization/taxes';
 import Profile from './components/settings/profile';
-import Reports from './components/reports/report';
-import Invoice from './components/invoice';
-import Datatable from './components/common/datatable'
 import Login from './components/auth/login';
 import ListAdmin from "./components/users/list-admin";
 import ListRole from "./components/roles/list-roles";
@@ -52,10 +26,10 @@ import EditRole from "./components/roles/edit-role";
 import RoleDetails from "./components/roles/role-details";
 import NotFound from "./components/404/not-found";
 import CreateShop from "./components/shops/create-shop"
-import { getPermissionTypes, getUserPermissions, getUserRoles } from "./utils/utils";
+import {getPermissionTypes, getUserPermissions, getUserRoles} from "./utils/utils";
 import ListShop from "./components/shops/list-shops";
 import ListUnit from './components/unit/list-unit';
-import { CreateUnit } from './components/unit/create-unit';
+import {CreateUnit} from './components/unit/create-unit';
 import CreateSupplier from './components/suppliers/create-supplier';
 import ListSupplier from './components/suppliers/list-supplier';
 import ListCategory from "./components/categories/list-category";
@@ -69,8 +43,11 @@ import ListProductVariance from "./components/product-variance/list-product-vari
 import CreateProductVariance from "./components/product-variance/create-product-variance";
 import ListInventory from "./components/Inventory/list-inventory";
 import CreateInventory from "./components/Inventory/create-inventory";
-import { CreateOffer } from './components/offer/create-offer';
+import {CreateOffer} from './components/offer/create-offer';
 import ListOffer from "./components/offer/list-offer";
+import ListDiscount from "./components/discount/list-discount";
+import CreateDiscount from "./components/discount/create-discount";
+import AssignDiscount from "./components/discount/assign-discount";
 
 class Root extends Component {
     permissions = [];
@@ -316,13 +293,13 @@ class Root extends Component {
                                 exact={true}
                             />
                         }
-                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
-                            <Route
-                                path={`${process.env.PUBLIC_URL}/inventories/create/:id`}
-                                component={CreateInventory}
-                                exact={true}
-                            />
-                        }
+
+                        {this.hasPermission(this.PermissionTypes.INVENTORY.CREATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/inventories/create/:id`}
+                            component={CreateInventory}
+                            exact={true}
+                        />}
 
                         //Product
                         {this.hasPermission(this.PermissionTypes.PRODUCT.GET) &&
@@ -386,6 +363,35 @@ class Root extends Component {
                         <Route
                             path={`${process.env.PUBLIC_URL}/offer/list`}
                             component={ListOffer}
+                            exact={true}
+                        />
+                        }
+
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/discount/list`}
+                            component={ListDiscount}
+                            exact={true}
+                        />
+                        }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/discounts/create`}
+                            component={CreateDiscount}
+                            exact={true}
+                        />
+                        }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/discounts/edit/:id`}
+                            component={CreateDiscount}
+                            exact={true}
+                        />
+                        }
+                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        <Route
+                            path={`${process.env.PUBLIC_URL}/discounts/assign`}
+                            component={AssignDiscount}
                             exact={true}
                         />
                         }

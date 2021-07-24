@@ -13,6 +13,7 @@ import { ProductModule } from './product/product.module';
 import { SupplierModule } from './supplier/supplier.module';
 import {CategoryModule} from "./category/category.module";
 import { CommonModule } from './common/common.module';
+import {DiscountModule} from "./discount/discount.module";
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CommonModule } from './common/common.module';
       ProductModule,
       SupplierModule,
       CategoryModule,
+      DiscountModule,
       CommonModule
   ],
   controllers: [AppController],
