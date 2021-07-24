@@ -26,7 +26,13 @@ export class OfferService {
             body: { ...offer },
         });
     }
-
+    updateStatus(id: number, status: number) {
+        return this.gatewayService.execute(MicroService.Product, {
+            method: "PUT",
+            path: `/api/v1/offer/${id}/status/${status}`,
+            body: null,
+        });
+    }
 
     async gets() {
         const { data: offerList } = await this.gatewayService.execute(MicroService.Product, {

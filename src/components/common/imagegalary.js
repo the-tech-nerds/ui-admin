@@ -23,7 +23,7 @@ const ImageGalary = (props) => {
         <div className="row img-gallery">
 
             {images.map((cell, index) => {
-                return <div className="single-image">
+                return <div key={index} className="single-image">
                     <div className="img-wrap" >
                         <span className="close" onClick={() => deleteImage(cell)}>&times;</span>
                         <img onClick={() => openImage(index)} className="item-image img-rounded" src={cell.url}></img>

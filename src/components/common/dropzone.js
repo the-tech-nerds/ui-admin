@@ -94,7 +94,7 @@ const MyUploader = (props) => {
     />
       </div>
       {images.length >0 && <div className="col-7">
-       <ImageGalary options={{
+       <ImageGalary key="image-list" options={{
            images: images,
            onDeleteSuccess: async (response) => {
                const info = JSON.stringify({

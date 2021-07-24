@@ -31,7 +31,7 @@ function ListOffer (props) {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
-                                                    {!row.original.status && <span onClick={() => {
+                                                    <span onClick={() => {
                                                         window.location.href = `/offer/edit/${row.original.id}`;
                                                     }} title="Edit offer">
                                                         <i className="fa fa-edit" style={{
@@ -41,7 +41,7 @@ function ListOffer (props) {
                                                             color: '#e4566e'
                                                         }}
                                                         />
-                                                    </span>}
+                                                    </span>
                                                     {row.original.status > 0 && <span onClick={async () => {
                                                         confirmAlert({
                                                             title: 'Confirm to change current status',
@@ -50,15 +50,12 @@ function ListOffer (props) {
                                                                 {
                                                                     label: 'Yes',
                                                                     onClick:async () => {
-                                                                        await fetch(`/api/offers/update/${row.original.id}`, {
+                                                                        const status = row.original.status === 1 ? 2 : 1
+                                                                        await fetch(`/api/offers/${row.original.id}/status/${status}`, {
                                                                             method: 'PUT',
                                                                             headers: {
                                                                                 'Content-Type': 'application/json',
-                                                                            },
-                                                                           body: JSON.stringify({
-                                                                               id:row.original.id,
-                                                                               status: row.original.status === 1 ? 2 : 1
-                                                                           })
+                                                                            }
                                                                         }).then(async res => {
                                                                             const response = await res.json();
                                                                             if(response.code === 200){

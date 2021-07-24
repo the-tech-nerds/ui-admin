@@ -4,10 +4,10 @@ import Breadcrumb from '../common/breadcrumb';
 import { AddOfferItem } from './add-offer-item';
 import {ItemList} from "./item-list";
 import updateFileStorage from "../common/file-storage";
-import FetchData from "../common/get-data";
+import {UpdateOffer} from "./update-offer";
 export function CreateOffer(props) {
     const [variances, setVariances] = useState([]);
-    let [offerInfo, setOfferInfo] = useState();
+    let [offerInfo, setOfferInfo] = useState(null);
     let [uploadIds, setUploadIds] = useState([]);
     let [files, setFiles] = useState([]);
     const [itemsKey, setItemsKey] = useState(Math.random()*100);
@@ -32,9 +32,16 @@ export function CreateOffer(props) {
                           description: response.data.offer.description,
                           start_date: response.data.offer.start_date,
                           end_date: response.data.offer.end_date,
-                          stock: response.data.offer.stock
+                          stock: response.data.offer.stock,
+                          shops: response.data.offer?.shops?.map(s =>{
+                              return {
+                                  value: s.id,
+                                  label: s.name
+                              }
+                          }),
+                          status: response.data.offer?.status
                       });
-                      setVariances(JSON.parse(response.data.offer.offer_detail));
+                      setVariances(JSON.parse(response.data.offer?.offer_detail));
                       setFiles(response.data.images)
                       setItemsKey(Math.random()*100);
                   } else {
@@ -47,10 +54,13 @@ export function CreateOffer(props) {
         setOfferInfo(items.offerInfo);
         if(items.variance){
             setVariances(variances.concat({
-                id: items.variance.value,
-                name: items.variance.label,
+                id: items.variance.id,
+                name: items.variance.name,
                 quantity: 1,
-                price: items.offerInfo.total_price
+                price: items.offerInfo.total_price,
+                shopType: items.variance.shopType,
+                categoryId:items.variance.categoryId,
+                productId: items.variance.productId
             }));
         }
         setUploadIds(items.uploadIds);
@@ -64,7 +74,7 @@ export function CreateOffer(props) {
     const handleSubmit=(offerDetail, status) =>{
          const variances = offerDetail.map( x=>{
              return {
-                 id: x.value,
+                 id: x.id,
                  name: x.name,
                  price: x.price,
                  quantity: x.quantity,
@@ -75,6 +85,7 @@ export function CreateOffer(props) {
          });
          offerInfo = {
              ...offerInfo,
+             shops: offerInfo.shops?.map(x=>x.value),
              offer_detail: JSON.stringify(variances),
              status: status
          }
@@ -122,7 +133,7 @@ export function CreateOffer(props) {
     }
     return <App>
         <Breadcrumb title={'create'} parent="offer" />
-        <div className="container-fluid">
+        {offerInfo && offerInfo?.status === 0 && <div className="container-fluid">
             <div className="card">
                 <AddOfferItem key ={itemsKey} images ={files} offerInfo={offerInfo} addItem={addItem} />
             </div>
@@ -130,6 +141,9 @@ export function CreateOffer(props) {
                 {variances?.length > 0 &&<ItemList key={itemsKey} offer={offerInfo} items={variances} deleteItem = {removeItem}
                  handleSubmit = {handleSubmit}/>}
             </div>
-        </div>
+        </div>}
+        {offerInfo && variances && offerInfo?.status !== 0 && <div className="container-fluid">
+           <UpdateOffer offer={offerInfo} items={variances}/>
+        </div>}
     </App>
 }

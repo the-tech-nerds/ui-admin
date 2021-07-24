@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
-import FetchData from "../common/get-data";
 export function ItemList(props){
     const {items, offer} = props;
     let [variances, setVariances] = useState([]);
@@ -35,7 +34,8 @@ export function ItemList(props){
         getTotal();
     }
     const handleSubmit = (status) =>{
-        if(totalPrice !==offer.total_price){
+        debugger
+        if(totalPrice !== Number(offer.total_price)) {
          setError('Total price must be ' + offer.total_price);
         } else{
             props.handleSubmit(variances, status);
