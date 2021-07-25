@@ -367,28 +367,28 @@ class Root extends Component {
                         />
                         }
 
-                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        {this.hasPermission(this.PermissionTypes.DISCOUNT.GET) &&
                         <Route
                             path={`${process.env.PUBLIC_URL}/discount/list`}
                             component={ListDiscount}
                             exact={true}
                         />
                         }
-                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        {this.hasPermission(this.PermissionTypes.DISCOUNT.CREATE) &&
                         <Route
                             path={`${process.env.PUBLIC_URL}/discounts/create`}
                             component={CreateDiscount}
                             exact={true}
                         />
                         }
-                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        {this.hasPermission(this.PermissionTypes.DISCOUNT.UPDATE) &&
                         <Route
                             path={`${process.env.PUBLIC_URL}/discounts/edit/:id`}
                             component={CreateDiscount}
                             exact={true}
                         />
                         }
-                        {this.hasPermission(this.PermissionTypes.PRODUCT.CREATE) &&
+                        {this.hasPermission(this.PermissionTypes.DISCOUNT.ASSIGN) &&
                         <Route
                             path={`${process.env.PUBLIC_URL}/discounts/assign`}
                             component={AssignDiscount}
