@@ -56,7 +56,7 @@ export default class ListDiscount extends Component {
     };
     render() {
         const PermissionTypes = getPermissionTypes();
-        let { open, openItem, discountId, discountData, assignedItemType, assignedItems } = this.state;
+        let { open, openItem, discountId, assignedItemType, assignedItems } = this.state;
         return (
             <App>
                 <Breadcrumb title="Discount List" parent="Discounts" />
@@ -121,7 +121,7 @@ export default class ListDiscount extends Component {
                                             accessor: str => "view_item",
                                             Cell: (row) => (
                                                 <div>
-                                                    {userHasPermission(PermissionTypes.PRODUCT.UPDATE) &&
+                                                    {userHasPermission(PermissionTypes.DISCOUNT.UPDATE) &&
                                                     <span onClick={() => {
                                                         this.onOpenItemModal(row.original);
                                                     }} title="Assigned Items" className="btn btn-sm btn-info">View
@@ -140,7 +140,7 @@ export default class ListDiscount extends Component {
                                             accessor: str => "view",
                                             Cell: (row) => (
                                                 <div>
-                                                    {userHasPermission(PermissionTypes.PRODUCT.UPDATE) &&
+                                                    {userHasPermission(PermissionTypes.DISCOUNT.UPDATE) &&
                                                     <span onClick={() => {
                                                         window.location.href = `/discounts/edit/${row.original.id}`;
                                                     }} title="edit Discount">
@@ -156,7 +156,7 @@ export default class ListDiscount extends Component {
                                                         ></i>
                                                     </span>}
 
-                                                    {userHasPermission(PermissionTypes.PRODUCT.UPDATE) &&
+                                                    {userHasPermission(PermissionTypes.DISCOUNT.UPDATE) &&
                                                     <span onClick={() => {
                                                         this.setState({
                                                             discountId: row.original.id
