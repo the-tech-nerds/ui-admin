@@ -11,7 +11,7 @@ export function CreateOffer(props) {
     let [uploadIds, setUploadIds] = useState([]);
     let [files, setFiles] = useState([]);
     const [itemsKey, setItemsKey] = useState(Math.random()*100);
-    const { id } = props.match.params;
+    const { id = 0 } = props.match.params;
     useEffect( () => {
       if(Number(id) > 0){
            fetch(`/api/offers/${id}`, {
@@ -133,7 +133,7 @@ export function CreateOffer(props) {
     }
     return <App>
         <Breadcrumb title={'create'} parent="offer" />
-        {offerInfo && offerInfo?.status === 0 && <div className="container-fluid">
+        {id <=0 || offerInfo?.status == 0 && <div className="container-fluid">
             <div className="card">
                 <AddOfferItem key ={itemsKey} images ={files} offerInfo={offerInfo} addItem={addItem} />
             </div>
@@ -141,9 +141,9 @@ export function CreateOffer(props) {
                 {variances?.length > 0 &&<ItemList key={itemsKey} offer={offerInfo} items={variances} deleteItem = {removeItem}
                  handleSubmit = {handleSubmit}/>}
             </div>
-        </div>}
-        {offerInfo && variances && offerInfo?.status !== 0 && <div className="container-fluid">
-           <UpdateOffer offer={offerInfo} items={variances}/>
+        </div> }
+       {id > 0 && offerInfo?.status != 0 && <div className="container-fluid">
+           <UpdateOffer offer={offerInfo}  key={itemsKey} items={variances}/>
         </div>}
     </App>
 }

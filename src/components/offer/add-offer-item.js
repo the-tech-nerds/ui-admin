@@ -203,7 +203,6 @@ export function AddOfferItem(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         let variance = varianceOption.find(x => x.value === varianceId);
-        debugger
         props.addItem({
             offerInfo,
             variance: {
